@@ -1,0 +1,63 @@
+from django.contrib import admin
+from django.urls import path
+from rest_framework import routers
+from .viewsets import *
+from .views import login_view
+from rest_framework.decorators import api_view
+
+
+route = routers.SimpleRouter()
+route.register('segerror',SegErrorViewSet)
+route.register('segcomp',SegCompViewSet)
+route.register('segaplic',SegAplicViewSet)
+route.register('seggjer',SegGjerViewSet)
+route.register('segperfi',SegPerfiViewSet)
+route.register('segbdato',SegBdatoViewSet)
+route.register('segprint',SegPrintViewSet)
+route.register('segauta',SegAutaViewSet)
+route.register('seggere',SegGereViewSet)
+route.register('segdept',SegDeptViewSet)
+route.register ('seguser',SegUserViewSet)
+route.register('segusco',SegUscoViewSet)
+route.register('segproc',SegProcViewSet)
+route.register('segpara',SegParaViewSet)
+route.register('segaperf',SegAperfViewSet)
+route.register('segtaut',SegTautViewSet)
+route.register('segprog',SegProgViewSet)
+route.register('segusat',SegUsatViewSet)
+route.register('segjera',SegJeraViewSet)
+route.register('segagen',SegAgenViewSet)
+route.register('segcapl',SegCaAplViewSet)
+route.register('segauco',SegAucoViewSet)
+route.register('segpape',SegPapeViewSet)
+route.register('segautp',SegAutpViewSet)
+route.register('segpprint',SegPprintViewSet)
+route.register('segaudd',SegAuddViewSet)
+route.register('segaupe',SegAupeViewSet)
+route.register('seghusu',SegHusuViewSet)
+route.register('segspro',SegSproViewSet)
+route.register('segsppe',SegSppeViewSet)
+route.register('segausp',SegAuspViewSet)
+route.register('segdeta',SegDetaViewSet)
+route.register('segaupk',SegAupkViewSet)
+route.register('segconm',SegConmViewSet)
+route.register('segmain',SegMainViewSet)
+route.register('segmaca',SegMacaViewSet)
+route.register('segaudc',SegAudcViewSet)
+route.register('segayuc',SegAyucViewSet)
+route.register('segayud',SegAyudViewSet)
+route.register('segaud1',SegAud1ViewSet)
+route.register('seggxbo',SegGxboViewSet)
+route.register('segucon',SegUconViewSet)
+route.register('segfiscal',SegFiscalViewSet)
+route.register('seglogin',SegLoginViewSet)
+route.register('syslic',SyslicViewSet)
+route.register('segrgla',SegRglaViewSet)
+route.register('segtcla',SegTclaViewSet)
+route.register('segcpas',SegCpasViewSet)
+route.register('seghpas',SegHpasViewSet)
+
+urlpatterns = [
+    path('seguser/login',api_view(['POST'])(login_view))
+]
+urlpatterns += route.urls
