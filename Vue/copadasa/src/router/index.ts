@@ -1,9 +1,12 @@
 import { createRouter,createWebHistory,RouteRecordRaw } from "vue-router";
-import PageLogin from '@/components/PageLogin.vue'
-import PrinPage from '@/components/PrinPage.vue'
-import CargCaMan from '@/views/CargCaMan.vue'
+import PageLogin from '@/components/PageLogin.vue';
+import PrinPage from '@/components/PrinPage.vue';
+import CargCaMan from '@/views/CargCaMan.vue';
 import CarNatur from "@/views/CarNatur.vue";
-import PcP from "@/views/PcP.vue"
+import PcP from "@/views/PcP.vue";
+import TarManejo from "@/views/TarManejo.vue";
+import TiTarifa from "@/views/TiTarifa.vue";
+import TarVue from "@/views/TarVue.vue";
 
 const routes:Array<RouteRecordRaw> = [
     {
@@ -35,12 +38,26 @@ const routes:Array<RouteRecordRaw> = [
         name:'PcP',
         component:PcP
     },
+    {
+        path:'/TarVue',
+        name:'TarVue',
+        component:TarVue
+    },
+    {
+        path:'/TarManejo',
+        name:'TarManejo',
+        component:TarManejo
+    },
+    {
+        path:'/TiTarifa',
+        name:'TiTarifa',
+        component:TiTarifa
+    }
             
         ]
     },
     
-
-
+    
 ]
 const router = createRouter({
     history:createWebHistory(process.env.BASE_URL),

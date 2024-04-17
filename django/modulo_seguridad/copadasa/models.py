@@ -223,6 +223,7 @@ class Caropera(models.Model):
         db_table = 'caropera'
 
 class Cartaralm(models.Model):
+    id = models.AutoField( primary_key=True, null=False)
     tarifa = models.CharField( null=True,max_length=2)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField(null=True)
@@ -269,6 +270,7 @@ class Cartari(models.Model):
 
 
 class Cartarman(models.Model):
+    id = models.AutoField( primary_key=True, null=False)
     tarifa = models.CharField( null=True,max_length=2)
     fecha_inicio = models.DateField()
     cargo = models.CharField( null=True,max_length=2)
@@ -290,6 +292,7 @@ class Cartarman(models.Model):
 
 
 class Cartarvue(models.Model):
+    id = models.AutoField( primary_key=True, default=0, null=False )
     aeronave = models.CharField( null=True,max_length=2)
     fecha_inicio = models.DateField()
     cargo = models.CharField( null=True,max_length=3)

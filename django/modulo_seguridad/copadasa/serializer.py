@@ -4,12 +4,12 @@ from .models import *
 class CaratenvueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Caratenvue
-        fieldss = '__all__'
+        fields = '__all__'
 
 class CaratvueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Caratvue
-        fieldss = '__all__'
+        fields = '__all__'
 
 class CarcmaniSerializer(serializers.ModelSerializer):
     class Meta:

@@ -20,6 +20,9 @@
         <li><router-link to="/CargCaMan" class="dropdown-item">Carga por manejo</router-link></li>
         <li><router-link to="/CarNatur" class="dropdown-item">Naturaleza</router-link></li>
         <li><router-link to="/PcP" class="dropdown-item">PcP</router-link></li>
+        <li><router-link to="/TarVue" class="dropdown-item">Tarifas de Vuelos</router-link></li>
+        <li><router-link to="/TiTarifa" class="dropdown-item">Tarifas</router-link></li>
+        <li><router-link to="/TarManejo" class="dropdown-item">Tarifa Manejo Carga</router-link></li>
         <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
       </ul>
     </div>

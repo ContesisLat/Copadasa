@@ -49,3 +49,46 @@ export interface Puertos{
     nombre_pais?:string
     nombre_ciudad?:string
 }
+
+export interface Cartarvue{
+    aeronave?:string
+    fecha_inicio?:string
+    fecha_final?:string
+    cargo?:string
+    costo_hora?:string
+    status?:string
+    nombre_taeronave?:string
+    nombre_cargo?:string
+}
+
+export interface Cartiaero{
+    aeronave?:string
+    descripcion?:string
+    status?:string
+}
+
+export interface Caratenvue{
+    cargo?:string
+    nombre?:string
+    status?:string 
+}
+
+export interface Cartarman{
+    tarifa?:string
+    fecha_inicio?:string
+    cargo?:string
+    fecha_final?:string
+    status?:string
+    valor?:string
+    aplica?:string
+    nom_tarifa?:string
+    nom_cargo?:string
+
+}
+
+export interface Cartitar
+{
+    tarifa?:string
+    nombre?:string
+    status?:string
+}
