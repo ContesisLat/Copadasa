@@ -87,6 +87,8 @@ import { Paises,Ciudades,Puertos } from '@/interface/interfaces';
 
 //-----------------------------------------------------------------
 const paises = ref<Array<Paises>>([]);
+console.log('Datos de Paises')
+
 const getPaises = () => {
   axios.get('http://127.0.0.1:8000/api2/paises/')
     .then(response => {
@@ -97,6 +99,7 @@ const getPaises = () => {
     });
 };
 //----------------------------------------------------------------
+
 const ciudades = ref<Array<Ciudades>>([])
 const getCiudades = (id_pais: any) => {
      axios.get(`http://127.0.0.1:8000/api2/paises/ciudad?id_pais=${id_pais}`)

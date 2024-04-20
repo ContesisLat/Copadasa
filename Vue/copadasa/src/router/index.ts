@@ -1,7 +1,7 @@
 import { createRouter,createWebHistory,RouteRecordRaw } from "vue-router";
 import PageLogin from '@/components/PageLogin.vue';
 import PrinPage from '@/components/PrinPage.vue';
-import CargCaMan from '@/views/CargCaMan.vue';
+import CarTarMan from '@/views/CarTarMan.vue';
 import CarNatur from "@/views/CarNatur.vue";
 import PcP from "@/views/PcP.vue";
 import TarManejo from "@/views/TarManejo.vue";
@@ -23,10 +23,10 @@ const routes:Array<RouteRecordRaw> = [
         name:'PrinPage',
         component: PrinPage,
         children:[
-            {
-        path:'/Cargcaman',
-        name:'Cargcaman',
-        component:CargCaMan,
+    {
+        path:'/Cartarman',
+        name:'Cartarman',
+        component:CarTarMan,
     },
     {
         path:'/Carnatur',
@@ -52,8 +52,12 @@ const routes:Array<RouteRecordRaw> = [
         path:'/TiTarifa',
         name:'TiTarifa',
         component:TiTarifa
+    },
+    {
+        path:'/Cargcaman',
+        name:'Cargcaman',
+        component:CarTarMan
     }
-            
         ]
     },
     

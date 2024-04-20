@@ -14,15 +14,17 @@
     </div>
     <div class="btn-group dropend">
       <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-        Programas Prueba
+        Parámetros
       </a>
       <ul class="dropdown-menu" >
-        <li><router-link to="/CargCaMan" class="dropdown-item">Carga por manejo</router-link></li>
-        <li><router-link to="/CarNatur" class="dropdown-item">Naturaleza</router-link></li>
-        <li><router-link to="/PcP" class="dropdown-item">PcP</router-link></li>
-        <li><router-link to="/TarVue" class="dropdown-item">Tarifas de Vuelos</router-link></li>
-        <li><router-link to="/TiTarifa" class="dropdown-item">Tarifas</router-link></li>
-        <li><router-link to="/TarManejo" class="dropdown-item">Tarifa Manejo Carga</router-link></li>
+        <li><router-link to="/PcP" class="dropdown-item">Países/Ciudades/Puertos</router-link></li>
+        <li><router-link to="/CarNatur" class="dropdown-item">Naturaleza de Carga</router-link></li><br>
+        <li><router-link to="/TiTarifa" class="dropdown-item">Definición de Tarifas</router-link></li>
+        <li><router-link to="/CarTarMan" class="dropdown-item">Tarifas por Manejo</router-link></li>
+        <li><router-link to="/TarMan" class="dropdown-item">Tarifas por Almacenaje</router-link></li>
+        <li><router-link to="/TarRef" class="dropdown-item">Tarifas Cuarto Frío</router-link></li>
+
+        <li><router-link to="/TarVue" class="dropdown-item">Tarifa Atención de Vuelos</router-link></li>
         <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
       </ul>
     </div>

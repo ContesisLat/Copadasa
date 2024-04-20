@@ -11,19 +11,6 @@
     hora_status?:string
 }
 
-export interface CargCaman{
-    cargo?:string,
-    nombre?:string,
-    creado_por?:string,
-    fecha_creado?:string,
-    hora_creado?:string
-    naturaleza?:string
-    status?:string,
-    modificado_por?:string,
-    fecha_status?:string,
-    hora_status?:string
-}
-
 export interface Paises{
     pais?:string
     nombre?:string
@@ -57,7 +44,6 @@ export interface Cartarvue{
     cargo?:string
     costo_hora?:string
     status?:string
-    nombre_taeronave?:string
     nombre_cargo?:string
 }
 
@@ -81,8 +67,7 @@ export interface Cartarman{
     status?:string
     valor?:string
     aplica?:string
-    nom_tarifa?:string
-    nom_cargo?:string
+    nom_aplica?:string
 
 }
 
@@ -91,4 +76,19 @@ export interface Cartitar
     tarifa?:string
     nombre?:string
     status?:string
+}
+
+export interface Cargcaman
+{
+    cargo?:string
+    nombre?:string
+    creado_por?:string
+    fecha_creado?:string
+    hora_creado?:string
+    naturaleza?:string
+    status?:string
+    modificado_por?:string
+    fecha_status?:string
+    hora_status?:string
+    nom_naturaleza?:string
 }

@@ -4,20 +4,25 @@
         <div class="container text-center">
         <div class="row">
             <div class="col d-flex flex-column justify-content-center align-items-center">
-                <h3><strong>TIPOS DE AERONAVES</strong></h3>
+                <h3><strong>Cargos por Manejo</strong></h3>
                 <div class="card overflow-scroll" style="width:800px; height: 150px;">
                     <table class="table table-hover table-striped table-sm">
                         <thead>
                             <tr>
-                                <th>Aeronave</th>
-                                <th>Descripcion</th>
+                                <th></th>
+                                <th>Cargo</th>
+                                <th>Descripción</th>
+                                <th>Naturaleza</th>
+                                <th>Descripción</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="elm in cartiaero" :key="elm.aeronave" @click="getTarifas(elm.aeronave)">
-                                <td>{{ elm.aeronave }}</td>
-                                <td>{{ elm.descripcion }}</td>
+                            <tr v-for="elm in cargcaman" :key="elm.cargo" @click="getVigencias('01', elm.cargo)">
+                                <td>{{ elm.cargo }}</td>
+                                <td>{{ elm.nombre }}</td>
+                                <td>{{ elm.naturaleza }}</td>
+                                <td>{{ elm.nom_naturaleza }}</td>
                                 <td>{{ elm.status }}</td>
                             </tr>
                         </tbody>
@@ -27,7 +32,7 @@
         </div>  
         <div class="row">
             <div class="col d-flex flex-column justify-content-center align-items-center">
-                <h3><strong>TARIFAS</strong></h3>
+                <h3><strong>Tarifas Por Cargos</strong></h3>
                 <div class="card overflow-scroll" style="width: 800px; height: 150px;">
                     <table class="table table-hover table-striped table-sm">
                         <thead>
@@ -36,17 +41,17 @@
                                 <th>Fecha Final</th>
                                 <th>Cargo</th>
                                 <th>Descripcion</th>
-                                <th>Costo Hora</th>
+                                <th>Valor</th>
+                                <th>Aplica</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="elm in cartarvue" :key="elm.aeronave" >
+                            <tr v-for="elm in cartarman" :key="elm.cargo" >
                                 <td>{{ elm.fecha_inicio }}</td>
                                 <td>{{ elm.fecha_final }}</td>
-                                <td>{{ elm.cargo }}</td>
-                                <td>{{ elm.nombre_cargo }}</td>
-                                <td>{{ elm.costo_hora }}</td>
+                                <td>{{ elm.valor }}</td>
+                                <td>{{ elm.nom_aplica }}</td>
                                 <td>{{ elm.status }}</td>
                             </tr>
                         </tbody>
@@ -62,35 +67,37 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { Cartiaero, Cartarvue } from '@/interface/interfaces';
+import { Cargcaman, Cartarman } from '@/interface/interfaces';
 
 //-----------------------------------------------------------------
-const cartiaero = ref<Array<Cartiaero>>([]);
-const getAeronaves = () => {
-  axios.get('http://127.0.0.1:8000/api2/cartiaero/')
+const cargcaman = ref<Array<Cargcaman>>([]);
+const getCargos = () => {
+  axios.get(`http://127.0.0.1:8000/api2/cargcaman`)
     .then(response => {
-      cartiaero.value = response.data;
+      cargcaman.value = response.data;
+
+      //console.log(cargcaman.value[0].naturaleza)
     })
     .catch(error => {
-      console.error('Error al Cargar Aeronaves:', error);
+      console.error('Error al Accesar los Cargos:', error);
     });
 };
 //----------------------------------------------------------------
-const cartarvue = ref<Array<Cartarvue>>([])
-const getTarifas = (id_aeronave: any) => {
-     axios.get(`http://127.0.0.1:8000/api2/cartiaero/cartarvue?id_aeronave=${id_aeronave}`)
+const cartarman = ref<Array<Cartarman>>([])
+
+const getVigencias = (id_tarifa:any, id_cargo:any) => {
+     axios.get(`http://127.0.0.1:8000/api2/cargcaman/cartarman?tarifa=${id_tarifa}&_cargo=${id_cargo}`)
     .then(response => {
-        cartarvue.value = response.data;
+        cartarman.value = response.data;
     })
     .catch(error => {
         console.error('Error al cargar los Cargos:', error);
     });
   };
-
 //----------------------------------------------------------------
 
 onMounted(() => {
-  getAeronaves();
+  getCargos();
 });
 </script>
 

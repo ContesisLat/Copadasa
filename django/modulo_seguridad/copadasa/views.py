@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Ciudades, Paises,Puertos, Cartiaero, Caratenvue, \
-                    Cartarvue, Cartitar, Cargcaman, Cartarman
+from .models import *
 
 def ciudades_por_pais(request):
     id_pais = request.GET.get('id_pais')  # Obtener el valor del parámetro id_pais de la URL
@@ -38,12 +37,12 @@ def tarifas_aeronaves(request):
     id_aeronave = request.GET.get('id_aeronave')  # Obtener el valor del parámetro id_aeronave de la URL
     try:
         # Obtener el país con el ID proporcionado
-        nombre_aero = Cartiaero.objects.get(aeronave=id_aeronave).descripcion
-        # Obtener todas las ciudades asociadas al país
-        cargos = Cartarvue.objects.get(aeronave=id_aeronave).values()
+        # Obtener todas las ciudades asociadas al país 
+        
+        cargos = Cartarvue.objects.filter(aeronave=id_aeronave).values()
         for cargo in cargos:
-            nombre_cargo = Caratenvue.objects.get(cargo=cargos.cargo).nombre
-            cargo['nombre_taeronave'] = nombre_aero
+            id_cargo = cargo['cargo']
+            nombre_cargo = Caratenvue.objects.get(cargo=id_cargo).nombre
             cargo['nombre_cargo'] = nombre_cargo
         cargos_list = list(cargos) 
         # Devolver los datos como JSON
@@ -51,22 +50,37 @@ def tarifas_aeronaves(request):
     except Cartarvue.DoesNotExist:
         # Manejar el caso en el que el país no exista
         return JsonResponse({'error': 'No Existen tarifas'}, status=404)
-    
-def tarifa_manejo(request):
-    id_tarifa = request.GET.get('id_tarifa')  # Obtener el valor del parámetro id_pais de la URL
-    id_cargo = request.Get.get('id_cargo')
+
+def cargos_manejo(request): 
+    if request.method == "GET":
+        cargos = Cargcaman.objects.all().values()
+        try:      
+            for cargo in cargos:
+                if cargo['naturaleza'] != None:   
+                    id_naturaleza = cargo['naturaleza']
+                    nom_naturaleza = Carnatur.objects.get(naturaleza=id_naturaleza).nombre
+                    cargo['nom_naturaleza'] = nom_naturaleza
+            cargos_list = list(cargos)
+            return JsonResponse(cargos_list, safe=False)
+        
+        except Cargcaman.DoesNotExist:
+            return JsonResponse({'error': 'No se encontraron Cargos de Mantenimiento'}, status=404)
+
+def tarifas_manejo(request):
+    id_cargo = request.GET.get('id_cargo')  # Obtener el valor del parámetro id_pais de la URL  
     try:
         # Obtener el país con el ID proporcionado
-        nom_tarifa = Cartitar.objects.get(tarifa=id_tarifa).nombre
-        nom_cargo = Cargcaman.objects.get(cargo=id_cargo).nombre
         # Obtener todas las ciudades asociadas al país
-        tarifas = Cartarman.objects.filter(tarifa=id_tarifa).values()
-        for tarifa in tarifas:
-            tarifa['nombre_tarifa'] = nom_tarifa
-            tarifa['nombre_cargo'] = nom_cargo
-        tarifa_list = list(tarifas) 
+        cargos = Cartarman.objects.filter(tarifa='01', cargo=id_cargo ) 
+        for cargo in cargos:
+            if cargo['aplica'] == 'P':
+                nom_aplica = 'Peso'
+            else:
+                nom_aplica ='Volumen'    
+        cargo_list = list(cargos)
+
         # Devolver los datos como JSON
-        return JsonResponse(tarifa_list, safe=False)
-    except Paises.DoesNotExist:
+        return JsonResponse(cargo_list, safe=False)
+    except Cartarman.DoesNotExist:
         # Manejar el caso en el que el país no exista
         return JsonResponse({'error': 'No se encontraron Tarifas'}, status=404)

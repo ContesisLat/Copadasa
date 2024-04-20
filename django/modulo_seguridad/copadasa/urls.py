@@ -36,7 +36,8 @@ route.register('ubicacion',UbicacionViewSet)
 urlpatterns = [
     path('paises/ciudad', ciudades_por_pais, name='ciudades_por_pais'),
     path('paises/puertos', puertos_por_pais, name='puertos_por_pais'),
-    path('tarifas/aronaves', tarifas_aeronaves, name='tarifas_aeronaves'),
-    path('tarifa/manejo', tarifa_manejo, name='tarifa_manejo')
+    path('cartiaero/cartarvue', tarifas_aeronaves, name='tarifas_aeronaves'),
+    path('cargcaman/', cargos_manejo, name='cargos_manejo'),
+    path('cargcaman/cartarman', tarifas_manejo, name='tarifas_manejo')
 ]
 urlpatterns += route.urls
