@@ -61,13 +61,14 @@ export interface Caratenvue{
 
 export interface Cartarman{
     tarifa?:string
-    fecha_inicio?:string
     cargo?:string
+    fecha_inicio?:string
     fecha_final?:string
-    status?:string
     valor?:string
     aplica?:string
     nom_aplica?:string
+    status?:string
+    nom_status?:string
 
 }
 
@@ -90,5 +91,6 @@ export interface Cargcaman
     modificado_por?:string
     fecha_status?:string
     hora_status?:string
+    nom_status?:string
     nom_naturaleza?:string
 }

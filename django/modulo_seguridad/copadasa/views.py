@@ -58,6 +58,11 @@ def cargos_manejo(request):
             for cargo in cargos:
                 if cargo['naturaleza'] != None:   
                     id_naturaleza = cargo['naturaleza']
+                    if cargo['status'] == 'A':
+                        cargo['nom_status'] = "Activo"
+                    else:
+                        cargo['nom_status'] = "Inactivo"
+                    
                     nom_naturaleza = Carnatur.objects.get(naturaleza=id_naturaleza).nombre
                     cargo['nom_naturaleza'] = nom_naturaleza
             cargos_list = list(cargos)
@@ -67,16 +72,23 @@ def cargos_manejo(request):
             return JsonResponse({'error': 'No se encontraron Cargos de Mantenimiento'}, status=404)
 
 def tarifas_manejo(request):
-    id_cargo = request.GET.get('id_cargo')  # Obtener el valor del parámetro id_pais de la URL  
+    id_cargo = request.GET.get('id_cargo')  # Obtener el valor del parámetro id_pais de la URL
+    id_tarifa = request.GET.get('id_tarifa')
     try:
         # Obtener el país con el ID proporcionado
         # Obtener todas las ciudades asociadas al país
-        cargos = Cartarman.objects.filter(tarifa='01', cargo=id_cargo ) 
+        cargos = Cartarman.objects.filter(tarifa=id_tarifa, cargo=id_cargo).values()
         for cargo in cargos:
-            if cargo['aplica'] == 'P':
-                nom_aplica = 'Peso'
+            if cargo['status'] == 'A':
+                cargo['nom_status'] = 'Activo'
             else:
-                nom_aplica ='Volumen'    
+                cargo['nom_status'] = 'Inactivo'
+
+            if cargo['aplica'] == 'P':
+                cargo['nom_aplica'] = 'Peso'
+            else:
+                cargo['nom_aplica'] ='Volumen'
+                    
         cargo_list = list(cargos)
 
         # Devolver los datos como JSON

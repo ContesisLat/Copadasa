@@ -9,7 +9,6 @@
                     <table class="table table-hover table-striped table-sm">
                         <thead>
                             <tr>
-                                <th></th>
                                 <th>Cargo</th>
                                 <th>Descripción</th>
                                 <th>Naturaleza</th>
@@ -23,7 +22,7 @@
                                 <td>{{ elm.nombre }}</td>
                                 <td>{{ elm.naturaleza }}</td>
                                 <td>{{ elm.nom_naturaleza }}</td>
-                                <td>{{ elm.status }}</td>
+                                <td>{{ elm.nom_status }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -39,8 +38,6 @@
                             <tr>
                                 <th>Fecha Inicio</th>
                                 <th>Fecha Final</th>
-                                <th>Cargo</th>
-                                <th>Descripcion</th>
                                 <th>Valor</th>
                                 <th>Aplica</th>
                                 <th>Estado</th>
@@ -52,7 +49,7 @@
                                 <td>{{ elm.fecha_final }}</td>
                                 <td>{{ elm.valor }}</td>
                                 <td>{{ elm.nom_aplica }}</td>
-                                <td>{{ elm.status }}</td>
+                                <td>{{ elm.nom_status }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -86,7 +83,7 @@ const getCargos = () => {
 const cartarman = ref<Array<Cartarman>>([])
 
 const getVigencias = (id_tarifa:any, id_cargo:any) => {
-     axios.get(`http://127.0.0.1:8000/api2/cargcaman/cartarman?tarifa=${id_tarifa}&_cargo=${id_cargo}`)
+     axios.get(`http://127.0.0.1:8000/api2/cargcaman/cartarman?id_tarifa=${id_tarifa}&id_cargo=${id_cargo}`)
     .then(response => {
         cartarman.value = response.data;
     })
