@@ -5,8 +5,8 @@
       <div class="row">
         <div class="col d-flex flex-column justify-content-center align-items-center">
           <h3><strong>Naturaleza</strong></h3>
-          <div class="card overflow-scroll" style="width: max-content; height: 72%;">
-            <table class="table table-hover table-striped table-sm">
+          <div class="card overflow-scroll" style="width: max-content; height: 50%;">
+            <table class="table table-hover table-sm">
               <thead>
                 <tr>
                     <th>Naturaleza</th>
@@ -78,8 +78,8 @@ body{
    top: 50%;
    left: 50%;
    transform: translate(-50%, -50%);
-   width: 70%;
-   height: 70%;
+   width: 80%;
+   height: 75%;
    display: flex;
    border-radius: 10px;
    justify-content: center;
@@ -89,6 +89,7 @@ body{
    font-family: Trebuchet MS;
    color: white;
    background: linear-gradient(to right,#ccd0cf,#9ba8ab,#4a5c6a);
+   overflow: hidden;
 }
 
   

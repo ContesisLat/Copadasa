@@ -6,7 +6,7 @@
             <div class="col d-flex flex-column justify-content-center align-items-center">
                 <h3><strong>TIPOS DE AERONAVES</strong></h3>
                 <div class="card overflow-scroll" style="width:800px; height: 150px;">
-                    <table class="table table-hover table-striped table-sm">
+                    <table class="table table-hover table-sm">
                         <thead>
                             <tr>
                                 <th>Aeronave</th>
@@ -29,7 +29,7 @@
             <div class="col d-flex flex-column justify-content-center align-items-center">
                 <h3><strong>TARIFAS</strong></h3>
                 <div class="card overflow-scroll" style="width: 800px; height: 150px;">
-                    <table class="table table-hover table-striped table-sm">
+                    <table class="table table-hover table-sm">
                         <thead>
                             <tr>
                                 <th>Fecha Inicio</th>
@@ -106,8 +106,8 @@ body{
    top: 50%;
    left: 50%;
    transform: translate(-50%, -50%);
-   width: 70%;
-   height: 70%;
+   width: 80%;
+   height: 75%;
    display: flex;
    border-radius: 10px;
    justify-content: center;
@@ -116,7 +116,8 @@ body{
    text-align: center;
    font-family: Trebuchet MS;
    color: white;
-   background:#24292F; 
+   background: linear-gradient(to right,#ccd0cf,#9ba8ab,#4a5c6a);
+   overflow: hidden;
 }
 
 </style>
