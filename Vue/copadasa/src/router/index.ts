@@ -7,6 +7,9 @@ import PcP from "@/views/PcP.vue";
 import TarManejo from "@/views/TarManejo.vue";
 import TiTarifa from "@/views/TiTarifa.vue";
 import TarVue from "@/views/TarVue.vue";
+import CarAtenVue from "@/views/CarAtenVue.vue";
+import CarTarAlm from "@/views/CarTarAlm.vue";
+import CarTari from "@/views/CarTari.vue"
 
 const routes:Array<RouteRecordRaw> = [
     {
@@ -57,11 +60,25 @@ const routes:Array<RouteRecordRaw> = [
         path:'/Cargcaman',
         name:'Cargcaman',
         component:CarTarMan
+    },
+    {
+        path:'/Caratenvue',
+        name:'Caratenvue',
+        component:CarAtenVue
+    },
+    {
+        path:'/CarTarAlm',
+        name:'Cartaralm',
+        component:CarTarAlm
+    },
+    {
+        path:'/CarTari',
+        name:'Cartari',
+        component:CarTari
     }
         ]
     },
-    
-    
+      
 ]
 const router = createRouter({
     history:createWebHistory(process.env.BASE_URL),

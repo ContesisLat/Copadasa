@@ -9,6 +9,7 @@
                     <table class="table table-hover  table-sm">
                         <thead>
                             <tr>
+                                <th>País</th>
                                 <th>Nombre</th>
                                 <th>Name</th>
                                 <th>Iso</th>
@@ -17,6 +18,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="elm in paises" :key="elm.pais" @click="getCiudades(elm.pais)">
+                                <td>{{ elm.pais }}</td>
                                 <td>{{ elm.nombre }}</td>
                                 <td>{{ elm.name }}</td>
                                 <td>{{ elm.iso2 }}</td>
@@ -34,14 +36,14 @@
                     <table class="table table-hover  table-sm">
                         <thead>
                             <tr>
+                                <th>Ciudad</th>
                                 <th>Nombre</th>
-                                <th>Pais</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="elm in ciudades" :key="elm.ciudad" @click="getPuertos(elm.ciudad,elm.pais)">
-                                <td>{{ elm.nombre }}</td>
-                                <td>{{ elm.nombre_pais}}</td>
+                                <td>{{ elm.ciudad }}</td>
+                                <td>{{ elm.nombre}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -126,6 +128,8 @@ const getPuertos = (id_ciudad:any,id_pais:any) => {
 //-----------------------------------------------------------------
 onMounted(() => {
   getPaises();
+  getCiudades("1");
+  getPuertos("1", "1")
 });
 </script>
 

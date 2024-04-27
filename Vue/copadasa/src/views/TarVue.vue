@@ -18,7 +18,7 @@
                             <tr v-for="elm in cartiaero" :key="elm.aeronave" @click="getTarifas(elm.aeronave)">
                                 <td>{{ elm.aeronave }}</td>
                                 <td>{{ elm.descripcion }}</td>
-                                <td>{{ elm.status }}</td>
+                                <td>{{ elm.nom_status }}</td>
                             </tr>
                         </tbody>
                     </table>

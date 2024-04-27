@@ -11,8 +11,6 @@
                             <tr>
                                 <th>Cargo</th>
                                 <th>Descripción</th>
-                                <th>Naturaleza</th>
-                                <th>Descripción</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
@@ -20,8 +18,6 @@
                             <tr v-for="elm in cargcaman" :key="elm.cargo" @click="getVigencias('01', elm.cargo)">
                                 <td>{{ elm.cargo }}</td>
                                 <td>{{ elm.nombre }}</td>
-                                <td>{{ elm.naturaleza }}</td>
-                                <td>{{ elm.nom_naturaleza }}</td>
                                 <td>{{ elm.nom_status }}</td>
                             </tr>
                         </tbody>
@@ -65,6 +61,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { Cargcaman, Cartarman } from '@/interface/interfaces';
+import { stringifyQuery } from 'vue-router';
 
 //-----------------------------------------------------------------
 const cargcaman = ref<Array<Cargcaman>>([]);
@@ -72,7 +69,7 @@ const getCargos = () => {
   axios.get(`http://127.0.0.1:8000/api2/cargcaman`)
     .then(response => {
       cargcaman.value = response.data;
-
+      
       //console.log(cargcaman.value[0].naturaleza)
     })
     .catch(error => {
@@ -95,6 +92,7 @@ const getVigencias = (id_tarifa:any, id_cargo:any) => {
 
 onMounted(() => {
   getCargos();
+  getVigencias("02","01")
 });
 </script>
 

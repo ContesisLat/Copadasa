@@ -11,6 +11,8 @@
                 <tr>
                     <th>Naturaleza</th>
                     <th>Nombre</th>
+                    <th>Cargo</th>
+                    <th>Descripcion</th>
                     <th>Status</th>
                 </tr>
               </thead>
@@ -18,7 +20,9 @@
                 <tr v-for="elm in carga" :key="elm.naturaleza">
                     <td>{{ elm.naturaleza }}</td>
                     <td>{{ elm.nombre }}</td>
-                    <td>{{ elm.status }}</td>
+                    <td>{{ elm.cargo }}</td>
+                    <td>{{ elm.nom_cargo }}</td>
+                    <td>{{ elm.nom_status }}</td>
                 </tr>
               </tbody>
             </table>

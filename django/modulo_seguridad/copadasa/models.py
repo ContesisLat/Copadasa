@@ -162,7 +162,6 @@ class Cargcaman(models.Model):
     creado_por = models.CharField(null=True,max_length=10)
     fecha_creado = models.DateField()
     hora_creado = models.TimeField()
-    naturaleza = models.CharField(null=True,max_length=3)
     status = models.CharField(null=True,max_length=1)
     modificado_por = models.CharField(null=True,max_length=10)
     fecha_status = models.DateField(null=True)
@@ -194,6 +193,7 @@ class Carinent(models.Model):
 class Carnatur(models.Model):
     naturaleza = models.CharField(primary_key=True,max_length=3)
     nombre = models.CharField(null=True,max_length=50)
+    cargo = models.CharField(null=True, max_length=3)
     creado_por = models.CharField(null=True,max_length=10)
     fecha_creado = models.DateField()
     hora_creado = models.TimeField()
@@ -247,6 +247,7 @@ class Cartaralm(models.Model):
 
 
 class Cartari(models.Model):
+    id = models.AutoField(primary_key=True, null=False)
     tarifa = models.CharField( null=True,max_length=2)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField( null=True)

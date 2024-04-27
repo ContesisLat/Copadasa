@@ -21,9 +21,10 @@
         <li><router-link to="/CarNatur" class="dropdown-item">Naturaleza de Carga</router-link></li><br>
         <li><router-link to="/TiTarifa" class="dropdown-item">Definición de Tarifas</router-link></li>
         <li><router-link to="/CarTarMan" class="dropdown-item">Tarifas por Manejo</router-link></li>
-        <li><router-link to="/TarMan" class="dropdown-item">Tarifas por Almacenaje</router-link></li>
-        <li><router-link to="/TarRef" class="dropdown-item">Tarifas Cuarto Frío</router-link></li>
+        <li><router-link to="/CarTarAlm" class="dropdown-item">Tarifas por Almacenaje</router-link></li>
+        <li><router-link to="/CarTari" class="dropdown-item">Tarifas Refrigeración</router-link></li><br>
 
+        <li><router-link to="/CarAtenVue" class="dropdown-item">Cargos por Atención de Vuelos</router-link></li>
         <li><router-link to="/TarVue" class="dropdown-item">Tarifa Atención de Vuelos</router-link></li>
         <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
       </ul>
