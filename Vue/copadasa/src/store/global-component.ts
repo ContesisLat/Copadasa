@@ -10,9 +10,9 @@ import PcP from '@/views/PcP.vue';
 import TarManejo from '@/views/TarManejo.vue';
 import TarVue from '@/views/TarVue.vue';
 import TiTarifa from '@/views/TiTarifa.vue';
-// Importa todos los demás componentes que desees hacer globales
+// Importar todos los componentes globales
 
-// Define un objeto que contenga todos los componentes globales
+// objeto que contiene todos los componentes globales
 const globalComponents: Record<string, Component> = {
   CarNatur,
   CargCaMan,
