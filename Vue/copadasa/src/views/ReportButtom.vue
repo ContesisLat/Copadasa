@@ -51,7 +51,7 @@ svg{
 .ReportPage{
     min-height: 250px;
     width: 550px;
-    background-color: #24292F;
+    background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
     position: absolute;
     top: 50%;
     left: 50%;

@@ -17,15 +17,15 @@
         Parámetros
       </a>
       <ul class="dropdown-menu" >
-        <li><router-link to="/PcP" class="dropdown-item">Países/Ciudades/Puertos</router-link></li>
-        <li><router-link to="/CarNatur" class="dropdown-item">Naturaleza de Carga</router-link></li><br>
-        <li><router-link to="/TiTarifa" class="dropdown-item">Definición de Tarifas</router-link></li>
-        <li><router-link to="/CarTarMan" class="dropdown-item">Tarifas por Manejo</router-link></li>
-        <li><router-link to="/CarTarAlm" class="dropdown-item">Tarifas por Almacenaje</router-link></li>
-        <li><router-link to="/CarTari" class="dropdown-item">Tarifas Refrigeración</router-link></li><br>
+        <li @click="store.openPopup('PcP')"><a class="dropdown-item">Países/Ciudades/Puertos</a></li>
+        <li @click="store.openPopup('CarNatur')"><a class="dropdown-item">Naturaleza de Carga</a></li><br>
+        <li @click="store.openPopup('TiTarifa')"><a class="dropdown-item">Definición de Tarifas</a></li>
+        <li @click="store.openPopup('CarTarMan')"><a class="dropdown-item">Tarifas por Manejo</a></li>
+        <li @click="store.openPopup('CarTarAlm')"><a class="dropdown-item">Tarifas por Almacenaje</a></li>
+        <li @click="store.openPopup('CarTari')"><a class="dropdown-item">Tarifas Refrigeración</a></li><br>
 
-        <li><router-link to="/CarAtenVue" class="dropdown-item">Cargos por Atención de Vuelos</router-link></li>
-        <li><router-link to="/TarVue" class="dropdown-item">Tarifa Atención de Vuelos</router-link></li>
+        <li @click="store.openPopup('CarAtenVue')"><a class="dropdown-item">Cargos por Atención de Vuelos</a></li>
+        <li @click="store.openPopup('TarVue')"><a class="dropdown-item">Tarifa Atención de Vuelos</a></li>
         <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
       </ul>
     </div>
@@ -34,6 +34,9 @@
 </template>
 
 <script lang="ts" setup>
+import { usePopupStore } from '@/store/PopupStore';
+
+const store = usePopupStore()
 </script>
 
 <style scoped>
