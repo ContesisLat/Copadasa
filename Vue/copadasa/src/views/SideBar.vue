@@ -16,7 +16,7 @@
       <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" href="#" aria-expanded="false">
         Parámetros
       </a>
-      <ul class="dropdown-menu" >
+      <ul class="dropdown-menu" style="cursor: pointer;">
         <li @click="store.openPopup('PcP')"><a class="dropdown-item">Países/Ciudades/Puertos</a></li>
         <li @click="store.openPopup('CarNatur')"><a class="dropdown-item">Naturaleza de Carga</a></li><br>
         <li @click="store.openPopup('TiTarifa')"><a class="dropdown-item">Definición de Tarifas</a></li>

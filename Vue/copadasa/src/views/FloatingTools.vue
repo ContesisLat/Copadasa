@@ -100,7 +100,7 @@ function updatePropsValue(newValue:boolean){
     position: relative;
     height: 50px;
     width: 50px;
-    background-color:darkblue;
+    background-color:#001982;
     border-radius: 50%;
     z-index: 2;
 }

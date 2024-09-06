@@ -3,6 +3,7 @@ from django.urls import path
 from rest_framework import routers
 from .viewsets import *
 from .views import *
+from .crud import *
 
 route = routers.SimpleRouter()
 route.register('caratenvue',CaratenvueViewSet)
@@ -42,6 +43,9 @@ urlpatterns = [
     path('cargcaman/', cargos_manejo, name='cargos_manejo'),
     path('cargcaman/cartarman', tarifas_manejo, name='tarifas_manejo'),
     path('cartaralm/', tarifas_almacenaje, name='tarifas_almacenaje'),
-    path('cartari/', tarifas_frio, name='tarifas_frio')
+    path('cartari/', tarifas_frio, name='tarifas_frio'),
+    path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
+    path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro
+    path('delete/', DeleteView.as_view(), name='delete'),  # Ruta para eliminar un registro
 ]
 urlpatterns += route.urls

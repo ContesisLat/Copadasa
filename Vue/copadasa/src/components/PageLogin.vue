@@ -5,8 +5,8 @@
       <h2><b>Contesis <br>Latinoamerica</b></h2><br>
 
       <div class="inputbox">
-        <input v-model="username" type="text" required id="User">
-        <label for="email"><b>Usuario</b></label>
+        <input v-model="username" type="text" required id="User" autocomplete="off">
+        <label for="User"><b>Usuario</b></label>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person"
           viewBox="0 0 16 16">
           <path
@@ -16,7 +16,7 @@
 
       <div class="inputbox">
         <input v-model="password" type="password" required id="password">
-        <label for="password"><B>Password</B></label>
+        <label for="password"><B>Contraseña</B></label>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock"
           viewBox="0 0 16 16">
           <path
@@ -53,10 +53,13 @@
 import { onMounted, ref } from 'vue';
 import LoginService from '@/services/LoginService';
 import { useRouter } from 'vue-router';
+import { userGlobalStore } from '@/store/userGlobal';
+
+let gUser = userGlobalStore()
 
 const username = ref<string>('');
 const password = ref<string>('');
-let loading = ref('Log in')
+let loading = ref('Acceso')
 const router = useRouter();
 const openA = ref(false)
 const openL = ref(false)
@@ -78,10 +81,11 @@ const validation = async (): Promise<void> => {
     // Validación
     if (!!user.value && user.value.message === 'Autenticacion exitosa') {
       router.push('/PrinPage');
+      gUser.setUser(username.value)
       console.log('Credenciales válidas');
     } else {
       openL.value = !openL.value
-      loading.value='Log in'
+      loading.value='Acceso'
       if (openA.value == false) {
         openA.value = !openA.value
       }

@@ -13,10 +13,10 @@
         </div>
         <div class="mb-3">
             <label for="formFile" class="form-label">Agregar Archivo</label>
-            <input class="form-control" type="file" id="formFile" style="background-color: transparent; color: white;">
+            <input class="form-control" type="file" id="formFile" style="background-color: transparent; color: black;">
         </div>
         <hr>
-        <div class="SuccessButoms"><button @click="handleClick">cancelar</button><button @click="handleClick" style="background-color:dodgerblue">enviar</button></div>
+        <div class="SuccessButoms"><button @click="handleClick">cancelar</button><button @click="handleClick" style="background-color:#001982">enviar</button></div>
 
     </div>
 </template>
@@ -51,7 +51,7 @@ svg{
 .ReportPage{
     min-height: 250px;
     width: 550px;
-    background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
+    background: whitesmoke;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -64,7 +64,7 @@ svg{
     flex-direction: column;
     gap: 15px;
     font-family: Trebuchet MS;
-    color: white;
+    color: black;
     padding: 15px;
     z-index: 1060;
 }
@@ -86,7 +86,7 @@ svg{
 .SuccessButoms button{
     border: none;
     border-radius: 4px;
-    background-color: gray;
+    background-color: #24292F;
     color: white;
     font-family: Trebuchet MS;
     width: 90px;
