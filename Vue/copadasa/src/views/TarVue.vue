@@ -4,6 +4,23 @@
         <div class="Card">
             <section class="layout">
                 <div class="header">
+                    <div class="btn-search">
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg></span>
+                        <input type="search" id="search" placeholder="Buscar"
+                            style="background-color: transparent; border: none; outline: none; color: white;"
+                            autocomplete="off" v-model="search">
+                        <select
+                            style="background-color: transparent; border: none; outline: none; color: black;"
+                            v-model="options">
+                            <option disabled value="">Select</option>
+                            <option>Aeronaves</option>
+                            <option>Tarifas</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="container">
                     <div class="row">
@@ -19,11 +36,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="elm in cartiaero" :key="elm.aeronave"
+                                        <tr v-for="elm in filteredCarga1" :key="elm.aeronave"
                                             @click="getTarifas(elm.aeronave)">
                                             <td>{{ elm.aeronave }}</td>
                                             <td>{{ elm.descripcion }}</td>
-                                            <td>{{ elm.nom_status }}</td>
+                                            <td>{{ elm.status }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -46,13 +63,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="elm in cartarvue" :key="elm.aeronave">
+                                        <tr v-for="elm in filteredCarga2" :key="elm.aeronave">
                                             <td>{{ elm.fecha_inicio }}</td>
                                             <td>{{ elm.fecha_final }}</td>
                                             <td>{{ elm.cargo }}</td>
                                             <td>{{ elm.nombre_cargo }}</td>
                                             <td>{{ elm.costo_hora }}</td>
-                                            <td>{{ elm.status }}</td>
+                                            <td>{{ elm.nom_status }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -66,16 +83,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed } from 'vue';
 import axios from 'axios';
 import { Cartiaero, Cartarvue } from '@/interface/interfaces';
-
+const search = ref('')
+const options = ref('') 
 //-----------------------------------------------------------------
 const cartiaero = ref<Array<Cartiaero>>([]);
 const getAeronaves = () => {
     axios.get('http://127.0.0.1:8000/api2/cartiaero/')
         .then(response => {
-            cartiaero.value = response.data;
+            cartiaero.value = response.data.map((item: Cartiaero) => {
+                return {
+                    ...item,
+                    status: item.status === 'A' ? 'Activo' : 'Inactivo'
+                };
+            });
         })
         .catch(error => {
             console.error('Error al Cargar Aeronaves:', error);
@@ -92,6 +115,51 @@ const getTarifas = (id_aeronave: any) => {
             console.error('Error al cargar los Cargos:', error);
         });
 };
+
+//----------------------------------------------------------------
+
+// Filtrar los registros que coincidan con el valor de búsqueda en cualquiera de los campos segun la tabla------------------------------------------------
+const filteredCarga1 = computed(() => {
+    if (search.value === '') {
+        // Si no hay nada en la búsqueda, retornar todos los registros
+        return cartiaero.value;
+    } else if (options.value == 'Aeronaves') {
+        // Convertir el término de búsqueda a minúsculas para hacer la búsqueda insensible a mayúsculas
+        const searchTerm = search.value.toLowerCase();
+        // Filtrar los registros que coincidan con el valor de búsqueda en cualquiera de los campos
+        return cartiaero.value.filter(elm => {
+            return (
+                elm.aeronave?.toLowerCase().includes(searchTerm) ||
+                elm.descripcion?.toLowerCase().includes(searchTerm) ||
+                elm.status?.toLowerCase().includes(searchTerm) 
+            );
+        });
+    }else{
+        return cartiaero.value
+    }
+});
+//----------------------------------------------------------------
+const filteredCarga2 = computed(() => {
+    if (search.value === '') {
+        return cartarvue.value;
+
+    } else if (options.value == 'Tarifas') {
+        const searchTerm = search.value.toLowerCase();
+
+        return cartarvue.value.filter(elm => {
+            return (
+                elm.fecha_inicio?.toLowerCase().includes(searchTerm) ||
+                elm.fecha_final?.toLowerCase().includes(searchTerm) ||
+                elm.cargo?.toLowerCase().includes(searchTerm) ||
+                elm.nombre_cargo?.toLowerCase().includes(searchTerm) ||
+                elm.costo_hora?.toLowerCase().includes(searchTerm) ||
+                elm.nom_status?.toLowerCase().includes(searchTerm) 
+            );
+        });
+    }else{
+        return cartarvue.value
+    }
+});
 
 //----------------------------------------------------------------
 
@@ -139,6 +207,9 @@ body {
 }
 
 .header {
+    display: flex;
+    justify-content: right;
+    align-items: right;
     grid-area: header;
 }
 
@@ -152,5 +223,22 @@ body {
     min-width: min-content;
     min-height: min-content;
     box-sizing: border-box;
+}
+
+.btn-search {
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding-left: 3px;
+    justify-content: space-between;
+    display: flex;
+    gap: 4px;
+    min-width: min-content;
+}
+
+.btn-search:focus {
+    outline: none;
 }
 </style>

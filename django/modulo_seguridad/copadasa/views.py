@@ -74,12 +74,6 @@ def tarifas_aeronaves(request):
     try:
         # Obtener el país con el ID proporcionado
         # Obtener todas las ciudades asociadas al país 
-        tipos = Cartiaero.objects.all().values()
-        for tipo in tipos:
-            if tipo['status'] == "A":
-                tipo['nom_status'] = "Activo"
-            else:
-                tipo['nom_status'] = "Inactivo"
 
         cargos = Cartarvue.objects.filter(aeronave=id_aeronave).values()
         for cargo in cargos:

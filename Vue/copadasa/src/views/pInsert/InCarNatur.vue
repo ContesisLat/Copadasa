@@ -40,8 +40,10 @@
 <script lang="ts" setup>
 import { defineProps,defineEmits,Ref,ref } from 'vue'
 import { useDateTimeStore } from '@/store/dateTimeStore';
+import { userGlobalStore } from '@/store/userGlobal';
 
 const dateTimeStore = useDateTimeStore();
+const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
 const naturaleza = ref<string>('')
@@ -68,7 +70,7 @@ const handleSubmit = async () =>{
             naturaleza:naturaleza.value,
             nombre:nombre.value,
             status:status.value,
-            creado_por:'informix',
+            creado_por:userStore.globalUser,
             fecha_creado:dateTimeStore.formattedDate,
             hora_creado:dateTimeStore.formattedTime
         }

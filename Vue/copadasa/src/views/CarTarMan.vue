@@ -20,7 +20,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="elm in cargcaman" :key="elm.cargo"
-                                            @click="getVigencias('01', elm.cargo)">
+                                            @click="getVigencias('02', elm.cargo)">
                                             <td>{{ elm.cargo }}</td>
                                             <td>{{ elm.nombre }}</td>
                                             <td>{{ elm.nom_status }}</td>

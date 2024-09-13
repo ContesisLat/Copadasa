@@ -5,18 +5,18 @@
         <hr>
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Correo Electronico</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" style="background-color: transparent; color: white;">
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" v-model="email" style="background-color: transparent; color: black;">
         </div>
         <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: vertical; background-color: transparent; color: white;"></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="mensaje" style="resize: vertical; background-color: transparent; color: black;"></textarea>
         </div>
         <div class="mb-3">
             <label for="formFile" class="form-label">Agregar Archivo</label>
-            <input class="form-control" type="file" id="formFile" style="background-color: transparent; color: black;">
+            <input class="form-control" type="file" id="formFile" @change="handleFileUpload" style="background-color: transparent; color: black;">
         </div>
         <hr>
-        <div class="SuccessButoms"><button @click="handleClick">cancelar</button><button @click="handleClick" style="background-color:#001982">enviar</button></div>
+        <div class="SuccessButoms"><button @click="handleClick">cancelar</button><button @click="enviarCorreo" style="background-color:#001982">enviar</button></div>
 
     </div>
 </template>
@@ -32,6 +32,50 @@ const emits = defineEmits(['updateProps'])
             emits("updateProps",!props.CardReport)
         }
 
+
+//envio de correo----------------------------------------------------
+const email = ref('');
+const mensaje = ref('');
+const archivo = ref<File | null>(null);
+
+// Función para capturar el archivo subido
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  archivo.value = target.files ? target.files[0] : null;
+};
+
+// Función para enviar el correo
+const enviarCorreo = async () => {
+  const formData = new FormData();
+  formData.append('correo_remitente', email.value);
+  formData.append('mensaje', mensaje.value);
+  
+  if (archivo.value) {
+    formData.append('archivo', archivo.value);
+  }
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/envio_correo', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      alert('Correo enviado correctamente');
+      email.value = '';
+      mensaje.value = '';
+      archivo.value = null;
+    } else {
+      alert(`Error: ${data.message}`);
+    }
+  } catch (error) {
+    alert('Ocurrió un error al enviar el correo');
+    console.error(error);
+  }
+};
+//-------------------------------------------------------------------
 </script>
 
 <style scoped>

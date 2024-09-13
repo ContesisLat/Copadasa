@@ -4,6 +4,15 @@
     <div class="Card">
       <section class="layout">
         <div class="header">
+          <div class="btn-search">
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                class="bi bi-search" viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+              </svg></span>
+            <input type="search" id="search" placeholder="Buscar"
+              style="background-color: transparent; border: none; outline: none; color: white;" autocomplete="off" v-model="search">
+          </div>
         </div>
         <div class="container">
           <div class="row">
@@ -21,7 +30,8 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="elm in carga" :key="elm.naturaleza" @click="FunClick(elm.naturaleza,elm.nombre,elm.status)">
+                    <tr v-for="elm in filteredCarga" :key="elm.naturaleza"
+                      @click="FunClick(elm.naturaleza, elm.nombre, elm.status)">
                       <td>{{ elm.naturaleza }}</td>
                       <td>{{ elm.nombre }}</td>
                       <td>{{ elm.cargo }}</td>
@@ -61,24 +71,26 @@
             </div>
           </div>
         </div>
-        <UpCarNatur v-if="btnUp" :natur="natur" :nombre="nombre" :status="status" :btnUp="btnUp" @updateProps="updatePropsValue"/>
-        <InCarNatur v-if="btnIn" :btnIn="btnIn" @insertProps="insertPropsValue"/>
-        <DlCarNatur v-if="btnDl" :btnDl="btnDl" :natur="natur" @deleteProps="deletePropsValue"/>
+        <UpCarNatur v-if="btnUp" :natur="natur" :nombre="nombre" :status="status" :btnUp="btnUp"
+          @updateProps="updatePropsValue" />
+        <InCarNatur v-if="btnIn" :btnIn="btnIn" @insertProps="insertPropsValue" />
+        <DlCarNatur v-if="btnDl" :btnDl="btnDl" :natur="natur" @deleteProps="deletePropsValue" />
       </section>
     </div>
   </body>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { Natur } from '@/interface/interfaces'
 import UpCarNatur from './pUpdate/UpCarNatur.vue';
-import InCarNatur from './pInsert/InCarNatur.vue'; 
+import InCarNatur from './pInsert/InCarNatur.vue';
 import DlCarNatur from './pDelete/DlCarNatur.vue';
 
 //carga de data-------------------------------------------------------
 const carga = ref<Array<Natur>>([]);
+const search = ref('')
 
 const getCarga = () => {
   axios.get('http://127.0.0.1:8000/api2/carnatur/')
@@ -89,62 +101,83 @@ const getCarga = () => {
       console.error('Error fetching cargos:', error);
     });
 };
+
+const filteredCarga = computed(() => {
+  if (search.value === '') {
+    // Si no hay nada en la búsqueda, retornar todos los registros
+    return carga.value;
+  } else {
+    // Convertir el término de búsqueda a minúsculas para hacer la búsqueda insensible a mayúsculas
+    const searchTerm = search.value.toLowerCase();
+
+    // Filtrar los registros que coincidan con el valor de búsqueda en cualquiera de los campos
+    return carga.value.filter(elm => {
+      return (
+        elm.naturaleza?.toLowerCase().includes(searchTerm) ||
+        elm.nombre?.toLowerCase().includes(searchTerm) ||
+        elm.cargo?.toLowerCase().includes(searchTerm) ||
+        elm.nom_cargo?.toLowerCase().includes(searchTerm) ||
+        elm.nom_status?.toLowerCase().includes(searchTerm)
+      );
+    });
+  }
+});
 //----------------------------------------------------------------------
 
 //funcion de los botones y las extenciones de Insert,delete,update----------------
-let natur:any
-let nombre:any
-let status:any
+let natur: any
+let nombre: any
+let status: any
 let btnUp = ref(false);//variable para mostrar modal de update
 let clickUp = ref(false)//variable para activar el click de Up
 let btnIn = ref(false);//variable modal insert
 let btnDl = ref(false);//variable para mostrar modal del delete
-let clickDl= ref(false);//variable para activar el click del delete
+let clickDl = ref(false);//variable para activar el click del delete
 
 //funciones q activan el click y en el caso del insert muestran el modal
-const CbtnUp=()=>{
-    clickUp.value = !clickUp.value
-    clickDl.value = false
+const CbtnUp = () => {
+  clickUp.value = !clickUp.value
+  clickDl.value = false
 }
-const CbtnIn=()=>{
+const CbtnIn = () => {
   btnIn.value = !btnIn.value
   clickUp.value = false
   clickDl.value = false
 }
 
-const CbtnDl=()=>{
+const CbtnDl = () => {
   clickDl.value = !clickDl.value
   clickUp.value = false
 }
 //funcion principal para el funcionamiento de el update y delete cuando uno de los 2 este activado
-const FunClick = (n:any,nm:any,st:any) =>{
+const FunClick = (n: any, nm: any, st: any) => {
   natur = n;
   nombre = nm;
   status = st;
 
   if (clickUp.value == true) {
     btnUp.value = !btnUp.value
-    clickUp.value = !clickUp.value 
+    clickUp.value = !clickUp.value
   }
   if (clickDl.value == true) {
-    btnDl.value =!btnDl.value
-    clickDl.value =!clickDl.value 
+    btnDl.value = !btnDl.value
+    clickDl.value = !clickDl.value
   }
 }
 
 //funciones de emits para actualizar las variables y cierre los modales activos sea de update o insert
-function updatePropsValue(newValue:boolean){
-    btnUp.value = newValue
-    getCarga()
+function updatePropsValue(newValue: boolean) {
+  btnUp.value = newValue
+  getCarga()
 }
-function insertPropsValue(newValue:boolean){
-    btnIn.value = newValue
-    getCarga();
+function insertPropsValue(newValue: boolean) {
+  btnIn.value = newValue
+  getCarga();
 }
 
-function deletePropsValue(newValue:boolean){
-    btnDl.value = newValue
-    getCarga()
+function deletePropsValue(newValue: boolean) {
+  btnDl.value = newValue
+  getCarga()
 }
 //-------------------------------------------------------------------------------
 
@@ -192,6 +225,9 @@ body {
 }
 
 .header {
+  display: flex;
+  justify-content: right;
+  align-items: right;
   grid-area: header;
 }
 
@@ -207,6 +243,23 @@ body {
   box-sizing: border-box;
 }
 
+.btn-search {
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding-left: 3px;
+  justify-content: space-between;
+  display: flex;
+  gap: 4px;
+  min-width: min-content;
+}
+
+.btn-search:focus {
+  outline: none;
+}
+
 .btn-group {
   display: flex;
   justify-content: flex-end;
@@ -219,17 +272,20 @@ body {
   border-radius: 20px;
 }
 
-.btn-delete:hover, .btn-delete:focus{
+.btn-delete:hover,
+.btn-delete:focus {
   background: #d94b6a;
   color: white;
 }
 
-.btn-update:hover, .btn-update:focus{
+.btn-update:hover,
+.btn-update:focus {
   background: #bcd34a;
   color: white;
 }
 
-.btn-insert:hover, .btn-insert:focus{
+.btn-insert:hover,
+.btn-insert:focus {
   background: #5d74b7;
   color: white;
 }
