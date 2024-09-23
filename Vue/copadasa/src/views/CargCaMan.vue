@@ -57,7 +57,7 @@ axios.get('http://103.23.61.168/api2/cargcaman/')
 };
 
 const getNaturalezas = () => {
-axios.get('http://127.0.0.1:8000/api2/carnatur/')
+axios.get('http://103.23.61.168/api2/carnatur/')
   .then(response => {
     response.data.forEach((naturaleza: { naturaleza: string, nombre: string }) => {
       naturalezas[naturaleza.naturaleza] = naturaleza.nombre;
