@@ -64,7 +64,7 @@ const tarifa = ref<Array<Cartaralm>>([]);
 const search = ref('')
 
 const getTarifa = (id_tarifa: any) => {
-  axios.get(`http://127.0.0.1:8000/api2/cartaralm?id_tarifa=${id_tarifa}`)
+  axios.get(`http://103.23.61.168/api2/cartaralm?id_tarifa=${id_tarifa}`)
     .then(response => {
       tarifa.value = response.data;
     })

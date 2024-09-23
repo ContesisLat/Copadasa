@@ -57,6 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080', 
     'http://127.0.0.1:8080', # Agrega el dominio de tu aplicación Vue.js
+    'htpp://103.23.61.168:8000'
 ]
 
 CORS_ALLOW_METHODS = (

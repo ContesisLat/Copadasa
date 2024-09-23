@@ -39,7 +39,7 @@ let natur = ref(props.natur)
 // función para eliminar el registro---------------------------------------------
 const handleSubmit = async () => {
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api2/delete/', {
+        const response = await axios.post('http://103.23.61.168/api2/delete/', {
             table: 'carnatur', 
             filters: { naturaleza: natur.value }, // Filtro para identificar el registro a eliminar
         })

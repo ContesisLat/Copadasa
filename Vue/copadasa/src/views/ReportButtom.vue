@@ -55,7 +55,7 @@ const enviarCorreo = async () => {
   }
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/envio_correo', {
+    const response = await fetch('http://103.23.61.168/api/envio_correo', {
       method: 'POST',
       body: formData,
     });

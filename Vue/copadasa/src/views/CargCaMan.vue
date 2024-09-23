@@ -47,7 +47,7 @@ const cargos = ref<Array>([]);
 const naturalezas: Record<string, string> = {};
 
 const getCargos = () => {
-axios.get('http://127.0.0.1:8000/api2/cargcaman/')
+axios.get('http://103.23.61.168/api2/cargcaman/')
   .then(response => {
     cargos.value = response.data;
   })

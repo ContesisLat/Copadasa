@@ -119,7 +119,7 @@ const options = ref('')
 const paises = ref<Array<Paises>>([]);
 
 const getPaises = () => {
-    axios.get('http://127.0.0.1:8000/api2/paises/')
+    axios.get('http://103.23.61.168/api2/paises/')
         .then(response => {
             paises.value = response.data;
         })
@@ -131,7 +131,7 @@ const getPaises = () => {
 
 const ciudades = ref<Array<Ciudades>>([])
 const getCiudades = (id_pais: any) => {
-    axios.get(`http://127.0.0.1:8000/api2/paises/ciudad?id_pais=${id_pais}`)
+    axios.get(`http://103.23.61.168/api2/paises/ciudad?id_pais=${id_pais}`)
         .then(response => {
             ciudades.value = response.data;
         })
@@ -143,7 +143,7 @@ const getCiudades = (id_pais: any) => {
 //----------------------------------------------------------------
 const puertos = ref<Array<Puertos>>([])
 const getPuertos = (id_ciudad: any, id_pais: any) => {
-    axios.get(`http://127.0.0.1:8000/api2/paises/puertos?id_ciudad=${id_ciudad}&id_pais=${id_pais}`)
+    axios.get(`http://103.23.61.168/api2/paises/puertos?id_ciudad=${id_ciudad}&id_pais=${id_pais}`)
         .then(response => {
             puertos.value = response.data;
         })

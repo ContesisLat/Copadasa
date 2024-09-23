@@ -76,7 +76,7 @@ const handleSubmit = async () =>{
         }
     }
     try {
-        const response = await fetch('http://127.0.0.1:8000/api2/insert/',{
+        const response = await fetch('http://103.23.61.168/api2/insert/',{
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',

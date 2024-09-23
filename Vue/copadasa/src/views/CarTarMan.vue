@@ -72,7 +72,7 @@ import { stringifyQuery } from 'vue-router';
 //-----------------------------------------------------------------
 const cargcaman = ref<Array<Cargcaman>>([]);
 const getCargos = () => {
-    axios.get(`http://127.0.0.1:8000/api2/cargcaman`)
+    axios.get(`http://103.23.61.168/api2/cargcaman`)
         .then(response => {
             cargcaman.value = response.data;
 
@@ -86,7 +86,7 @@ const getCargos = () => {
 const cartarman = ref<Array<Cartarman>>([])
 
 const getVigencias = (id_tarifa: any, id_cargo: any) => {
-    axios.get(`http://127.0.0.1:8000/api2/cargcaman/cartarman?id_tarifa=${id_tarifa}&id_cargo=${id_cargo}`)
+    axios.get(`http://103.23.61.168/api2/cargcaman/cartarman?id_tarifa=${id_tarifa}&id_cargo=${id_cargo}`)
         .then(response => {
             cartarman.value = response.data;
         })

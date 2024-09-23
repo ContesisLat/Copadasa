@@ -93,7 +93,7 @@ const carga = ref<Array<Natur>>([]);
 const search = ref('')
 
 const getCarga = () => {
-  axios.get('http://127.0.0.1:8000/api2/carnatur/')
+  axios.get('http://103.23.61.168/api2/carnatur/')
     .then(response => {
       carga.value = response.data;
     })

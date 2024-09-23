@@ -14,7 +14,7 @@ class LoginService{
 
     async fetchByLogin(nombre_usuario:string,contrasena:string):Promise<void>{
         try{
-            const url = 'http://127.0.0.1:8000/api/seguser/login';
+            const url = 'http://103.23.61.168/api/seguser/login';
             const response = await axios.post(url,{
                 nombre_usuario:nombre_usuario,
                 contrasena:contrasena},{

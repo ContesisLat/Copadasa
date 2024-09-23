@@ -28,8 +28,8 @@
                                           <td>{{ elm.fecha_final }}</td>
                                           <td>{{ elm.cargo }}</td>
                                           <td>{{ elm.nom_cargo }}</td>
-                                          <td>{{ elm.valor }}</td>
                                           <td>{{ elm.aplica }}</td>
+                                          <td>{{ elm.valor }}</td>
                                           <td>{{ elm.status }}</td>
                                       </tr>
                                   </tbody>
@@ -51,7 +51,7 @@ import { Cartarman } from '@/interface/interfaces'
 const tarifa = ref<Array<Cartarman>>([]);
 
 const getTarifa = () => {
-axios.get('http://127.0.0.1:8000/api2/cartarman/')
+axios.get('http://103.23.61.168/api2/cartarman/')
   .then(response => {
     tarifa.value = response.data;
   })
@@ -60,19 +60,7 @@ axios.get('http://127.0.0.1:8000/api2/cartarman/')
   });
 };
 
-//scrolling con teclas
-const scrollTop = ref(0);
 
-function handleKeyDown(event: { key: string; }) {
-// Verificar si se presionaron las teclas de flecha
-if (event.key === 'ArrowUp') {
-  // Desplazar hacia arriba
-  scrollTop.value -= 10; // Ajusta la cantidad de desplazamiento según sea necesario
-} else if (event.key === 'ArrowDown') {
-  // Desplazar hacia abajo
-  scrollTop.value += 10; // Ajusta la cantidad de desplazamiento según sea necesario
-}
-}
 
 onMounted(() => {
 getTarifa();

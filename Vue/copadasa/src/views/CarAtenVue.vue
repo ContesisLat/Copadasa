@@ -54,7 +54,7 @@ const cargo = ref<Array<Caratenvue>>([]);
 const search = ref('')
 
 const getCargos = () => {
-  axios.get('http://127.0.0.1:8000/api2/caratenvue/')
+  axios.get('http://103.23.61.168/api2/caratenvue/')
     .then(response => {
       cargo.value = response.data;
     })

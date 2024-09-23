@@ -54,7 +54,7 @@ const tipo = ref<Array<Cartitar>>([]);
 const search = ref('')
 
 const getTipo = () => {
-  axios.get('http://127.0.0.1:8000/api2/cartitar/')
+  axios.get('http://103.23.61.168/api2/cartitar/')
     .then(response => {
       tipo.value = response.data;
     })
