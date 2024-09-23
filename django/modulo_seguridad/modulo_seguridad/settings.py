@@ -55,9 +55,15 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080', 
+    'http://localhost:8000',
+    'http://localhost:8080',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:5432',
+    'http://10.20.10.13:8000',
+    'http://10.20.10.13:8080',
     'http://127.0.0.1:8080', # Agrega el dominio de tu aplicación Vue.js
-    'htpp://103.23.61.168:8000'
+    'http://103.23.61.168:8080', # Agrega el dominio de tu aplicación Vue.js
+    'http://103.23.61.168:8000',
 ]
 
 CORS_ALLOW_METHODS = (
@@ -97,30 +103,20 @@ WSGI_APPLICATION = 'modulo_seguridad.wsgi.application'
 
 DATABASES = {
      'default': {
-        'ENGINE': 'django_informixdb',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME':'teampy',
-        'USER':'informix',
-        'PASSWORD':'Vifeci2020',
-        'SERVER':'prueba_cloud_tcp',
-        'HOST':'185.254.205.177',
-        'PORT':'1528',
-        'OPTIONS':{
-            'driver':'IBM INFORMIX ODBC DRIVER',
-            'dsn':'teampy',
-        },
+        'USER':'postgres',
+        'PASSWORD':'postgres',
+        'HOST':'127.0.0.1',
+        'PORT':'5432',
     },
      'copadasa_db': {
-        'ENGINE': 'django_informixdb',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME':'copadasapma',
-        'USER':'informix',
-        'PASSWORD':'Vifeci2020',
-        'SERVER':'prueba_cloud_tcp',
-        'HOST':'185.254.205.177',
-        'PORT':'1528',
-        'OPTIONS':{
-            'driver':'IBM INFORMIX ODBC DRIVER',
-            'dsn':'copadasa',
-        },
+        'USER':'postgres',
+        'PASSWORD':'postgres',
+        'HOST':'127.0.0.1',
+        'PORT':'5432',
      }
 }      
 
