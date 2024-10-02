@@ -94,7 +94,9 @@ svg {
     /* Fondo oscuro semitransparente */
     z-index: 1050;
     /* Coloca el fondo oscuro por encima de otros elementos */
-
+    @media screen and (max-width: 600px){
+        width: 500px;
+    }
 }
 
 .ReportPage {
@@ -116,6 +118,11 @@ svg {
     color: black;
     padding: 15px;
     z-index: 1060;
+    @media screen and (max-width:600px){
+        overflow: scroll;
+        height: 55%;
+        width: 95%;
+    }
 }
 
 .ReportPage hr {

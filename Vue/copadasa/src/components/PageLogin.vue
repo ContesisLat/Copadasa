@@ -125,6 +125,9 @@ onMounted(() => {
   backdrop-filter: blur(10px);
   color: black;
   font-family: Trebuchet MS;
+  @media screen and (max-width: 600px) {
+    width: 320px;
+  }
 }
 
 .inputbox {
@@ -191,5 +194,11 @@ button {
   border: none;
   color: white;
   margin-bottom: 10px;
+}
+
+.alert{
+  @media screen and (max-width: 600px){
+    width: 95%;
+  }
 }
 </style>

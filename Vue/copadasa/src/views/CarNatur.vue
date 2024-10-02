@@ -211,6 +211,9 @@ body {
   color: white;
   background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
   overflow: hidden;
+  @media screen and (max-width: 600px) {
+    overflow: scroll;
+  }
 }
 
 .layout {
@@ -239,7 +242,6 @@ body {
   width: 85%;
   height: 250px;
   min-width: min-content;
-  min-height: min-content;
   box-sizing: border-box;
 }
 

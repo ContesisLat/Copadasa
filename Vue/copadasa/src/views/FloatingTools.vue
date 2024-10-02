@@ -1,5 +1,6 @@
 <template>
     <ReportButtom :CardReport="CardReport" @updateProps="updatePropsValue"/>
+    <DeviceC :device="device" @DevicesProps="updatePropsD"/>
     <div class="fab-container">
         <div class="fab shadow">
             <div class="fab-content">
@@ -22,11 +23,19 @@
             <a href="https://www.google.com/intl/es/gmail/about/" target="_blank" title="Gmail">
             <img src="@/assets/Gmail-logo.png" alt="word" class="logo-image"></a>
         </div>
+        <div class="sub-button shadow">
+            <a href="#" @click.prevent="deviceOpen"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upc"
+                viewBox="0 0 16 16">
+                <path
+                    d="M3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0z" />
+            </svg></a>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import ReportButtom from './ReportButtom.vue';
+import DeviceC from './DeviceC.vue';
 import {ref} from 'vue';
 
 let CardReport = ref(false);
@@ -36,6 +45,16 @@ const ReportOpen=()=>{
 
 function updatePropsValue(newValue:boolean){
     CardReport.value = newValue
+}
+
+//emits y props de DeviceC------------------------------
+let device = ref(false);
+const deviceOpen = () =>{
+    device.value =!device.value
+}
+
+function updatePropsD(newValue:boolean){
+    device.value = newValue
 }
 </script>
 
@@ -91,7 +110,7 @@ function updatePropsValue(newValue:boolean){
     transform: translateY(-150px);
 }
 .fab-container:hover .sub-button:nth-child(5){
-    transform: translateY(-260px);
+    transform: translateY(-200px);
 }
 .fab-container:hover .sub-button:nth-child(6){
     transform: translateY(-320px);

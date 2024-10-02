@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from .viewsets import *
-from .views import login_view,EnviarCorreoView
+from .views import *
 from rest_framework.decorators import api_view
 
 
@@ -59,6 +59,7 @@ route.register('seghpas',SegHpasViewSet)
 
 urlpatterns = [
     path('seguser/login',api_view(['POST'])(login_view)),
-    path('envio_correo',EnviarCorreoView.as_view(),name='envio_correo')
+    path('envio_correo',EnviarCorreoView.as_view(),name='envio_correo'),
+    path('barcode',barcode_reader,name='barcode')
 ]
 urlpatterns += route.urls

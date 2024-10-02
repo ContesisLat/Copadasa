@@ -8,11 +8,13 @@ import PageLogin from './components/PageLogin.vue';
 
 <style>
 #app {
-  height: 80vh;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   background: white;
   background-image: url('@/assets/ContesisLA.png');
   background-repeat: no-repeat;
-  background-size:contain;
-  background-position: 50% 30px;
+  background-size:84%;
+  background-position: 50% 25%;
 }
 </style>

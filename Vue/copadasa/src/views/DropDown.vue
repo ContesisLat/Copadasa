@@ -26,29 +26,6 @@
                             </ul>
                         </div>
                     </li>
-                    <li>
-                        <button>Info</button>
-                        <div class="dropdown">
-                            <h3>for</h3>
-                            <ul class="list-menu-items">
-                                <li>
-                                    <a href="#" title="enterprise">info</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <button>Info</button>
-                        <div class="dropdown">
-                            <h3>for</h3>
-                            <ul class="list-menu-items">
-                                <li>
-                                    <a href="#" title="topic">info</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    
                 </ul>
 
             </div>
@@ -124,6 +101,9 @@ let gUser = userGlobalStore()
     display: flex;
     gap: 24px;
     align-items: center;
+    @media screen and (max-width:600px){
+        gap: 10px;
+    }
 }
 .logo{
     width: 32px;
@@ -273,6 +253,9 @@ let gUser = userGlobalStore()
     gap: 8px;
     align-items: center;
     flex-wrap: nowrap;
+    @media  screen and (max-width:600px) {
+        gap: 3px;
+    }
 }
 .action-buttons a{
     text-decoration: none;

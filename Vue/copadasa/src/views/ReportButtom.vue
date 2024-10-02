@@ -111,6 +111,9 @@ svg{
     color: black;
     padding: 15px;
     z-index: 1060;
+    @media screen and (max-width: 600px) {
+    width: 340px;
+  }
 }
 .ReportPage hr{
     border: none;

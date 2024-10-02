@@ -103,16 +103,15 @@ svg {
 }
 
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     /* Fondo oscuro semitransparente */
     z-index: 1050;
     /* Coloca el fondo oscuro por encima de otros elementos */
-
+    @media screen and (max-width:600px){
+        width: 500px;     
+    }
 }
 
 .ReportPage {
@@ -133,7 +132,13 @@ svg {
     font-family: Trebuchet MS;
     color: black;
     padding: 15px;
-    z-index: 1060;
+    z-index: 1060; 
+    overflow: hidden;
+    @media screen and (max-width: 600px){
+        overflow: scroll;
+        height: 55%;
+        width: 95%; 
+    }
 }
 
 .ReportPage hr {

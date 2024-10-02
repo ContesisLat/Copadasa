@@ -4,8 +4,11 @@ from .models import SegUser
 import json
 from django.core.mail import EmailMessage
 from django.views import View
-from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator,api_view
 from django.conf import settings
+from PIL import Image
+import io
+from pyzbar.pyzbar import decode
 # Create your views here.
 
 @csrf_exempt
@@ -59,3 +62,36 @@ class EnviarCorreoView(View):
                 return JsonResponse({'status': 'error', 'message': str(e)})
         else:
             return JsonResponse({'status': 'error', 'message': 'Correo o mensaje no proporcionado'})
+        
+
+@api_view(['POST'])
+def barcode_reader(request):
+    try:
+        # Obtener la imagen enviada desde el frontend
+        image_file = request.FILES.get('barcode_image')
+        
+        if not image_file:
+            return JsonResponse({'error': 'no se proporciono ningun archivo'}, status=400)
+
+        # Leer la imagen utilizando PIL
+        image = Image.open(image_file)
+
+        # Decodificar el código de barras en la imagen
+        decoded_objects = decode(image)
+
+        # Si no se encontró ningún código de barras, retornar un error
+        if not decoded_objects:
+            return JsonResponse({'error': 'No se detecta codigo de barras en la imagen'}, status=400)
+
+        # Extraer la información del código de barras (puede haber más de uno, tomamos el primero)
+        barcode_data = decoded_objects[0].data.decode('utf-8')
+        barcode_type = decoded_objects[0].type
+
+        # Responder con los datos obtenidos
+        return JsonResponse({
+            'barcode_data': barcode_data,
+            'barcode_type': barcode_type
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

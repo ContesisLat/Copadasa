@@ -7,10 +7,21 @@ export const usePopupStore = defineStore('popup', {
   }),
   actions: {
     openPopup(componentName: string) {
+      let wth = 50
+      let hgt = 50
+
+      if (window.innerWidth > 600) {
+        wth = 800
+        hgt = 500
+      }else if (window.innerWidth < 600){
+        wth = 350
+        hgt = 420
+      }
+
       this.openedPopups.push({
         componentName: componentName,
-        width: 800, // Valor predeterminado para el ancho
-        height: 500, // Valor predeterminado para el alto
+        width: wth, // Valor predeterminado para el ancho
+        height: hgt, // Valor predeterminado para el alto
         posX: 0, // Valor predeterminado para la posición X
         posY: 0, // Valor predeterminado para la posición Y
       });
