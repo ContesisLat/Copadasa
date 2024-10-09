@@ -41,7 +41,9 @@
 import { defineProps,defineEmits,Ref,ref } from 'vue'
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import { userGlobalStore } from '@/store/userGlobal';
+import { UrlGlobal } from '@/store/dominioGlobal';
 
+const dUrl = UrlGlobal()
 const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
@@ -76,7 +78,7 @@ const handleSubmit = async () =>{
         }
     }
     try {
-        const response = await fetch('http://103.23.61.168/api2/insert/',{
+        const response = await fetch(dUrl.urlGlobal +'/api2/insert/',{
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 // stores/globalStore.ts
 import { defineStore } from 'pinia';
 
-export const userGlobalStore = defineStore('global', {
+export const userGlobalStore = defineStore('Uglobal', {
   state: () => ({
     globalUser: '' as string, // Variable global inicializada como string vacía
   }),

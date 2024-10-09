@@ -59,12 +59,15 @@
 import { ref, onMounted,computed } from 'vue';
 import axios from 'axios';
 import { Cartari } from '@/interface/interfaces'
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const tarifa = ref<Array<Cartari>>([]);
 const search = ref('')
 
 const getTarifa = (id_tarifa: any) => {
-  axios.get(`http://103.23.61.168/api2/cartari?id_tarifa=${id_tarifa}`)
+  axios.get(`${dUrl.urlGlobal}/api2/cartari?id_tarifa=${id_tarifa}`)
     .then(response => {
       tarifa.value = response.data;
     })

@@ -20,7 +20,9 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, Ref, ref } from 'vue'
 import axios from 'axios';
+import { UrlGlobal } from '@/store/dominioGlobal';
 
+const dUrl = UrlGlobal()
 //props y emits ----------------------------------------------------------------
 const props = defineProps({
     btnDl: Boolean,
@@ -39,7 +41,7 @@ let natur = ref(props.natur)
 // función para eliminar el registro---------------------------------------------
 const handleSubmit = async () => {
     try {
-        const response = await axios.post('http://103.23.61.168/api2/delete/', {
+        const response = await axios.post(dUrl.urlGlobal +'/api2/delete/', {
             table: 'carnatur', 
             filters: { naturaleza: natur.value }, // Filtro para identificar el registro a eliminar
         })

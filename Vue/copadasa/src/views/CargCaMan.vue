@@ -42,12 +42,15 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const cargos = ref<Array>([]);
 const naturalezas: Record<string, string> = {};
 
 const getCargos = () => {
-axios.get('http://103.23.61.168/api2/cargcaman/')
+axios.get( dUrl.urlGlobal +'/api2/cargcaman/')
   .then(response => {
     cargos.value = response.data;
   })
@@ -57,7 +60,7 @@ axios.get('http://103.23.61.168/api2/cargcaman/')
 };
 
 const getNaturalezas = () => {
-axios.get('http://103.23.61.168/api2/carnatur/')
+axios.get( dUrl.urlGlobal + '/api2/carnatur/')
   .then(response => {
     response.data.forEach((naturaleza: { naturaleza: string, nombre: string }) => {
       naturalezas[naturaleza.naturaleza] = naturaleza.nombre;

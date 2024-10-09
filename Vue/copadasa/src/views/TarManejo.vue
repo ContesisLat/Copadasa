@@ -47,11 +47,14 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { Cartarman } from '@/interface/interfaces'
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const tarifa = ref<Array<Cartarman>>([]);
 
 const getTarifa = () => {
-axios.get('http://103.23.61.168/api2/cartarman/')
+axios.get(dUrl.urlGlobal +'/api2/cartarman/')
   .then(response => {
     tarifa.value = response.data;
   })

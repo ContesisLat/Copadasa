@@ -42,6 +42,9 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, Ref, ref } from 'vue'
 import axios from 'axios'
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 //props y emits ----------------------------------------------------------------
 const props = defineProps({
@@ -66,7 +69,7 @@ let status = ref(props.status)
 
 const handleSubmit = async () => {
     try {
-        const response = await axios.post('http://103.23.61.168/api2/update/', {
+        const response = await axios.post(dUrl.urlGlobal +'/api2/update/', {
             table: 'carnatur', 
             filters: { naturaleza: natur.value }, // Filtro para identificar el registro a actualizar
             data: { nombre: nombre.value, status: status.value } // Datos a actualizar

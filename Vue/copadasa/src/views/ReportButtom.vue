@@ -23,6 +23,9 @@
 
 <script lang="ts" setup>
 import { defineProps,defineEmits,Ref,ref } from 'vue'
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const props = defineProps({
     CardReport: Boolean,
@@ -55,7 +58,7 @@ const enviarCorreo = async () => {
   }
 
   try {
-    const response = await fetch('http://103.23.61.168/api/envio_correo', {
+    const response = await fetch(dUrl.urlGlobal +'/api/envio_correo', {
       method: 'POST',
       body: formData,
     });

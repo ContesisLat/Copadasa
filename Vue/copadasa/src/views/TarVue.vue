@@ -86,12 +86,15 @@
 import { ref, onMounted,computed } from 'vue';
 import axios from 'axios';
 import { Cartiaero, Cartarvue } from '@/interface/interfaces';
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 const search = ref('')
 const options = ref('') 
 //-----------------------------------------------------------------
 const cartiaero = ref<Array<Cartiaero>>([]);
 const getAeronaves = () => {
-    axios.get('http://103.23.61.168/api2/cartiaero/')
+    axios.get(dUrl.urlGlobal +'/api2/cartiaero/')
         .then(response => {
             cartiaero.value = response.data.map((item: Cartiaero) => {
                 return {
@@ -107,7 +110,7 @@ const getAeronaves = () => {
 //----------------------------------------------------------------
 const cartarvue = ref<Array<Cartarvue>>([])
 const getTarifas = (id_aeronave: any) => {
-    axios.get(`http://103.23.61.168/api2/cartiaero/cartarvue?id_aeronave=${id_aeronave}`)
+    axios.get(`${dUrl.urlGlobal}/api2/cartiaero/cartarvue?id_aeronave=${id_aeronave}`)
         .then(response => {
             cartarvue.value = response.data;
         })

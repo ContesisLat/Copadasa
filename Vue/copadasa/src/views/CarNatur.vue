@@ -87,13 +87,16 @@ import { Natur } from '@/interface/interfaces'
 import UpCarNatur from './pUpdate/UpCarNatur.vue';
 import InCarNatur from './pInsert/InCarNatur.vue';
 import DlCarNatur from './pDelete/DlCarNatur.vue';
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 //carga de data-------------------------------------------------------
 const carga = ref<Array<Natur>>([]);
 const search = ref('')
 
 const getCarga = () => {
-  axios.get('http://103.23.61.168/api2/carnatur/')
+  axios.get(dUrl.urlGlobal + '/api2/carnatur/')
     .then(response => {
       carga.value = response.data;
     })

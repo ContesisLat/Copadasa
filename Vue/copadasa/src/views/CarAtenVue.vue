@@ -49,12 +49,15 @@
 import { ref, onMounted,computed } from 'vue';
 import axios from 'axios';
 import { Caratenvue } from '@/interface/interfaces'
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const cargo = ref<Array<Caratenvue>>([]);
 const search = ref('')
 
 const getCargos = () => {
-  axios.get('http://103.23.61.168/api2/caratenvue/')
+  axios.get(dUrl.urlGlobal +'/api2/caratenvue/')
     .then(response => {
       cargo.value = response.data;
     })

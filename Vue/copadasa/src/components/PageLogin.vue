@@ -85,7 +85,7 @@ const validation = async (): Promise<void> => {
       console.log('Credenciales válidas');
     } else {
       openL.value = !openL.value
-      loading.value='Acceso'
+      loading.value = 'Acceso'
       if (openA.value == false) {
         openA.value = !openA.value
       }
@@ -196,8 +196,8 @@ button {
   margin-bottom: 10px;
 }
 
-.alert{
-  @media screen and (max-width: 600px){
+.alert {
+  @media screen and (max-width: 600px) {
     width: 95%;
   }
 }

@@ -71,6 +71,9 @@
 <script lang="ts" setup>
 import { ref, defineProps, defineEmits, } from 'vue';
 import axios from 'axios';
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const video = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
@@ -131,7 +134,7 @@ async function sendImage() {
         formData.append('barcode_image', blob, 'barcode.png');
 
         try {
-            const response = await axios.post('http://103.23.61.168/api/barcode', formData, {
+            const response = await axios.post(dUrl.urlGlobal +'/api/barcode', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

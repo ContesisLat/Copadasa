@@ -23,13 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d#g^gcs6j#lbi3hz_94lm@kq+sgjr0$*qc!fyr7w0n@z=7i772'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    '103.23.61.168'
+    '103.23.61.168',
+    '127.0.0.1',
+    '5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]
 
+SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
+SECURE_HSTS_SECONDS=259200
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
 
+HTTPS_PORT = 443
+HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
+HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,6 +53,7 @@ INSTALLED_APPS = [
     'desarrollo',
     'rest_framework',
     'copadasa',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -57,15 +68,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-    'http://localhost:8080',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:5432',
-    'http://10.20.10.13:8000',
-    'http://10.20.10.13:8080',
-    'http://127.0.0.1:8080', # Agrega el dominio de tu aplicación Vue.js
+    'https://127.0.0.1:8080', # Agrega el dominio de tu aplicación Vue.js
     'http://103.23.61.168:8080', # Agrega el dominio de tu aplicación Vue.js
-    'http://103.23.61.168:8000',
+    'https://5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]
 
 CORS_ALLOW_METHODS = (
@@ -111,6 +116,11 @@ DATABASES = {
         'PASSWORD':'postgres',
         'HOST':'127.0.0.1',
         'PORT':'5432',
+         'OPTIONS': {
+            'sslmode': 'require',
+            'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
+            'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
+        },
     },
      'copadasa_db': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -119,6 +129,11 @@ DATABASES = {
         'PASSWORD':'postgres',
         'HOST':'127.0.0.1',
         'PORT':'5432',
+         'OPTIONS': {
+            'sslmode': 'require',
+            'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
+            'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
+        },
      }
 }      
 

@@ -49,12 +49,15 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { Cartitar } from '@/interface/interfaces'
+import { UrlGlobal } from '@/store/dominioGlobal';
+
+const dUrl = UrlGlobal()
 
 const tipo = ref<Array<Cartitar>>([]);
 const search = ref('')
 
 const getTipo = () => {
-  axios.get('http://103.23.61.168/api2/cartitar/')
+  axios.get(dUrl.urlGlobal +'/api2/cartitar/')
     .then(response => {
       tipo.value = response.data;
     })
