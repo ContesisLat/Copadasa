@@ -4,7 +4,8 @@ from .models import SegUser
 import json
 from django.core.mail import EmailMessage
 from django.views import View
-from django.utils.decorators import method_decorator,api_view
+from django.utils.decorators import method_decorator
+from rest_framework.decorators import api_view
 from django.conf import settings
 from PIL import Image
 import io

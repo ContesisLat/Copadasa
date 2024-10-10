@@ -33,6 +33,15 @@
         <hr>
         <!-- Solo mostramos el video cuando la cámara está activa -->
         <div class="SuccessButoms">
+            <button @click="changeCamera" v-if="cameras.length">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                    <path
+                        d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9" />
+                    <path fill-rule="evenodd"
+                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z" />
+                </svg>
+            </button>
             <button v-if="!isCameraActive" @click="startCamera"><svg xmlns="http://www.w3.org/2000/svg" width="16"
                     height="16" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
                     <path
@@ -47,8 +56,8 @@
                         d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
                 </svg>
             </button>
-            <button v-if="!isCameraActive" @click="sendImage"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-send" viewBox="0 0 16 16">
+            <button v-if="!isCameraActive" @click="sendImage"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                    height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                     <path
                         d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
                 </svg></button>
@@ -69,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits, } from 'vue';
+import { ref, defineProps, defineEmits, onMounted } from 'vue';
 import axios from 'axios';
 import { UrlGlobal } from '@/store/dominioGlobal';
 
@@ -80,24 +89,79 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 const photo = ref<string | null>(null);
 const isCameraActive = ref(false); // Nueva variable para gestionar el estado de la cámara
 let stream: MediaStream | null = null; // Variable para almacenar el stream
+const cameras = ref<MediaDeviceInfo[]>([]); // Almacenar cámaras disponibles
+const currentCameraIndex = ref(0); // Índice de la cámara actual
+
+// Listar las cámaras disponibles
+const listCameras = async () => {
+    try {
+        await navigator.mediaDevices.getUserMedia({ video: true }); // Solicita permiso
+        const devices = await navigator.mediaDevices.enumerateDevices()
+        cameras.value = devices.filter(device => device.kind === 'videoinput');
+        if (cameras.value.length > 0) {
+            currentCameraIndex.value = 0; // Seleccionar la primera cámara por defecto
+        }
+    } catch (error) {
+        console.error('Error al obtener las cámaras:', error);
+    }
+};
 
 // Iniciar la cámara
 const startCamera = async () => {
-    photo.value = null
-    isCameraActive.value = true
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (video.value) {
-                video.value.srcObject = stream;
-            }
-        } catch (err) {
-            console.error('Error accediendo a la cámara:', err);
+    photo.value = null;
+    isCameraActive.value = true;
+    await listCameras()
+    try {
+        // Asegúrate de que hay cámaras disponibles
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        cameras.value = devices.filter(device => device.kind === 'videoinput');
+
+        if (cameras.value.length === 0) {
+            console.error('No se encontraron cámaras disponibles.');
+            alert('No se encontraron cámaras disponibles.');
+            return;
         }
-    } else {
-        alert('Tu navegador no soporta acceso a la cámara.');
+        console.log('Cámaras disponibles:', cameras.value);
+
+        // Verifica que el índice actual sea válido
+        if (currentCameraIndex.value < 0 || currentCameraIndex.value >= cameras.value.length) {
+            console.error('Índice de cámara no válido.');
+            alert('Índice de cámara no válido.');
+            return;
+        }
+
+        const cameraId = cameras.value[currentCameraIndex.value].deviceId; // ID de la cámara actual
+        
+        // Intentar acceder a la cámara
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { deviceId: { exact: cameraId } }
+        });
+
+        if (video.value) {
+            video.value.srcObject = stream;
+        }
+    } catch (err) {
+        console.error('Error accediendo a la cámara:', err);
+        alert('Error accediendo a la cámara: ' + err); // Mostrar mensaje de error
     }
 };
+
+
+// Cambiar entre cámaras
+const changeCamera = async () => {
+    // Detener el stream actual
+    if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+    }
+
+    // Incrementar el índice de la cámara actual
+    currentCameraIndex.value = (currentCameraIndex.value + 1) % cameras.value.length;
+
+    // Iniciar la nueva cámara
+    await startCamera();
+};
+
 
 // Tomar la foto, guardarla en Vue y detener la cámara
 const takePicture = () => {
@@ -134,7 +198,7 @@ async function sendImage() {
         formData.append('barcode_image', blob, 'barcode.png');
 
         try {
-            const response = await axios.post(dUrl.urlGlobal +'/api/barcode', formData, {
+            const response = await axios.post(dUrl.urlGlobal + '/api/barcode', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -198,9 +262,10 @@ const handleClick = () => {
     color: black;
     padding: 15px;
     z-index: 3;
+
     @media screen and (max-width: 600px) {
-    width: 340px;
-  }
+        width: 340px;
+    }
 }
 
 .DevicePage hr {
