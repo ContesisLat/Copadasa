@@ -114,7 +114,7 @@ DATABASES = {
         'NAME':'teampy',
         'USER':'postgres',
         'PASSWORD':'postgres',
-        'HOST':'127.0.0.1',
+        'HOST':'10.20.10.13',
         'PORT':'5432',
          'OPTIONS': {
             'sslmode': 'require',
@@ -127,7 +127,7 @@ DATABASES = {
         'NAME':'copadasapma',
         'USER':'postgres',
         'PASSWORD':'postgres',
-        'HOST':'127.0.0.1',
+        'HOST':'10.20.10.13',
         'PORT':'5432',
          'OPTIONS': {
             'sslmode': 'require',

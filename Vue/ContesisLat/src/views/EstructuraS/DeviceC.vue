@@ -106,11 +106,14 @@ const listCameras = async () => {
     }
 };
 
+onMounted(() =>{
+    listCameras();
+})
+
 // Iniciar la cámara
 const startCamera = async () => {
     photo.value = null;
     isCameraActive.value = true;
-    await listCameras()
     try {
         // Asegúrate de que hay cámaras disponibles
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -121,7 +124,6 @@ const startCamera = async () => {
             alert('No se encontraron cámaras disponibles.');
             return;
         }
-        console.log('Cámaras disponibles:', cameras.value);
 
         // Verifica que el índice actual sea válido
         if (currentCameraIndex.value < 0 || currentCameraIndex.value >= cameras.value.length) {
@@ -142,6 +144,7 @@ const startCamera = async () => {
         }
     } catch (err) {
         console.error('Error accediendo a la cámara:', err);
+        isCameraActive.value = false;
         alert('Error accediendo a la cámara: ' + err); // Mostrar mensaje de error
     }
 };

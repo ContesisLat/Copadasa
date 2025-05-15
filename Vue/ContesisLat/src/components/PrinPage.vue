@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-import DropDown from '@/views/DropDown.vue'
-import FloatingTools from '@/views/FloatingTools.vue';
-import PopupWindow from '@/views/PopupWindow.vue';
+import DropDown from '@/views/EstructuraS/DropDown.vue'
+import FloatingTools from '@/views/EstructuraS/FloatingTools.vue';
+import PopupWindow from '@/views/EstructuraS/PopupWindow.vue';
 </script>
 
 <style scoped>

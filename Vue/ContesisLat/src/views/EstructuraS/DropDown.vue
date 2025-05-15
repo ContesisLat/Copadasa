@@ -30,11 +30,12 @@
 
             </div>
             <div class="action-buttons">
+                <router-link to="/"><a href="#" title="sign out" class="secondary hide" style="font-family:Lucida Handwriting,cursive">{{ gUser.globalUser }}</a></router-link>
                 <span class="dateTime"> 
                     <p>{{ currentDate }}</p>
                     <p>{{ currentTime }}</p>
                 </span>
-                <router-link to="/"><a href="#" title="sign out" class="secondary hide" style="font-family:Lucida Handwriting,cursive">{{ gUser.globalUser }}</a></router-link>
+                
             </div>
             
 
@@ -43,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import SideBar from '@/views/SideBar.vue'
+import SideBar from '@/views/EstructuraS/SideBar.vue'
 import{ref,onMounted} from "vue"
 import { userGlobalStore } from '@/store/userGlobal';
 

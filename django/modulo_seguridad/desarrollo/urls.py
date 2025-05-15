@@ -4,6 +4,7 @@ from rest_framework import routers
 from .viewsets import *
 from .views import *
 from rest_framework.decorators import api_view
+from .crud import *
 
 
 route = routers.SimpleRouter()
@@ -60,6 +61,10 @@ route.register('seghpas',SegHpasViewSet)
 urlpatterns = [
     path('seguser/login',api_view(['POST'])(login_view)),
     path('envio_correo',EnviarCorreoView.as_view(),name='envio_correo'),
-    path('barcode',barcode_reader,name='barcode')
+    path('barcode',barcode_reader,name='barcode'),
+    path('query',query_global, name='query_global'),
+    path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
+    path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro
+    path('delete/', DeleteView.as_view(), name='delete')  # Ruta para eliminar un registro
 ]
 urlpatterns += route.urls

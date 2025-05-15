@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from rest_framework.decorators import api_view
 from django.conf import settings
 from PIL import Image
-import io
+from django.db import connection
 from pyzbar.pyzbar import decode
 # Create your views here.
 
@@ -96,3 +96,44 @@ def barcode_reader(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+@api_view(['POST'])
+def query_global(request):
+    try:
+        # Decodificar el cuerpo de la solicitud para obtener los datos JSON
+        data = json.loads(request.body)
+
+        tabla = data.get('tabla')
+        filtro = data.get('filtro', {})
+
+        if not tabla:
+            return JsonResponse({'error': "Falta el parámetro 'tabla'"}, status=400)
+
+        # Validación: asegúrate de que no haya filtros vacíos en el diccionario
+        filtro = {key: value for key, value in filtro.items() if value}  # Elimina claves con valores vacíos
+
+        # Construir la cláusula WHERE de la consulta SQL
+        where_clauses = []
+        params = []
+        for key, value in filtro.items():
+            where_clauses.append(f"{key} = %s")
+            params.append(value)
+
+        # Construir la consulta SQL dinámica
+        sql_query = f"SELECT * FROM {tabla}"
+        if where_clauses:
+            sql_query += " WHERE " + " AND ".join(where_clauses)
+
+        # Ejecutar la consulta SQL
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query, params)
+            columns = [col[0] for col in cursor.description]
+            results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        # Retornar los resultados como JSON
+        return JsonResponse(results, safe=False)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Error al decodificar los datos JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
