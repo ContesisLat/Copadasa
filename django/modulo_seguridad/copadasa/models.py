@@ -461,6 +461,7 @@ class Caratvued(models.Model):
 
 
 class Logubica(models.Model):
+    ubicacion = models.AutoField(primary_key= True)
     almacen = models.CharField( null=True,max_length=2)
     area = models.CharField( null=True,max_length=2)
     anaquel = models.CharField( null=True,max_length=3)
@@ -478,9 +479,24 @@ class Logubica(models.Model):
     class Meta:
         managed = False
         db_table = 'logubica'
-        unique_together = (('almacen', 'area', 'anaquel', 'cara', 'fila', 'columna'),)
+        unique_together = ('ubicacion')
 
+class Logarea(models.Model):
+    almacen = models.CharField( null=False, max_length=2)
+    area = models.CharField(null= False, max_length=2)
+    descripcion = models.CharField(null= False, max_length=30)
+    creado_por = models.CharField(null= False, max_length=10)
+    fecha_creado = models.DateField(null= False)
+    hora_creado = models.TimeField(null= False)
+    modificado_por = models.CharField(null= True, max_length=10)
+    fecha_status = models.DateField(null= True)
+    hora_status = models.TimeField(null= True)
 
+    class Meta:
+        managed = False
+        db_table = 'logarea'
+        unique_together = ('almacen', 'area')
+        
 
 class Paises(models.Model):
     pais = models.CharField(primary_key=True,max_length=3)
