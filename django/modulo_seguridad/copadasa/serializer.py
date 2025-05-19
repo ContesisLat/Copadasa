@@ -124,6 +124,11 @@ class LogubicaSerializer(serializers.ModelSerializer):
         model = Logubica
         fields = '__all__'
 
+class LogareaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logarea
+        fields = '__all__'
+
 class PaisesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paises
