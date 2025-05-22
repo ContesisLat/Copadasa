@@ -367,6 +367,7 @@ class Ciudades(models.Model):
     pais = models.CharField( null=True,max_length=3)
     ciudad = models.CharField( primary_key=True,max_length=5)
     nombre = models.CharField( null=True,max_length=50)
+    status = models.CharField(null= False, max_length=1)
 
     class Meta:
         managed = False
@@ -461,6 +462,7 @@ class Caratvued(models.Model):
 
 
 class Logubica(models.Model):
+    ubicacion = models.AutoField(primary_key= True)
     almacen = models.CharField( null=True,max_length=2)
     area = models.CharField( null=True,max_length=2)
     anaquel = models.CharField( null=True,max_length=3)
@@ -478,8 +480,55 @@ class Logubica(models.Model):
     class Meta:
         managed = False
         db_table = 'logubica'
-        unique_together = (('almacen', 'area', 'anaquel', 'cara', 'fila', 'columna'),)
+         
 
+class Logarea(models.Model):
+    almacen = models.CharField( null=False, max_length=2)
+    area = models.CharField(null= False, max_length=2)
+    descripcion = models.CharField(null= False, max_length=30)
+    creado_por = models.CharField(null= False, max_length=10)
+    fecha_creado = models.DateField(null= False)
+    hora_creado = models.TimeField(null= False)
+    modificado_por = models.CharField(null= True, max_length=10)
+    fecha_status = models.DateField(null= True)
+    hora_status = models.TimeField(null= True)
+
+    class Meta:
+        managed = False
+        db_table = 'logarea'
+        unique_together = ('almacen', 'area')
+        
+class Logalma(models.Model):
+    almacen = models.CharField(primary_key= True, max_length=2)
+    descripcion = models.CharField(null= False, max_length=40)
+    creado_por = models.CharField(null= False, max_length=10)
+    fecha_creado = models.DateField(null= False)
+    hora_creado = models.TimeField(null= False)
+    fecha_trabajo = models.DateField(null= False)
+    max_dias_cierre = models.SmallIntegerField()
+    compania = models.CharField(max_length=3)
+    gerencia = models.CharField(max_length=2)
+    agencia = models.CharField(max_length=3)
+    principal = models.CharField(max_length=1)
+    factura = models.CharField(max_length=1)
+    tipo_almacen = models.CharField(max_length=1)
+    reserva = models.CharField(max_length=1)
+    dias_reserva = models.SmallIntegerField()
+    maneja_despacho = models.CharField(max_length=1)
+    dias_despachar = models.SmallIntegerField()
+    secuencia_reserva = models.SmallIntegerField()
+    totales_ctrl = models.CharField(max_length=1)
+    tipo_costo = models.CharField(max_length=1)
+    modificado_por = models.CharField(max_length=10)
+    status = models.CharField(max_length=1)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
+    genera_asiento = models.CharField(max_length=1)
+
+    class Meta:
+        managed = False
+        db_table = 'logalma'
+        
 
 
 class Paises(models.Model):
@@ -489,6 +538,7 @@ class Paises(models.Model):
     iso2 = models.CharField( null=True,max_length=3)
     iso3 = models.CharField( null=True,max_length=4)
     phone_code = models.CharField( null=True,max_length=7)
+    status = models.CharField(null= False, max_length=1)
 
     class Meta:
         managed = False
@@ -500,6 +550,7 @@ class Puertos(models.Model):
     pais = models.CharField( null=True,max_length=3)
     ciudad = models.CharField( null=True,max_length=5)
     tipo = models.CharField( null=True,max_length=1)
+    status = models.CharField(null= False, max_length=1)
 
     class Meta:
         managed = False

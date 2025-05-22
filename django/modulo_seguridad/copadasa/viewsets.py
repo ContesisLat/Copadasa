@@ -100,6 +100,15 @@ class LogubicaViewSet(viewsets.ModelViewSet):
     queryset = Logubica.objects.all()
     serializer_class = LogubicaSerializer
 
+class LogareaViewSet(viewsets.ModelViewSet):
+    queryset = Logarea.objects.all()
+    serializer_class = LogareaSerializer
+
+class LogalmaViewSet(viewsets.ModelViewSet):
+    queryset = Logalma.objects.all()
+    serializer_class = LogalmaSerializer
+    
+
 class PaisesViewSet(viewsets.ModelViewSet):
     queryset = Paises.objects.all()
     serializer_class = PaisesSerializer
