@@ -367,6 +367,7 @@ class Ciudades(models.Model):
     pais = models.CharField( null=True,max_length=3)
     ciudad = models.CharField( primary_key=True,max_length=5)
     nombre = models.CharField( null=True,max_length=50)
+    status = models.CharField(null= False, max_length=1)
 
     class Meta:
         managed = False
@@ -479,7 +480,7 @@ class Logubica(models.Model):
     class Meta:
         managed = False
         db_table = 'logubica'
-        unique_together = ('ubicacion')
+         
 
 class Logarea(models.Model):
     almacen = models.CharField( null=False, max_length=2)
@@ -525,9 +526,9 @@ class Logalma(models.Model):
     genera_asiento = models.CharField(max_length=1)
 
     class Meta:
-        manage = False
+        managed = False
         db_table = 'logalma'
-        unique_together = ('almacen')
+        
 
 
 class Paises(models.Model):
@@ -537,6 +538,7 @@ class Paises(models.Model):
     iso2 = models.CharField( null=True,max_length=3)
     iso3 = models.CharField( null=True,max_length=4)
     phone_code = models.CharField( null=True,max_length=7)
+    status = models.CharField(null= False, max_length=1)
 
     class Meta:
         managed = False
@@ -548,6 +550,7 @@ class Puertos(models.Model):
     pais = models.CharField( null=True,max_length=3)
     ciudad = models.CharField( null=True,max_length=5)
     tipo = models.CharField( null=True,max_length=1)
+    status = models.CharField(null= False, max_length=1)
 
     class Meta:
         managed = False

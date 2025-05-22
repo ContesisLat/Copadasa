@@ -127,3 +127,33 @@ export interface Cartari
     status?:string
     nom_status?:string   
 }
+
+export interface Logubica
+{
+    ubicacion?:string
+    almacen?:string
+    area?:string
+    anaquel?:string
+    cara?:string
+    fila?:string
+    columna?:string
+    status?:string
+    nom_status?:string
+}
+
+export interface Logarea
+{
+    almacen?:string
+    area?:string
+    descripcion?:string
+    status?:string
+    nom_status?:string
+}
+
+export interface Logalma
+{
+    almacen?:string
+    descripcion?:string
+    status?:string
+    nom_status?:string
+}

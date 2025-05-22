@@ -10,6 +10,7 @@ from django.conf import settings
 from PIL import Image
 from django.db import connection
 from pyzbar.pyzbar import decode
+
 # Create your views here.
 
 @csrf_exempt
