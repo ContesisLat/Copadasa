@@ -198,6 +198,7 @@ const startSearch = () => {
 };
 
 // Funcion para iniciar edición
+let pk : string
 const startUpdate = () => {
   isEditing.value = true;
   isInserting.value = false;
@@ -207,6 +208,7 @@ const startUpdate = () => {
   onlyRead.value = false;
   ButtonText.value = 'Editar';
   ButtonText2.value = 'Volver';
+  pk = formData.value.base_datos
 };
 
 //funcion para iniciar eliminacion
@@ -216,7 +218,7 @@ const starDelete = () => {
   isInserting.value = false;
   isSearching.value = false;
   canNavigate.value = false;
-  onlyRead.value = false;
+  onlyRead.value = true;
   ButtonText.value = 'Eliminar';
   ButtonText2.value = 'Volver'
 };
@@ -303,7 +305,7 @@ const handleUpdate = async () => {
   try {
     const response = await axios.post(dUrl.urlGlobal + '/api/update/', {
       table: 'segbdato',
-      filters: { base_datos: formData.value.base_datos }, // Filtro para identificar el registro a actualizar
+      filters: { base_datos: pk }, // Filtro para identificar el registro a actualizar
       data: {
         base_datos: formData.value.base_datos,
         tipo_base_datos: formData.value.tipo_base_datos,

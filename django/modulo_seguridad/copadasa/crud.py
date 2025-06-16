@@ -23,7 +23,7 @@ class InsertView(APIView):
 
         # Construye la consulta SQL de inserción
         columns = ', '.join(fields.keys())
-        placeholders = ', '.join(['?'] * len(fields))
+        placeholders = ', '.join(['%s'] * len(fields))
         sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
 
        
@@ -51,8 +51,8 @@ class UpdateView(APIView):
 
         try:
             # Construir la consulta SQL para la actualización
-            set_clause = ', '.join([f"{key} = ?" for key in updated_data.keys()])
-            where_clause = ' AND '.join([f"{key} = ?" for key in filters.keys()])
+            set_clause = ', '.join([f"{key} = %s" for key in updated_data.keys()])
+            where_clause = ' AND '.join([f"{key} = %s" for key in filters.keys()])
 
             query = f"UPDATE {table_name} SET {set_clause} WHERE {where_clause}"
             params = list(updated_data.values()) + list(filters.values())
@@ -79,7 +79,7 @@ class DeleteView(APIView):
             return Response({"error": "Faltan datos para la operación"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Construir la consulta SQL
-        where_clause = ' AND '.join([f"{key} = ?" for key in filters.keys()])
+        where_clause = ' AND '.join([f"{key} = %s" for key in filters.keys()])
         sql_query = f"DELETE FROM {table_name} WHERE {where_clause}"
 
         params = list(filters.values())
@@ -92,3 +92,4 @@ class DeleteView(APIView):
         except Exception as e:
             print(f"Error during DELETE operation: {e}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
