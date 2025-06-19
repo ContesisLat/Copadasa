@@ -86,6 +86,61 @@ def ciudades_por_pais(request):
     except Paises.DoesNotExist:
         # Manejar el caso en el que el país no exista
         return JsonResponse({'error': 'El país no existe'}, status=404)
+    
+def anaqueles_por_area(request):
+    if request.method == "GET":
+        id_almacen = request.GET.get('id_almacen')
+        id_area = request.GET.get('id_area')
+        loganaquel = Loganaquel.objects.filter(almacen=id_almacen, area=id_area).values()
+        try:
+            for anaquel in loganaquel:
+                if anaquel['status'] == "A":
+                    anaquel['nom_status'] = "Activo"
+                else:
+                    anaquel['nom_status'] = "Inactivo"
+
+            loganaquel_list = list(loganaquel) 
+            return JsonResponse(loganaquel_list, safe=False)
+        except Loganaquel.DoesNotExist:
+            return JsonResponse({'Error': 'No se pudo cargar los Anaqueles'}, status=404)
+
+def anaqueles_por_ubicacion(request):
+    if request.method == "GET":
+        id_almacen = request.GET.get('id_almacen')
+        id_area = request.GET.get('id_area')
+        id_anaquel = request.GET.get('id_anaquel')
+        id_cara = request.GET.get('id_cara')
+        logubica = Logubica.objects.filter(almacen=id_almacen, area=id_area, anaquel=id_anaquel, cara=id_cara).values()
+        try:
+            for ubica in logubica:
+                if ubica['status'] == "A":
+                    ubica['nom_status'] = "Activo"
+                else:
+                    ubica['nom_status'] = "Inactivo"
+        
+            logubica_list = list(logubica)
+            return JsonResponse(logubica_list, safe=False)
+        except Logubica.DoesNotExist:
+            return JsonResponse({'Error': 'No se pudo cargar las ubicaciones'}, status=404)
+        
+def areas_de_bodega(request):
+    logarea = Logarea.objects.all().values()
+    try:
+        for area in logarea:
+            id_almacen = area['almacen']
+            nombre = Logalma.objects.get(almacen =id_almacen).descripcion
+            area['nom_almacen'] = nombre
+
+            if area['status'] == "A":
+                area['nom_status'] = "Activo"
+            else:
+                area['nom_status'] = "Inactivo"
+
+        area_list = list(logarea)
+        return JsonResponse(area_list, safe=False)
+    except Logalma.DoesNotExist:
+        return JsonResponse({'error': 'Almacen no existe'}, status=404)
+
 
 def puertos_por_pais(request):
     id_ciudad = request.GET.get('id_ciudad')
@@ -117,6 +172,38 @@ def cargos_aereos(request):
             return JsonResponse(cargos_list, safe=False)
         except Caratenvue.DoesNotExist:
             return JsonResponse({'error': 'No Existen Cargos'}, status=404)
+        
+def control_manifiestos(request):
+    if request.method == "GET":
+        manifiesto = Carcmani.objects.all().values()
+        try:
+            for man in manifiesto:
+                id_operador = man['operador']
+                id_puerto = man['puerto_despacho']
+                nom_puerto = Puertos.objects.get(puerto=id_puerto).nombre
+                man['nom_pto_despacho'] = nom_puerto
+
+                id_puerto = man['puerto_destino']
+                nom_puerto = Puertos.objects.get(puerto=id_puerto).nombre
+                man['nom_pto_destino'] = nom_puerto
+
+                nom_operador = Caropera.objects.get(operador=id_operador).nombre
+                man['nom_operador'] = nom_operador
+
+                id_aeronave = man['aeronave']
+                nom_aeronave = Cartiaero.objects.get(aeronave=id_aeronave).descripcion
+                man['nom_aeronave'] = nom_aeronave
+
+                if man['status'] == "A":
+                    man['nom_status'] = "Activo"
+                else:
+                    man['nom_status'] = "Inactivo"
+
+            manifiesto_list = list(manifiesto)
+            return JsonResponse(manifiesto_list, safe=False)
+        except Carcmani.DoesNotExist:
+            return JsonResponse({'error': 'No Existen Manifiestos'}, status=404)
+
 
 def tarifas_aeronaves(request):
     id_aeronave = request.GET.get('id_aeronave')  # Obtener el valor del parámetro id_aeronave de la URL
@@ -141,6 +228,24 @@ def tarifas_aeronaves(request):
         # Manejar el caso en el que el país no exista
         return JsonResponse({'error': 'No Existen tarifas'}, status=404)
 
+def indicadores_carga(request):
+    if request.method == "GET":
+        indicador = Carinent.objects.all().values()
+        try:
+            for indi in indicador:
+                if indi['tipo'] == 'E':
+                    indi['nom_tipo'] = "Entrega"
+
+                if indi['status'] == 'A':
+                    indi['nom_status'] = "Activo"
+                else:
+                    indi['nom_status'] = "Inactivo"
+                
+            indicador_list = list(indicador)
+            return JsonResponse(indicador_list, safe=False)
+        except Carinent.DoesNotExist:
+            return JsonResponse({'error': 'No Existen Indicadores'}, status=404)
+        
 def cargos_manejo(request): 
     if request.method == "GET":
         cargos = Cargcaman.objects.all().values()

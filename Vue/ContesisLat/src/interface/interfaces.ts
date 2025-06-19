@@ -114,6 +114,16 @@ export interface Cartaralm
     nom_status?:string
 }
 
+export interface Carinent
+{
+    tipo?:string
+    nom_tipo?:string
+    codigo?:string
+    descripcion?:string
+    status?:string
+    nom_status?:string
+}
+
 export interface Cartari
 {
     tarifa?:string
@@ -144,8 +154,19 @@ export interface Logubica
 export interface Logarea
 {
     almacen?:string
+    nom_almacen?:string
     area?:string
     descripcion?:string
+    status?:string
+    nom_status?:string
+}
+
+export interface Loganaquel
+{
+    almacen?:string
+    area?:string
+    anaquel?:string
+    cara?:string
     status?:string
     nom_status?:string
 }
@@ -154,6 +175,41 @@ export interface Logalma
 {
     almacen?:string
     descripcion?:string
+    status?:string
+    nom_status?:string
+}
+
+export interface Carcmani
+{
+    fecha?:string
+    operador?:string
+    nom_operador?:string
+    numero_vuelo?:string
+    puerto_despacho?:string
+    nom_pto_despacho?:string
+    puerto_destino?:string
+    nom_pto_destino?:string
+    tot_piezas?:string
+    peso_kg?:string
+    aeronave?:string
+    nom_aeronave?:string
+    matricula?:string
+    status?:string
+    nom_status?:string
+}
+
+export interface Cardmani
+{
+    secuencia?:string
+    no_embarque?:string
+    naturaleza?:string
+    nom_naturaleza?:string
+    cant_items?:string
+    peso_kg?:string
+    remitente?:string
+    destinatario?:string
+    comentarios?:string
+    ubicacion?:string
     status?:string
     nom_status?:string
 }

@@ -14,7 +14,8 @@ class LoginService{
 
     async fetchByLogin(nombre_usuario:string,contrasena:string):Promise<void>{
         try{
-            const url = 'https://5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/api/seguser/login';
+            //const url = 'https://5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/api/seguser/login';
+            const url = 'http://127.0.0.1:8000/api/seguser/login';
             const response = await axios.post(url,{
                 nombre_usuario:nombre_usuario,
                 contrasena:contrasena},{
