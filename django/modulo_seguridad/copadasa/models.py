@@ -480,9 +480,11 @@ class Logubica(models.Model):
     class Meta:
         managed = False
         db_table = 'logubica'
+        unique_together = ('almacen', 'area', 'anaquel', 'cara', 'fila', 'columna')
          
 
 class Logarea(models.Model):
+    id = models.AutoField( primary_key=True, default=0, null=False )
     almacen = models.CharField( null=False, max_length=2)
     area = models.CharField(null= False, max_length=2)
     descripcion = models.CharField(null= False, max_length=30)
@@ -529,7 +531,24 @@ class Logalma(models.Model):
         managed = False
         db_table = 'logalma'
         
+class Loganaquel(models.Model):
+    id = models.AutoField( primary_key=True, default=0, null=False )
+    almacen = models.CharField(null= False, max_length=2)
+    area = models.CharField(null= False, max_length=2)
+    anaquel = models.CharField(null= False, max_length=2)
+    cara = models.CharField(null= False, max_length=1)
+    creado_por = models.CharField(null= False, max_length=10)
+    fecha_creado = models.DateField(null= False)
+    hora_creado = models.TimeField(null= False)
+    modificado_por = models.CharField(max_length=10)
+    status = models.CharField(null=False, max_length=1)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
 
+    class Meta:
+        managed = False
+        db_table = 'loganaquel'
+        unique_together = (('almacen', 'area', 'anaquel', 'cara'),)
 
 class Paises(models.Model):
     pais = models.CharField(primary_key=True,max_length=3)

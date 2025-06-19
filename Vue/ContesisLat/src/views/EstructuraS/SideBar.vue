@@ -26,8 +26,24 @@
 
         <li @click="store.openPopup('CarAtenVue')"><a class="dropdown-item">Cargos por Atención de Vuelos</a></li>
         <li @click="store.openPopup('TarVue')"><a class="dropdown-item">Tarifa Atención de Vuelos</a></li>
-        <li @click="store.openPopup('RegMani')"><a class="dropdown-item">Registro Manifiestos</a></li>
+        <li @click="store.openPopup('CarInent')"><a class="dropdown-item">Indicadores de Entrega</a></li>
+
+        <li @click="store.openPopup('LogUbica')"><a class="dropdown-item">Ubicaciones en Almacen</a></li>
+
+       
         <li @click="store.openPopup('BdSeg001')"><a class="dropdown-item">bases de datos</a></li>
+
+        <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
+      </ul>
+    </div>
+    <div class="btn-group dropend">
+      <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                 Procesos
+                 
+      </a>
+      <ul class="dropdown-menu" style="cursor: pointer;">
+        <li @click="store.openPopup('RegMani')"><a class="dropdown-item">Registro Manifiestos</a></li>
+        <li @click="store.openPopup('CtrlManifiesto')"><a class="dropdown-item">Control de Manifiestos</a></li>
 
         <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
       </ul>
