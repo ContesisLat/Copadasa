@@ -120,3 +120,23 @@ class PuertosViewSet(viewsets.ModelViewSet):
 class UbicacionViewSet(viewsets.ModelViewSet):
     queryset = Ubicacion.objects.all()
     serializer_class = UbicacionSerializer
+
+class LogtralViewSet(viewsets.ModelViewSet):
+    queryset = Logtral.objects.all()
+    serializer_class = LogtralSerializer
+
+class LogctmoViewSet(viewsets.ModelViewSet):
+    queryset = Logctmo.objects.all()
+    serializer_class = LogctmoSerializer
+
+class LogdemoViewSet(viewsets.ModelViewSet):
+    queryset = Logdemo.objects.all()
+    serializer_class = LogdemoSerializer
+
+class SegpaagViewSet(viewsets.ModelViewSet):
+    queryset = Segpaag.objects.all()
+    serializer_class = SegpaagSerializer
+
+class CrmclteViewSet(viewsets.ModelViewSet):
+    queryset = Crmclte.objects.all()
+    serializer_class = CrmclteSerializer

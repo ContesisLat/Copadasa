@@ -35,6 +35,10 @@ route.register('logalma', LogalmaViewSet)
 route.register('paises',PaisesViewSet)
 route.register('puertos',PuertosViewSet)
 route.register('ubicacion',UbicacionViewSet)
+route.register('logtral', LogtralViewSet)
+route.register('logctmo', LogctmoViewSet)
+route.register('logdemo', LogdemoViewSet)
+route.register('crmclte', CrmclteViewSet)
 
 urlpatterns = [
     path('paises/ciudad', ciudades_por_pais, name='ciudades_por_pais'),
@@ -49,9 +53,27 @@ urlpatterns = [
     path('cartaralm/', tarifas_almacenaje, name='tarifas_almacenaje'),
     path('carinent/', indicadores_carga, name='indicadores_carga'),
     path('cartari/', tarifas_frio, name='tarifas_frio'),
-    path('carcmani/cardmani/', control_manifiestos, name='contro_manifiestos'),
+    path('carcmani/', control_manifiesto, name='control_manifiesto'),
+    path('logtral/', transacciones_almacen, name='transacciones_almacen' ),
+    path('logctmo/', control_movimientos, name='control_movimientos'),
+    path('logctmo/logdemo', detalles_movimientos, name='detalles_movimientos'),
+    path('cardeent/mostrar', mostrar_calculos, name='mostrar_calculos'),
+    path('carcmani/cardmani', detalle_manifiesto, name='detalle_manifiesto'),
+    path('carentre/', control_despacho, name='control_despacho'),
+    path('carentre/cardeent', detalle_despacho, name='detalle_despacho'),
+    path('carcmani/calculo', calcula_manifiesto, name='calcula_manifiesto'),
+    path('logctmo/calculo', calculo_cuartofrio, name='calculo_cuartofrio'),
+    path('logctmo/salida', despacho_cuartofrio, name="despacho_ctofrio"),
+    path('crmclte/', clientes_default, name='clientes_default'),
+    path('logalma/', define_almacenes, name='define_almacenes'),
     path('cardmani/filter', CardmaniFilterView.as_view(), name='cardmani-filter'),
+    path('caratvued/filter', CaratvuedFilterView.as_view(), name='servuelos-filter'),
     path('puertos/filter', PuertosFilterView.as_view(), name='puertos-filter'),
+    path('compania/filter', CompaniaFilterView.as_view(), name='compania-filter'),
+    path('naturaleza/filter', NaturalezaFilterView.as_view(), name='naturaleza-filter'),
+    path('caratenvue/filter', CaratenvueFilterView.as_view(), name='caratenvue-filter'),
+    path('logtral/filter', LogtralFilterView.as_view(), name='logtral-filter'),
+    path('crmclte/filter', CrmclteFilterView.as_view(), name='crmclte-filter'),
     path('query',query_global, name='query_global'),
     path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
     path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro

@@ -17,9 +17,9 @@
                             style="background-color: transparent; border: none; outline: none; color: black;"
                             v-model="options">
                             <option disabled value="">Select</option>
-                            <option>Fecha</option>
-                            <option>Operador</option>
-                            <option>AirWayBill</option>
+                            <option>Area</option>
+                            <option>Anaquel</option>
+                            <option>Fila</option>
                         </select>
                     </div>
                 </div>

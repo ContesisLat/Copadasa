@@ -1,28 +1,55 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Insertar Compañías Aéreas</h4>
+        <h4>Registro Códigos Tr. Inventarios</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
-            <div class="col-md-4">
-                <label for="validationCustom01" class="form-label">Naturaleza</label>
-                <input type="text" v-model="naturaleza" class="form-control" id="validationCustom01" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-4">
-                <label for="validationCustom02" class="form-label">Nombre</label>
-                <input type="text" v-model="nombre" class="form-control" id="validationCustom02"  required>
+            <div class="col-md-2">
+                <label for="validationCustom01" class="form-label">Código</label>
+                <input type="text" v-model="codigo" class="form-control" id="validationCustom01" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">Status</label>
+                <label for="validationCustom02" class="form-label">Descripción</label>
+                <input type="text" v-model="descripcion" class="form-control" id="validationCustom02"  required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Acción</label>
+                <select class="form-select" v-model="accion" id="validationCustom04" required >
+                    <option value="S" selected>Suma</option>
+                    <option value="R">Resta</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select a valid state.
+                </div>
+            </div>
+             <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Cltes</label>
+                <select class="form-select" v-model="maneja_cliente" id="validationCustom04" required >
+                    <option value="S" selected>Sí</option>
+                    <option value="N">No</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select a valid state.
+                </div>
+            </div>
+            <div class="col-md-1">
+                <label for="validationCustom02" class="form-label">Secuencia</label>
+                <input type="text" v-model="secuencia" class="form-control" id="validationCustom02"  required disabled>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Estado</label>
                 <select class="form-select" v-model="status" id="validationCustom04" required >
-                    <option>A</option>
-                    <option>I</option>
+                    <option value="A" selected>Activo</option>
+                    <option value="I">Inactivo</option>
                 </select>
                 <div class="invalid-feedback">
                     Please select a valid state.
@@ -48,8 +75,11 @@ const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const naturaleza = ref<string>('')
-const nombre = ref<string>('')
+const codigo = ref<string>('')
+const descripcion = ref<string>('')
+const accion = ref<string>('')
+const maneja_cliente = ref<string>('')
+const secuencia = ref<string>('')
 const status = ref<string>('')
 
 //props y emits----------------------------------------------------------------
@@ -67,10 +97,12 @@ const handleSubmit = async () =>{
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"carnatur",
+        model:"logtral",
         data:{
-            naturaleza:naturaleza.value,
-            nombre:nombre.value,
+            codigo:codigo.value,
+            descripcion:descripcion.value,
+            accion:accion.value,
+            maneja_cliente:maneja_cliente.value,
             status:status.value,
             creado_por:userStore.globalUser,
             fecha_creado:dateTimeStore.formattedDate,

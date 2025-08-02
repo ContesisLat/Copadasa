@@ -1,19 +1,19 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Insertar Compañías Aéreas</h4>
+        <h4>Tarifas de Refrigeración</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
-                <label for="validationCustom01" class="form-label">Naturaleza</label>
-                <input type="text" v-model="naturaleza" class="form-control" id="validationCustom01" required>
+                <label for="validationCustom01" class="form-label">Inicio</label>
+                <input type="date" v-model="fecha_inicio" class="form-control" id="validationCustom01" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-4">
-                <label for="validationCustom02" class="form-label">Nombre</label>
-                <input type="text" v-model="nombre" class="form-control" id="validationCustom02"  required>
+                <label for="validationCustom02" class="form-label">Final</label>
+                <input type="date" v-model="fecha_final" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -48,8 +48,14 @@ const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const naturaleza = ref<string>('')
-const nombre = ref<string>('')
+const fecha_inicio = ref<string>('')
+const fecha_final = ref<string>('')
+const entrada = ref<string>('')
+const medida = ref<string>('')
+const peso_base = ref<string>('')
+const costo_diario = ref<string>('')
+const minimo_diario = ref<string>('')
+const full_pallet = ref<string>('')
 const status = ref<string>('')
 
 //props y emits----------------------------------------------------------------
@@ -67,10 +73,10 @@ const handleSubmit = async () =>{
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"carnatur",
+        model:"cartitar",
         data:{
-            naturaleza:naturaleza.value,
-            nombre:nombre.value,
+            fecha_inicio:fecha_inicio.value,
+            nombre:fecha_final.value,
             status:status.value,
             creado_por:userStore.globalUser,
             fecha_creado:dateTimeStore.formattedDate,

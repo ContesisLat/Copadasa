@@ -7,6 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework import generics
 from .serializer import *
 from django_filters.rest_framework import DjangoFilterBackend
+import decimal
+from django.db.models import Sum
+from datetime import date, datetime,time, timedelta
+#from django.db import transaction
 
 @api_view(['POST'])
 def query_global(request):
@@ -158,7 +162,6 @@ def puertos_por_pais(request):
         return JsonResponse({'error': 'El país no existe'}, status=404)
     
 def cargos_aereos(request):
-    print('ingreso')
     if request.method == "GET":
         cargos = Caratenvue.objects.all().values()
         try:
@@ -173,37 +176,85 @@ def cargos_aereos(request):
         except Caratenvue.DoesNotExist:
             return JsonResponse({'error': 'No Existen Cargos'}, status=404)
         
-def control_manifiestos(request):
+def control_manifiesto(request):
     if request.method == "GET":
-        manifiesto = Carcmani.objects.all().values()
+        manifiesto = Carcmani.objects.all().values() 
         try:
             for man in manifiesto:
-                id_operador = man['operador']
-                id_puerto = man['puerto_despacho']
-                nom_puerto = Puertos.objects.get(puerto=id_puerto).nombre
-                man['nom_pto_despacho'] = nom_puerto
-
-                id_puerto = man['puerto_destino']
-                nom_puerto = Puertos.objects.get(puerto=id_puerto).nombre
-                man['nom_pto_destino'] = nom_puerto
-
+                id_operador = man['operador'] 
                 nom_operador = Caropera.objects.get(operador=id_operador).nombre
                 man['nom_operador'] = nom_operador
 
-                id_aeronave = man['aeronave']
+                id_puertor = man['puerto_despacho']
+                nom_puerto = Puertos.objects.get(puerto=id_puertor).nombre
+                man['nom_pto_despacho'] = nom_puerto
+                 
+                id_puerto = man['puerto_destino']
+                nom_puerto = Puertos.objects.get(puerto=id_puerto).nombre
+                man['nom_pto_destino'] = nom_puerto
+             
+                id_aeronave = man['aeronave']            
                 nom_aeronave = Cartiaero.objects.get(aeronave=id_aeronave).descripcion
                 man['nom_aeronave'] = nom_aeronave
 
-                if man['status'] == "A":
-                    man['nom_status'] = "Activo"
-                else:
-                    man['nom_status'] = "Inactivo"
+                if man['status'] == "R":
+                    man['nom_status'] = "Registrado"
+                if man['status'] == "C":
+                    man['nom_status'] = "Confirmado"
+                if man['status'] == "K":
+                    man['nom_status'] = "Liquidado"
+                if man['status'] == "D":
+                    man['nom_status'] = "Despachado"
+                if man['status'] == "E":
+                    man['nom_status'] = "Anulado"
+                
 
             manifiesto_list = list(manifiesto)
             return JsonResponse(manifiesto_list, safe=False)
-        except Carcmani.DoesNotExist:
+        except Carcmani.DoesNotExist:      
             return JsonResponse({'error': 'No Existen Manifiestos'}, status=404)
 
+def detalle_manifiesto(request):
+    id_fecha = request.GET.get('id_fecha')
+    id_operador = request.GET.get('id_operador')
+    id_numero_vuelo = request.GET.get('id_numero_vuelo')
+
+    cardmani = Cardmani.objects.filter(fecha=id_fecha, operador=id_operador, numero_vuelo=id_numero_vuelo).values()
+    try:
+        for dmani in cardmani:
+            id_naturaleza = dmani['naturaleza']
+            nombre_natur = Carnatur.objects.get(naturaleza=id_naturaleza).nombre
+            dmani['nom_naturaleza'] = nombre_natur
+
+            if dmani['status'] == "R":
+                dmani['nom_status'] = "Registrado"
+            if dmani['status'] == "L":
+                dmani['nom_status'] = "Confirmado"
+            if dmani['status'] == "C":
+                dmani['nom_status'] = "Calculado"
+            if dmani['status'] == "K":
+                dmani['nom_status'] = "Liquidado"
+            if dmani['status'] == "D":
+                dmani['nom_status'] = "Despachado"
+
+        cardmani_list = list(cardmani)
+        return JsonResponse(cardmani_list, safe=False)
+    except Cardmani.DoesNotExist:
+        return JsonResponse({'Error:' 'No existen detalles detalles'}, status=404)
+
+def compania_aerea(request):
+    carcoaer = Carcoaer.objects.all().values()
+    try:
+        for comp in carcoaer:
+            if comp['status'] == "A":
+                comp['nom_status'] = "Activo"
+            else:
+                comp['nom_status'] = "Inactivo"
+        
+        carcoaer_list = list(carcoaer)
+        return JsonResponse(carcoaer_list, safe=False)
+    except Carcoaer.DoesNotExist:
+        return JsonResponse({'error': 'No hay compañías'}, status=404)
 
 def tarifas_aeronaves(request):
     id_aeronave = request.GET.get('id_aeronave')  # Obtener el valor del parámetro id_aeronave de la URL
@@ -305,11 +356,12 @@ def tarifas_almacenaje(request):
             return JsonResponse(tarifa_list, safe=False)
     except Cartaralm.DoesNotExist:
         return JsonResponse({'error': 'No puede accesar Tarifas'}, status=404 )
-          
+
 def tarifas_frio(request):
     if request.method == "GET":
+        id_tarifa = request.GET.get('id_tarifa')
         try:
-            id_tarifa = "03"
+            #id_tarifa = "03"
             tarifas = Cartari.objects.filter(tarifa=id_tarifa).values()
             for tarifa in tarifas:
                 if tarifa['status'] == "A":
@@ -322,6 +374,408 @@ def tarifas_frio(request):
         except Cartari.DoesNotExist:
             return JsonResponse({'error': 'Error al cargar Tarifas'}, status=404)
 
+def transacciones_almacen(request):
+    logtral = Logtral.objects.all().values()
+    try:
+        for tral in logtral:
+            if tral['status'] == "A":
+                tral['nom_status'] = "Activo"
+            else:
+                tral['nom_status'] = "Inactivo"
+
+            if tral['accion'] == "S":
+                tral['nom_accion'] = "Suma"
+            else:
+                tral['nom_accion'] = "Resta"
+
+            if tral['maneja_cliente'] == "S":
+                tral['nom_maneja_clte'] = "Sí"
+            else:
+                tral['nom_maneja_clte'] = "No"
+
+        logtral_list = list(logtral)
+        return JsonResponse(logtral_list, safe=False)
+    except Logtral.DoesNotExist:
+        return JsonResponse({'Error': 'No hay información'}, status=404)    
+    
+def calcula_manifiesto(request):
+        id_reg = request.GET.get('id')
+        cardmani = Cardmani.objects.filter(id=id_reg).values()
+        now = datetime.now()
+        try:
+            for detalle in cardmani:
+                m_fecha = detalle['fecha']
+                id_operador = detalle['operador']
+                id_numero_vuelo = detalle['numero_vuelo']
+                id_no_embarque = detalle['no_embarque']
+
+                fecha_confirma = detalle['fecha_confirma']
+                hora_confirma = detalle['hora_confirma']
+
+                Cardeent.objects.filter(fecha_manifiesto=m_fecha, operador=id_operador, 
+                                numero_vuelo=id_numero_vuelo, no_embarque=id_no_embarque).delete()
+            
+                Carentre.objects.filter(fecha_manifiesto=m_fecha, operador=id_operador, 
+                                    numero_vuelo=id_numero_vuelo, no_embarque=id_no_embarque).delete()
+            
+                id_cant_items = detalle['cant_items']
+                id_destinatario = detalle['destinatario']
+                id_peso = detalle['peso_kg']
+                id_fecha = now.date()
+                w_hora = now.time()
+                id_hora = w_hora.strftime('%H:%M:%S')
+                Carentre.objects.create(fecha=id_fecha, fecha_manifiesto=m_fecha, operador=id_operador,
+                                     numero_vuelo=id_numero_vuelo, no_embarque=id_no_embarque, creado_por='contesis',
+                                     fecha_creado=id_fecha, hora_creado=id_hora, piezas_entrega=id_cant_items,
+                                     piezas_faltantes=0, piezas_buenas=id_cant_items, monto=0, status='G', 
+                                     destinatario=id_destinatario, peso=id_peso)
+            
+            #cargcaman = Cargcaman.objects.filter(tipo='M', status='A').values()
+       
+            #for cargo in cargcaman:
+               
+                tarifa = Cartitar.objects.get(tipo='M', status='A').tarifa
+                cartarman = Cartarman.objects.filter(tarifa=tarifa, status='A').values()
+                for tarifa in cartarman:
+                    id_cargo = tarifa['cargo']
+                    id_valor = tarifa['valor']
+                    id_aplica = tarifa['aplica']
+                    if id_aplica == 'G':
+                        valor = id_valor
+                    if id_aplica == 'P':
+                        valor = id_valor * id_peso
+
+                    Cardeent.objects.create(fecha=id_fecha, fecha_manifiesto=m_fecha, operador=id_operador,
+                                        numero_vuelo=id_numero_vuelo, no_embarque=id_no_embarque, tarifa=id_cargo,
+                                        monto= valor, status='A', fecha_status=id_fecha, hora_status=id_hora)
+                    
+                Cardmani.objects.filter(id=id_reg).update(status='C', modificado_por='contesis', 
+                                            fecha_status=id_fecha, hora_status=id_hora)   
+#       Calcula Almacenaje
+                dalmacen = Segpaag.objects.get(compania='300', agencia='001', aplicacion='CAR', parametro='dias_gracia_alm').valor
+                halmacen = Segpaag.objects.get(compania='300', agencia='001', aplicacion='CAR', parametro='hora_corte_alm').hora
+
+                dias_tiempo = id_fecha - fecha_confirma
+                dias_transcurridos = dias_tiempo.days
+   
+                if (hora_confirma >= halmacen):
+                    dias_transcurridos = dias_transcurridos + 1
+   
+                dalmacen = int(dalmacen)
+                dias_extra = dias_transcurridos - dalmacen
+
+                if (dias_transcurridos > dalmacen):
+                    id_tarifa = Cartitar.objects.get(tipo='A', status='A').tarifa
+                    cartaralm = Cartaralm.objects.filter(tarifa=id_tarifa, fecha_inicio__lt=id_fecha, fecha_final__gte=id_fecha, status='A').values()
+                    for taralm in cartaralm:
+                        peso_base = taralm['peso_base']
+                        valor_base = taralm['valor_base']
+                        peso_adic = taralm['peso_adicional']
+                        valor_peso_adic = taralm['valor_peso_adic']
+
+                        if id_peso > peso_base:
+                            valor = valor_base
+                            peso_xtra = id_peso - peso_base
+                            factor_peso_adic = peso_xtra / peso_adic
+                            valor = valor + factor_peso_adic * valor_peso_adic
+                        else:
+                            valor = valor_base
+                
+                        valor = valor * dias_extra
+                        Cardeent.objects.create(fecha=id_fecha, fecha_manifiesto=m_fecha, operador=id_operador,
+                                        numero_vuelo=id_numero_vuelo, no_embarque=id_no_embarque, tarifa=id_tarifa,
+                                        monto= valor, status='A', fecha_status=id_fecha, hora_status=id_hora)
+
+            return JsonResponse('Calculado', safe=False)
+        except Cargcaman.DoesNotExist:
+            return JsonResponse({'Error': 'No hay para calcular'}, status=404)
+
+def mostrar_calculos(request):
+    id_fecha = request.GET.get('fecha')
+    id_operador = request.GET.get('operador')
+    id_numero_vuelo = request.GET.get('numero_vuelo')
+    id_no_embarque = request.GET.get('no_embarque')
+    cardeent = Cardeent.objects.filter(fecha=id_fecha, operador=id_operador, id_numero_vuelo=id_numero_vuelo,
+                                       no_embarque=id_no_embarque).values()
+    
+    try:
+        for card in cardeent:
+            id_tarifa = card['tarifa']
+            nom_tarifa = Cargcaman.objects.get(cargo=id_tarifa).nombre
+            card['nom_tarifa'] = nom_tarifa
+
+            if card['status'] == "A":
+                card['nom_status'] = "Activo"
+            else:
+                card['nom_status'] = "Inactivo"
+        
+        cardeent_list = list(cardeent)
+        return JsonResponse(cardeent_list, safe=False)
+
+    except Cardeent.DoesNotExist:
+        return JsonResponse({'Error':'No hay informacion'}, status=404)
+    
+
+def control_despacho(request):
+    carentre = Carentre.objects.all().values()
+    try:
+        for car in carentre:
+            id_operador = car['operador']
+            nom_operador = Caropera.objects.get(operador=id_operador).nombre
+            car['nom_operador'] = nom_operador
+            if car['status'] == "G":
+                car['nom_status'] = "Generado"
+            else:
+                car['nom_status'] = "Despachado" 
+                
+        carentre_list = list(carentre)
+        return JsonResponse(carentre_list, safe=False)
+    except Carentre.DoesNotExist:
+        return JsonResponse({'Error', 'No hay información'}, status=404)
+    
+def detalle_despacho(request):
+        id_fecha = request.GET.get('id_fecha')
+        id_fecha_manifiesto = request.GET.get('id_fecha_manifiesto')
+        id_operador = request.GET.get('id_operador')
+        id_numero_vuelo = request.GET.get('id_numero_vuelo')
+        id_no_embarque = request.GET.get('id_no_embarque')
+    
+    
+        cardeent = Cardeent.objects.filter(fecha=id_fecha, fecha_manifiesto=id_fecha_manifiesto, 
+                                       operador=id_operador, numero_vuelo=id_numero_vuelo,
+                                       no_embarque=id_no_embarque).values()
+        try:
+            for car in cardeent:
+                id_cargo = car['tarifa']
+                nom_cargo = Cargcaman.objects.get(cargo=id_cargo).nombre
+                car['nom_tarifa'] = nom_cargo
+
+                if car['status'] == "A":
+                    car['nom_status'] = "Activo"
+                else:
+                    car['nom_staus'] = "Inactivo"
+        
+            cardeent_list = list(cardeent)
+            return JsonResponse(cardeent_list, safe=False)
+
+        except Cardeent.DoesNotExist:
+            return JsonResponse({'error:', 'No hay informacion'}, status=404)
+    
+def clientes_default(request):
+    id_cliente = request.GET.get('cliente')
+    crmclte = Crmclte.objects.filter(cliente=id_cliente).values()
+    try:
+        for clte in crmclte:
+            if clte['code_id'] == 'N':
+                clte['nom_code_id'] = 'Natural'
+            else:
+                clte['nom_code_id'] = 'Jurídico'
+
+            if clte['status'] == 'A':
+                clte['nom_status'] = 'Activo'
+            if clte['status'] == 'I':
+                clte['nom_status'] = 'Inactivo'
+
+        crmclte_list = list(crmclte)
+        return JsonResponse(crmclte_list, safe=False)
+
+    except Crmclte.DoesNotExist:
+        return JsonResponse({'Error': 'No hay información'}, status=404)
+    
+def define_almacenes(request):
+    logalma = Logalma.objects.all().values()
+    try:
+        for alma in logalma:
+            if alma['tipo_almacen'] == "P":
+                alma['nom_tipo_almacen'] = 'Normal'
+
+            if alma['tipo_almacen'] == "C":
+                alma['nom_tipo_almacen'] = "Cuarto Frío"
+
+            if alma['status'] == "A":
+                alma['nom_status'] = "Activo"
+            else:
+                alma['nom_status'] = "Inactivo"
+        
+        logalma_list = list(logalma)
+        return JsonResponse(logalma_list, safe=False)
+    except Logalma.DoesNotExist:
+        return JsonResponse({'Error' :' No hay información'}, status=404)
+
+def control_movimientos(request):
+        logctmo = Logctmo.objects.all().values()
+        try:
+            for ctmo in logctmo:
+                id_cliente = ctmo['cliente']
+                ctmo['nom_cliente']= Crmclte.objects.get(cliente=id_cliente).nombre_comercial
+                id_codigo = ctmo['codigo']
+                ctmo['nom_codigo'] = Logtral.objects.get(codigo=id_codigo).descripcion
+                if ctmo['status'] == "I":
+                    ctmo['nom_status'] = "Ingresada"
+                if ctmo['status'] == "C":
+                    ctmo['nom_status'] = "Calculada"
+                if ctmo['status'] == "D":
+                    ctmo['nom_status'] = "Despachada"
+        
+            logctmo_list = list(logctmo)
+            return JsonResponse(logctmo_list, safe=False)
+        except Logctmo.DoesNotExist:
+            return JsonResponse({'Error' : 'No hay información que mostrar'}, status=404)
+    
+def detalles_movimientos(request):
+        id_compania = request.GET.get('id_compania')
+        id_agencia = request.GET.get('id_agencia')
+        id_fecha = request.GET.get('id_fecha')
+        id_almacen = request.GET.get('id_almacen')
+        id_codigo = request.GET.get('id_codigo')
+        id_documento = request.GET.get('id_documento')
+     
+        logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=id_fecha, almacen=id_almacen, codigo=id_codigo, documento=id_documento).values()
+        try:
+            for demo in logdemo:
+                if demo['status'] == "I":
+                    demo['nom_status'] = "Ingresada"
+                if demo['status'] == "C":
+                    demo['nom_status'] = "Calculada"
+                if demo['status'] == "D":
+                    demo['nom_status'] = "Despachada"
+        
+            logdemo_list = list(logdemo)
+            return JsonResponse(logdemo_list, safe=False)
+        except Logdemo.DoesNotExist:
+            return JsonResponse({'Error': 'No hay información'}, status=404)
+
+def calculo_cuartofrio(request):
+        id_reg = request.GET.get('id')
+        logctmo = Logctmo.objects.filter(id=id_reg).values()
+        now = datetime.now()
+        id_fecha = now.date()
+        w_hora = now.time()
+        id_hora = w_hora.strftime('%H:%M:%S')
+        try:
+            for ctmo in logctmo:
+                id_compania = ctmo['compania']
+                id_agencia = ctmo['agencia']
+                idw_fecha = ctmo['fecha']
+                id_almacen = ctmo['almacen']
+                id_codigo = ctmo['codigo']
+                id_documento = ctmo['documento']
+                id_fecha_llegada = ctmo['fecha_llegada']
+                id_hora_llegada = ctmo['hora_llegada']
+            
+                dias = id_fecha - id_fecha_llegada
+                dias_servicio = dias.days
+                cartari = Cartari.objects.filter(tarifa='03', fecha_inicio__lt=id_fecha, fecha_final__gte=id_fecha,
+                                            status='A').values()
+                for tari in cartari:
+                    id_entrada = tari['entrada']
+                    id_costo_diario = tari['costo_diario']
+                    id_minimo_diario = tari['minimo_diario']
+                    id_full_pallet = tari['full_pallet']
+                    id_peso_base = tari['peso_base']
+
+                logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=idw_fecha,
+                            almacen=id_almacen, codigo=id_codigo, documento=id_documento).values()
+            
+                for demo in logdemo:
+                    id_demo = demo['id']
+                    id_secuencia = demo['secuencia']
+                    id_pallets = demo['pallets']
+                    id_peso = demo['peso']
+                    id_cajas = demo['cajas']
+                    entrada = id_entrada
+                    if id_pallets > 0:
+                        valor = id_pallets * id_full_pallet
+                    if id_cajas > 0:
+                        if id_peso > id_peso_base: 
+                            peso_dif = id_peso - id_peso_base
+                            valor = valor + peso_dif * id_costo_diario
+                        else:
+                            valor = 0 
+                        if valor < id_minimo_diario:
+                            valor = id_minimo_diario
+
+                    valorf = valor * dias_servicio
+                    valorf = valorf + entrada
+                
+
+                    Logdemo.objects.filter(id=id_demo).update(monto=valorf, status='C', modificado_por='contesis',
+                            fecha_status=id_fecha, hora_status=id_hora)
+
+                resultado = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=idw_fecha,
+                        almacen=id_almacen, codigo=id_codigo, documento=id_documento).aggregate(
+                        total=Sum('monto'))
+            
+                total_ctmo = decimal.Decimal(resultado['total'])
+            
+                Logctmo.objects.filter(id=id_reg).update(valor=total_ctmo, status='C', modificado_por='contesis',
+                        fecha_status=id_fecha, hora_status=id_hora)
+                Logctmo.save()
+                Logdemo.save()
+            return JsonResponse('Se generó el calculo...', safe=False)    
+        except Logctmo.DoesNotExist:
+            return JsonResponse({'Error ':'No hay información por mostrar'}, status=404)
+
+def despacho_cuartofrio(request):
+    id_registro = request.GET.get('id')
+    now = datetime.now()
+    id_fecha = now.date()
+    w_hora = now.time()
+    id_hora = w_hora.strftime('%H:%M:%S')
+    logtral = Logtral.objects.filter(accion='R', maneja_cliente='S').values()
+    for tral in logtral:
+        id_codigo = tral['codigo']
+        id_secuencia = tral['secuencia']
+        if id_secuencia != 'number':
+            id_secuencia = 0
+
+        id_documento = id_secuencia + 1
+    
+    logctmo = Logctmo.objects.filter(id=id_registro).values()
+    try:
+        for ctmo in logctmo:
+            id_compania = ctmo['compania']
+            id_agencia = ctmo['agencia']
+            ant_fecha = ctmo['fecha']
+            ant_codigo = ctmo['codigo']
+            id_almacen = ctmo['almacen']
+            ant_documento = ctmo['documento']
+            id_guia = ctmo['guia_despacho']
+
+            id_cliente = ctmo['cliente']
+            id_valor = ctmo['valor']
+
+        Logctmo.objects.create(compania=id_compania, agencia=id_agencia, fecha=id_fecha, almacen=id_almacen,
+                    codigo=id_codigo, documento=id_documento, fecha_creado=id_fecha, hora_creado=id_hora,
+                    guia_despacho=id_guia, cliente=id_cliente, valor=id_valor, status='D')
+    
+        logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=ant_fecha, 
+                    almacen=id_almacen, codigo=ant_codigo, documento=ant_documento).values()
+    
+        for demo in logdemo:
+            id_orden = demo['orden_produccion']
+            id_sec = demo['secuencia']
+            id_pallets = demo['pallets']
+            id_cajas = demo['cajas']
+            id_peso = demo['peso']
+            id_monto = demo['monto']
+            Logdemo.objects.create(compania=id_compania, agencia=id_agencia, fecha=id_fecha, almacen=id_almacen,
+                        codigo=id_codigo, documento=id_documento, secuencia=id_sec, orden_produccion=id_orden,
+                        pallet_desp=id_pallets, peso_desp=id_peso, cajas_desp=id_cajas, monto=id_monto, status='D')
+
+        Logctmo.objects.filter(id=id_registro).update(status='D', modificado_por='contesis', 
+                                    fecha_status=id_fecha, hora_status=id_hora)
+    
+        Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=ant_fecha, almacen=id_almacen,
+                           codigo=ant_codigo, documento=ant_documento).update(status='D', modificado_por='contesis',
+                            fecha_status=id_fecha, hora_status=id_hora)
+    
+        Logtral.objects.filter(codigo=id_codigo).update(secuencia=id_documento)
+
+        return JsonResponse('Se generó el despacho satisfactoriamente...', safe=False)
+    except Logctmo.DoesNotExist:
+        return JsonResponse({'Error': ' No se encontró la entrada...'}, status=404)
+
 
 #nuevo filtrado en tabla        
 class CardmaniFilterView(generics.ListAPIView):
@@ -330,8 +784,44 @@ class CardmaniFilterView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['numero_vuelo']  # Aquí defines los campos por los que quieres filtrar
 
+class CaratvuedFilterView(generics.ListAPIView):
+    queryset = Caratvued.objects.all()
+    serializer_class = CaratvuedSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['fecha', 'compania', 'matricula']
+
+class CompaniaFilterView(generics.ListAPIView):
+    queryset = Carcoaer.objects.all()
+    serializer_class = CarcoaerSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['status']
+
+class CaratenvueFilterView(generics.ListAPIView):
+    queryset = Caratenvue.objects.all()
+    serializer_class = CaratenvueSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['status']
+
 class PuertosFilterView(generics.ListAPIView):
-    queryset = Cardmani.objects.all()
+    queryset = Puertos.objects.all()
     serializer_class = PuertosSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['status'] 
+
+class NaturalezaFilterView(generics.ListAPIView):
+    queryset = Carnatur.objects.all()
+    serializer_class = CarnaturSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['status']
+
+class LogtralFilterView(generics.ListAPIView):
+    queryset = Logtral.objects.all()
+    serializer_class = LogtralSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_field = ['status']
+
+class CrmclteFilterView(generics.ListAPIView):
+    queryset = Crmclte.objects.all()
+    serializer_class = CrmclteSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_field = ['status']

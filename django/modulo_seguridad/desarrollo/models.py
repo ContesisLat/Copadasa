@@ -242,6 +242,9 @@ class SegPara(models.Model):
 
     class Meta:
         db_table='segpara'
+        managed = False
+        unique_together = (('aplicacion', 'parametro'),)
+
       
 
 class SegAperf(models.Model):

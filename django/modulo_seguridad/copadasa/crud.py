@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from django.db import connections
 from .serializer import *
 from django.http import JsonResponse
+from django.db import transaction
+
 
 class InsertView(APIView):
     """
@@ -17,7 +19,21 @@ class InsertView(APIView):
         # Obtiene el nombre de la tabla y los datos de la solicitud
         table_name = request.data.get('model')
         fields = request.data.get('data')
+        #with transaction.atomic():
+         
+        if table_name == 'logctmo':
+            id_codigo = fields['codigo'] 
+            id_secuencia = Logtral.objects.select_for_update().get(codigo=id_codigo).secuencia
+            if id_secuencia is None:
+                idw_secuencia = 0 
+            else:
+                idw_secuencia = int(id_secuencia)
 
+            id_secuencia = idw_secuencia + 1
+
+            Logtral.objects.filter(codigo=id_codigo).update(secuencia=id_secuencia)
+            fields['documento'] = id_secuencia
+             
         if not table_name or not fields:
             return Response({"error": "Faltan datos o nombre de la tabla"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -26,7 +42,6 @@ class InsertView(APIView):
         placeholders = ', '.join(['%s'] * len(fields))
         sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
 
-       
         try:
             with connections['copadasa_db'].cursor() as cursor:
                     cursor.execute(sql, list(fields.values()))
@@ -47,6 +62,7 @@ class UpdateView(APIView):
         updated_data = request.data.get('data')
 
         if not table_name or not filters or not updated_data:
+           
             return Response({"error": "Faltan datos para la operación"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
@@ -57,6 +73,8 @@ class UpdateView(APIView):
             query = f"UPDATE {table_name} SET {set_clause} WHERE {where_clause}"
             params = list(updated_data.values()) + list(filters.values())
 
+            print(query)
+            
             # Ejecutar la consulta
             with connections['copadasa_db'].cursor() as cursor:
                 cursor.execute(query, params)
@@ -64,6 +82,7 @@ class UpdateView(APIView):
             return Response({"message": "Registro actualizado exitosamente"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": f"Error durante la operación de actualización: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class DeleteView(APIView):
     """
