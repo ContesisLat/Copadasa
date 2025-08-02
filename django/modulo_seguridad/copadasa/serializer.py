@@ -149,3 +149,28 @@ class UbicacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ubicacion
         fields = '__all__'
+
+class LogtralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logtral
+        fields = '__all__'
+
+class LogctmoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logctmo
+        fields = '__all__'
+
+class LogdemoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logdemo
+        fields = '__all__'
+
+class SegpaagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Segpaag
+        fields = '__all__'
+
+class CrmclteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crmclte
+        fields = '__all__'

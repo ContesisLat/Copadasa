@@ -1,12 +1,12 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Insertar Compañías Aéreas</h4>
+        <h4>Ingresar Compañías Aéreas</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
-                <label for="validationCustom01" class="form-label">Naturaleza</label>
-                <input type="text" v-model="naturaleza" class="form-control" id="validationCustom01" required>
+                <label for="validationCustom01" class="form-label">Compania</label>
+                <input type="text" v-model="compania" class="form-control" id="validationCustom01" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -21,8 +21,8 @@
             <div class="col-md-3">
                 <label for="validationCustom04" class="form-label">Status</label>
                 <select class="form-select" v-model="status" id="validationCustom04" required >
-                    <option>A</option>
-                    <option>I</option>
+                    <option value="A">Activo</option>
+                    <option value="I">Inactivo</option>
                 </select>
                 <div class="invalid-feedback">
                     Please select a valid state.
@@ -48,7 +48,7 @@ const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const naturaleza = ref<string>('')
+const compania = ref<string>('')
 const nombre = ref<string>('')
 const status = ref<string>('')
 
@@ -67,9 +67,9 @@ const handleSubmit = async () =>{
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"carnatur",
+        model:"carcoaer",
         data:{
-            naturaleza:naturaleza.value,
+            compania:compania.value,
             nombre:nombre.value,
             status:status.value,
             creado_por:userStore.globalUser,

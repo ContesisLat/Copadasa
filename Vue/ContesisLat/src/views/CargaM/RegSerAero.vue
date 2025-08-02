@@ -82,53 +82,39 @@
             <div class="col-10 d-flex flex-column justify-content-center align-items-center" style="gap: 50px;">
               <div class="row">
                 <form>
-                  <h3>Registro de Manifiestos</h3>
-                  <div class="row mb-1">
-                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Operador</label>
-                    <div class="col-sm-3">
-                      <select class="form-select form-select-sm" v-model="formData.operador" :disabled="onlyRead">
-                        <option selected>{{ descripcionOperador }}</option>
-                        <option v-for="op in operadores" :key="op.operador" :value="op.operador">{{ op.nombre }}</option>
-                      </select>
-                    </div>
-                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">N.Vuelo</label>
-                    <div class="col-sm-3">
-                      <input class="form-control form-control-sm" v-model="formData.numero_vuelo" :readonly="onlyRead">
-                    </div>
+                  <h3><strong>Servicios a Aeronaves</strong></h3>
+                  <div class="row mb-1"> <!--Fecha-->
                     <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Fecha</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                       <input class="form-control form-control-sm" type="date" v-model="formData.fecha"
                         :readonly="onlyRead">
                     </div>
-                  </div>
-                  <div class="row mb-1">
-                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Puerto
-                      despacho</label>
-                    <div class="col-sm-3">
-                      <select class="form-select form-select-sm" v-model="formData.puerto_despacho"
-                        :disabled="onlyRead">
-                        <option selected>{{ descripcionPuertosDP }}</option>
-                        <option v-for="i in puertos" :key="i.puerto" :value="i.puerto">{{ i.nombre }}</option>
-                      </select>
-                    </div>
-                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Puerto destino</label>
-                    <div class="col-sm-3">
-                      <select class="form-select form-select-sm" v-model="formData.puerto_destino" :disabled="onlyRead">
-                        <option selected>{{ descripcionPuertosDT }}</option>
-                        <option v-for="i in puertos" :key="i.puerto" :value="i.puerto">{{ i.nombre }}</option>
-                      </select>
-                    </div>
                     <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Estado</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                       <select class="form-select form-select-sm" v-model="formData.status" :disabled="onlyRead">
-                        <option>{{ formData.status }}</option>
+                        <option selected>{{ formData.status }}</option>
                         <option value="R" selected>Registrado</option>
-                        <option value="A">Actualizado</option>
-                        <option value="E">Anulado</option>
+                        <option value="F">Facturado</option>
+                        <option value="C">Cerrado</option>
+                        <option value="A">Anulado</option>
                       </select>
                     </div>
                   </div>
-                  <div class="row mb-1">
+                  <div class="row mb-1"> <!-- Compañía-->
+                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Compañía</label>
+                    <div class="col-sm-3"> <!--Tipo Aeronave-->
+                      <select class="form-select form-select-sm" v-model="formData.compania" :disabled="onlyRead">
+                        <option selected>{{ descripcionCompania }}</option>
+                        <option v-for="i in companias" :key="i.compania" :value="i.compania">{{ i.nombre }}</option>
+                      </select>
+                    </div>
+                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Matricula</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control form-control-sm" v-model="formData.matricula"
+                        :readonly="onlyRead">
+                    </div>
+                  </div>
+                  <div class="row mb-1"> <!--Tipo Aeronave-->
                     <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Tipo aeronave</label>
                     <div class="col-sm-3">
                       <select class="form-select form-select-sm" v-model="formData.aeronave" :disabled="onlyRead">
@@ -136,44 +122,71 @@
                         <option v-for="i in aeronaves" :key="i.aeronave" :value="i.aeronave">{{ i.descripcion }}</option>
                       </select>
                     </div>
-                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Matricula</label>
+                    <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Llegada</label>           
                     <div class="col-sm-3">
-                      <input type="text" class="form-control form-control-sm" style="text-transform: uppercase;" v-model="formData.matricula"
+                      <input class="form-control form-control-sm" type="date" v-model="formData.fecha_llegada"
+                        :readonly="onlyRead">
+                    </div>
+                    <div class="col-sm-3"> 
+                      <input class="form-control form-control-sm" type="time" v-model="formData.hora_llegada"
                         :readonly="onlyRead">
                     </div>
                   </div>
+                  <div class="row mb-1"> <!--Monto-->
+                      <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Monto</label>
+                      <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" v-model="formData.monto_servicio"
+                          :readonly="onlyRead" disabled>
+                      </div>
+                      <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">No. Factura</label>
+                      <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" v-model="formData.factura"
+                          :readonly="onlyRead" disabled>
+                      </div>
+                  </div>
                 </form>
               </div>
-              <div class="row"> <!--Arreglo-->
+              <div class="row">
                 <div class="div-dotted">
                   <form>
                     <div class="row g-3 mb-2" v-for="(registro, index) in registros" :key="index">
-                      <div class="col-md-2">
-                        <input v-model="registro.guia" type="text" style="text-transform: uppercase;" class="form-control form-control-sm"
-                          id="validationDefault03" placeholder="Guía aerea" :readonly="tonlyRead">
-                      </div>
-                      <div class="col-md-2">
-                        <input v-model="registro.items" type="number" class="form-control form-control-sm"
-                          id="validationDefault03" placeholder="Items" :readonly="tonlyRead">
-                      </div>
-                      <div class="col-md-2">
-                        <input v-model="registro.peso" type="number" class="form-control form-control-sm"
-                          id="validationDefault02" placeholder="Peso" :readonly="tonlyRead">
-                      </div>
-                      <div class="col-sm-3">
-                        <select class="form-select form-select-sm" v-model="registro.naturaleza" :disabled="onlyRead">
-                          <option selected>{{ descripcionNaturaleza(idnaturaleza)}}</option>
-                          <option v-for="i in naturaleza" :key="i.naturaleza"  :value="i.naturaleza" @click="idN(i.naturaleza)">{{ i.nombre }}</option>
+                      <div class="col-md-3">
+                        <select class="form-select form-select-sm" v-model="registro.cargo" :disabled="onlyRead">
+                          <option selected>{{ descripcionCargos(idncargo)}}</option>
+                          <option v-for="i in cargos" :key="i.cargo"  :value="i.cargo" @click="idN(i.cargo)">{{ i.nombre }}</option>
                         </select>
                       </div>
-                      <!--div class="col-md-3">
-                        <input v-model="registro.naturaleza" type="text" class="form-control form-control-sm"
-                          id="validationDefault03" placeholder="Naturaleza" :readonly="tonlyRead">
+                      <!--div class="col-md-2">
+                        <input v-model="registro.fecha_inicio" type="date" class="form-control form-control-sm"
+                          id="validationDefault02" placeholder="Fecha Inicio" :readonly="tonlyRead">
+                      </div>
+                      <div class="col-sm-2">
+                        <input v-model="registro.hora_inicio" type="time" class="form-control form-control-sm"
+                          id="validationDefault02" placeholder= "Hora Inicio" :readonly="tonlyRead">
+                      </div>
+                      <div class="col-sm-2"> 
+                        <input v-model="registro.fecha_final" type="date" class="form-control form-control-sm"
+                          id="validationDefault03" placeholder="Fecha Final" :readonly="tonlyRead">  
+                      </div> 
+                      <div class="col-md-2">
+                         <input v-model="registro.hora_final" type="time" class="form-control form-control-sm"
+                          id="validationDefault02" placeholder= "Hora Final" :readonly="tonlyRead">
                       </div-->
                       <div class="col-md-3">
-                        <input v-model="registro.destinatario" type="text" class="form-control form-control-sm"
-                          id="validationDefault02" placeholder="Destinatario" :readonly="tonlyRead">
+                        <input v-model="registro.tiempo_total" type="text" class="form-control form-control-sm"
+                          id="validationDefault03" placeholder="Tiempo" :readonly="tonlyRead" >
                       </div>
+                      <div class="col-md-3">
+                        <input v-model="registro.monto" type="text" class="form-control form-control-sm"
+                          id="validationDefault03" placeholder="Monto" :readonly="tonlyRead" disabled >
+                      </div>                     
+                      <div class="col-sm-3">
+                        <select class="form-select form-select-sm" v-model="formData.status" :disabled="onlyRead">
+                          <option selected>{{ formData.status }}</option>
+                          <option value="R" selected>Registrado</option>
+                          <option value="A">Anulado</option>
+                        </select>
+                      </div> 
                     </div>
                   </form>
                 </div>
@@ -203,7 +216,7 @@ const { success, error, question, warning } = useAlert()
 import { UrlGlobal } from '@/store/dominioGlobal';
 import { userGlobalStore } from '@/store/userGlobal';
 import { useDateTimeStore } from '@/store/dateTimeStore';
-import { RefSymbol } from '@vue/reactivity';
+import CarCoaer from './CarCoaer.vue';
 
 const dUrl = UrlGlobal()
 const userStore = userGlobalStore()
@@ -211,28 +224,28 @@ const dateTimeStore = useDateTimeStore();
 
 //--------------------------------------------------------------------------------------------------------------
 type Registro = {
-  guia: string
-  items: number | null
-  peso: string
-  naturaleza: string
-  destinatario: string
+  cargo: string
+  tiempo_total: string // | null
+  monto: string
+  status: string
 }
 
 // Inicializa con una sola fila vacía
 const registros = ref<Registro[]>([
-  { guia: '', items: 0, peso: '', naturaleza: '', destinatario: '' }
+  { cargo: '', tiempo_total: '', monto: '0', status: 'A' }
 ])
 
 // Estado del formulario y la data
 const formData = ref({
-  numero_vuelo: '',
-  operador: '',
   fecha: '',
-  puerto_despacho: '',
-  puerto_destino: '',
-  status: '',
+  compania: '',
+  matricula: '',
   aeronave: '',
-  matricula: ''
+  fecha_llegada: '',
+  hora_llegada: '',
+  monto_servicio: null,
+  factura: '',
+  status: 'R',
 });
 
 // Variables de control
@@ -285,7 +298,7 @@ const startUpdate = () => {
   onlyRead.value = false;
   ButtonText.value = 'Editar';
   ButtonText2.value = 'Volver';
-  pk = formData.value.numero_vuelo
+  pk = formData.value.fecha, formData.value.compania, formData.value.matricula
 };
 
 //funcion para iniciar eliminacion
@@ -300,11 +313,10 @@ const starDelete = () => {
   ButtonText2.value = 'Volver'
 };
 
-
 // Función para hacer la consulta
 const handleSearch = async () => {
   try {
-    const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'carcmani', filtro: formData.value });
+    const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'caratvue', filtro: formData.value });
     dataList.value = response.data;
     currentIndex.value = 0;
     updateFormData();
@@ -316,146 +328,17 @@ const handleSearch = async () => {
       ButtonText.value = 'Consulta';
       canNavigate.value = true;
       onlyRead.value = true;
-      getCarga()
+      getCaratvue()
     }
   } catch (err: any) {
     error(err.response?.data?.detail || 'Ocurrió un error en la consulta.')
   }
 };
 
-// Valida Array
-function valida(arr: string[]): boolean {
-  let valido = true
-  const uniqueElement = new Set(arr)
-  if (arr.length != uniqueElement.size) {
-    valido = false
-  }
-
-  return valido
-}
-
 //Funcion para la insercion
 const handleInsert = async () => {
   let vali = 0
-
-// Validar Campos
-  if(!formData.value.operador){
-    error('Digite el Operador')
-    return
-  }
-
-  if (!Date.parse(formData.value.fecha)) {
-    error('Fecha Incorrecta... debe digitarla')
-    return
-  }
-
-  if (!formData.value.numero_vuelo) {
-    error('Tiene que digitar el número del Vuelo')
-    return
-  }
-
-  if (!formData.value.puerto_despacho) {
-    error('Digite el Puerto de Despacho... ')
-    return
-  }
-
-  if (!formData.value.puerto_destino) {
-    error('Digite el Puerto Destino... ')
-    return
-  }
-
-  if (formData.value.puerto_despacho == formData.value.puerto_destino) {
-    error('Puerto de despacho no puede ser igual al destino... ')
-    return
-  }
-
-  if (!formData.value.aeronave) {
-    error('Hay que escoger el tipo de aeronave')
-    return
-  }
-  if (!formData.value.status) {
-    error('Estado del Manifiesto incorrecto...')
-    return
-  }
-
-  if (!formData.value.matricula) {
-    error('Matrícula de Aeronave no registrada')
-    return
-  }
-
-// VALIDAR ARREGLO
-  let lineas = registros.value.length
-  
-  if (!registros.value) {
-    console.log('esta vacio el array')
-    return
-  }
-   
-  const guiaArray: string[] = registros.value.map(item => item.guia)
-
-  let resultado: boolean = valida(guiaArray);
-  if (!resultado) {
-    console.log(registros)
-    error('Existen Guías Aéreas repetidas... ')
-    return
-  }
-
-  // VALIDA REGISTRO DUPLICADO
-  try {
-    console.log(formData.value.numero_vuelo) 
-
-    const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'carcmani', 
-        filtro: { fecha: formData.value.fecha, operador: formData.value.operador, numero_vuelo: formData.value.numero_vuelo}});
-
-    dataList.value = response.data;
-
-    console.log(response.data)
-    console.log(dataList.value.length)
-
-    if (dataList.value.length > 0) {
-      warning('Este Manifiesto ya fué Registrado', 'Valide la Información a Registrar')
-      return
-    }
-
-    } catch (err: any) {
-        error(err.response?.data?.detail || 'Ocurrió un error en la consulta.')
-  }
-
-// VALIDA CONTENIDO DEL ARRAY
-  let indice = registros.value.length -1
-  for ( let i = 0; i < indice; i++ ) {
-    const arreglo = registros.value[i];
-
-    if (typeof arreglo.guia !== 'string' || arreglo.guia.trim() === '') {
-      console.log(i)
-      console.log(arreglo)
-      error (`Error: Falta la Guía en la posición ${i++}`)
-      return false
-    }
-
-    if (typeof arreglo.items !== 'number') {
-      console.log(i)
-      console.log(arreglo)
-      error (`Error: Cantidad de Items en la posición ${i++}  es inválida... `)
-      return false
-    }
-
-    if (typeof arreglo.peso !== 'number' || arreglo.peso <= 0) {
-      error (`Error: Valor digitado en Peso en la posición ${i++} es incorrecto... `)
-      return false
-    }
-
-    if (typeof arreglo.naturaleza !== 'string' || arreglo.naturaleza.trim() === '') {
-      error (`Error: Campo Naturaleza no tiene registro en la posición ${i++}`)
-      return false
-    }
-
-    if (typeof arreglo.destinatario !== 'string' || arreglo.destinatario.trim() === '') {
-      error (`Error: Debe registrar el Destinatario en la posición ${i++}`)
-      return false
-    }
-  }
-
+  // Mostrar confirmación
   const result = await question(
     'Se va a insertar el campo con los nuevos datos.',
     '¿Deseas insertar este registro?'
@@ -466,22 +349,20 @@ const handleInsert = async () => {
     return
   }
 
-  registros.value.pop()
-
   const data = {
-    model: "carcmani",
+    model: "caratvue",
     data: {
       fecha: formData.value.fecha,
-      operador: formData.value.operador,
-      numero_vuelo: formData.value.numero_vuelo,
-      puerto_despacho: formData.value.puerto_despacho,
-      puerto_destino: formData.value.puerto_destino,
-      status: formData.value.status,
-      aeronave: formData.value.aeronave,
+      compania: formData.value.compania,
       matricula: formData.value.matricula,
+      aeronave: formData.value.aeronave,
+      fecha_llegada: formData.value.fecha_llegada,
+      hora_llegada: formData.value.hora_llegada,
       creado_por: userStore.globalUser,
       fecha_creado: dateTimeStore.formattedDate,
-      hora_creado: dateTimeStore.formattedTime
+      hora_creado: dateTimeStore.formattedTime,
+      monto_servicio: formData.value.monto_servicio,
+      status: formData.value.status,
     }
   }
   try {
@@ -500,18 +381,17 @@ const handleInsert = async () => {
       vali++
       for (const fila of registros.value) {
         const data = {
-        model: "cardmani",
+        model: "caratvued",
         data: {
-          no_embarque: fila.guia,
-          cant_items: fila.items,
-          peso_kg: fila.peso,
-          naturaleza: fila.naturaleza,
-          destinatario: fila.destinatario,
-          remitente: '.',
           fecha: formData.value.fecha,
-          operador: formData.value.operador,
-          numero_vuelo: formData.value.numero_vuelo,
-          secuencia: 1,
+          compania: formData.value.compania,
+          matricula: formData.value.matricula,
+          creado_por: userStore.globalUser,
+          fecha_creado: dateTimeStore.formattedDate,
+          hora_creado: dateTimeStore.formattedTime, 
+          cargo: fila.cargo,
+          tiempo_total: fila.tiempo_total,
+          monto: fila.monto, 
           status: formData.value.status
         }
       }
@@ -526,12 +406,12 @@ const handleInsert = async () => {
 
         if (!response.ok) {
           // Puedes registrar el error y seguir con el siguiente
-          error(`Error al insertar registro con guía: ${fila.guia}`)
+          console.log(`Error al insertar registro con cargo: ${fila.cargo}`)
         }else{
           vali++
         }
       } catch (err: any) {
-        error(`Error inesperado en la guía ${fila.guia}:`, err)
+        error(`Error inesperado el cargo ${fila.cargo}:`, err)
       }
     }
     }
@@ -559,24 +439,25 @@ const handleUpdate = async () => {
 
   try {
     const response = await axios.post(dUrl.urlGlobal + '/api2/update/', {
-      table: 'carcmani',
-      filters: { numero_vuelo: pk }, // Filtro para identificar el registro a actualizar
+      table: 'caratvue',
+      filters: { fecha: formData.value.fecha, compania: formData.value.compania, matricula: formData.value.matricula }, // Filtro para identificar el registro a actualizar
       data: {
-        numero_vuelo: formData.value.numero_vuelo,
-        operador: formData.value.operador,
         fecha: formData.value.fecha,
-        puerto_despacho: formData.value.puerto_despacho,
-        puerto_destino: formData.value.puerto_destino,
-        status: formData.value.status,
+        compania: formData.value.compania, 
+        matricula: formData.value.matricula, 
+        fecha_llegada: formData.value.fecha_llegada,
+        hora_llegada: formData.value.hora_llegada,
+        monto_servicio: formData.value.monto_servicio,
         aeronave: formData.value.aeronave,
-        matricula: formData.value.matricula,
+        status: formData.value.status,
         creado_por: userStore.globalUser,
         fecha_creado: dateTimeStore.formattedDate,
         hora_creado: dateTimeStore.formattedTime
       } // Datos a actualizar
     })
     if (response.status == 200) {
-      success('Los datos fueron actualizados correctamente.', 'Actualización exitosa')
+        success('Los datos fueron actualizados correctamente.', 'Actualización exitosa')
+
     } else {
       error('Ocurrió un error al actualizar los datos.')
     }
@@ -600,8 +481,8 @@ const handleDelete = async () => {
 
   try {
     const response = await axios.post(dUrl.urlGlobal + '/api2/update/', {
-      table: 'carcmani',
-      filters: { numero_vuelo: formData.value.numero_vuelo }, // Filtro para identificar el registro a actualizar
+      table: 'caratvue',
+      filters: { fecha: formData.value.fecha, compania: formData.value.compania, matricula: formData.value.matricula }, // Filtro para identificar el registro a actualizar
       data: {
         status: 'I',
       }
@@ -624,21 +505,19 @@ const updateFormData = () => {
 };
      
 //carga de la tabla
-const getdmani = ref<any[]>([]);
-const getCarga = () => {
-  getdmani.value = []
+const getCaratvued = ref<any[]>([]);
+const getCaratvue = () => {
+  getCaratvued.value = []
   registros.value = []
-  axios.get(dUrl.urlGlobal + `/api2/cardmani/filter?fecha=${formData.value.fecha}&operador=${formData.value.operador}&numero_vuelo=${formData.value.numero_vuelo}`)
+  axios.get(dUrl.urlGlobal + `/api2/caratvued/filter?fecha=${formData.value.fecha}&compania=${formData.value.compania}&matricula=${formData.value.matricula}`)
     .then(response => {
-      getdmani.value = response.data;
-      registros.value = getdmani.value.map((i: any) => ({
-        guia: i.no_embarque || '',
-        items: i.cant_items ?? Number,
-        peso: i.peso_kg || '',
-        naturaleza: i.naturaleza || '',
-        destinatario: i.destinatario || ''
+      getCaratvued.value = response.data;
+      registros.value = getCaratvued.value.map((i: any) => ({
+        cargo: i.cargo || '',
+        tiempo_total: i.tiempo_total || '',
+        monto: i.monto || null,
+        status: i.status || '',
       }))
-
     })
     .catch(error => {
       console.error('Error fetching cargos:', error);
@@ -646,50 +525,37 @@ const getCarga = () => {
 };
 
 //carga de las ayudas
-const operadores = ref<any[]>([]);
 const aeronaves = ref<any[]>([]);
-const puertos = ref<any[]>([]);
-const naturaleza = ref<any[]>([]);
+const companias = ref<any[]>([]);
+const cargos = ref<any[]>([]);
 onMounted(async () => {
-  const responseO = await axios.get(dUrl.urlGlobal + '/api2/caropera/')
-  operadores.value = responseO.data
   const responseA = await axios.get(dUrl.urlGlobal + '/api2/cartiaero/')
   aeronaves.value = responseA.data
-  const responseP = await axios.get(dUrl.urlGlobal + `/api2/puertos/filter?status=A`)
-  puertos.value = responseP.data
-  const responseN = await axios.get(dUrl.urlGlobal + '/api2/naturaleza/filter?status=A')
-  naturaleza.value = responseN.data
+  const responseP = await axios.get(dUrl.urlGlobal + `/api2/compania/filter?status=A`)
+  companias.value = responseP.data
+  const responseN = await axios.get(dUrl.urlGlobal + '/api2/caratenvue/filter?status=A')
+  cargos.value = responseN.data
 })
 
 //computados de las ayudas
-const descripcionOperador = computed(() => {
-  const encontrado = operadores.value.find(op => op.operador === formData.value.operador)
-  return encontrado ? encontrado.nombre : ''
-})
-
 const descripcionAeronaves = computed(() => {
   const encontrado = aeronaves.value.find(i => i.aeronave === formData.value.aeronave)
   return encontrado ? encontrado.descripcion : ''
 })
 
-const descripcionPuertosDP = computed(() => {
-  const encontrado = puertos.value.find(i => i.puerto === formData.value.puerto_despacho)
+const descripcionCompania = computed(() => {
+  const encontrado = companias.value.find(i => i.compania === formData.value.compania)
   return encontrado ? encontrado.nombre : ''
 })
 
-const descripcionPuertosDT = computed(() => {
-  const encontrado = puertos.value.find(i => i.puerto === formData.value.puerto_destino)
-  return encontrado ? encontrado.nombre : ''
-})
-
-const descripcionNaturaleza = (naturalezaId: string) => {
-  const encontrado = naturaleza.value.find(i => i.aeronave === naturalezaId)
+const descripcionCargos = (cargosId: string) => {
+  const encontrado = cargos.value.find(i => i.cargo === cargosId)
   return encontrado ? encontrado.nombre : ''
 }
 
-let idnaturaleza : any
+let idncargo : any
 const idN = (naturalezaId: string) => {
-  idnaturaleza = naturalezaId
+  idncargo = naturalezaId
 }
 //const descripcionNaturaleza = computed(() => {
 //  const encontrado = naturaleza.value.find(i => i.naturaleza === registros.value.)
@@ -701,26 +567,26 @@ const idN = (naturalezaId: string) => {
 const goToFirst = () => {
   currentIndex.value = 0;
   updateFormData();
-  getCarga()
+  getCaratvue()
 };
 const goToPrev = () => {
   if (currentIndex.value > 0) {
     currentIndex.value--;
     updateFormData();
-    getCarga()
+    getCaratvue()
   }
 };
 const goToNext = () => {
   if (currentIndex.value < dataList.value.length - 1) {
     currentIndex.value++;
     updateFormData();
-    getCarga()
+    getCaratvue()
   }
 };
 const goToLast = () => {
   currentIndex.value = dataList.value.length - 1;
   updateFormData();
-  getCarga()
+  getCaratvue()
 };
 //------------------------------------------------------------------------------------------------------------------
 
@@ -731,7 +597,7 @@ const toggleSearch = () => {
   if (dataList.value.length && isSearching.value == true) {
     // Si ya hay datos, "Consulta" limpia y reinicia la búsqueda
     dataList.value = [];
-    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
+    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: null, status: '', factura: '', aeronave: '' };
     onlyRead.value = false;
     ButtonText.value = 'Ok'
     canNavigate.value = false;
@@ -754,7 +620,7 @@ const toggleSearch = () => {
 const resetAll = () => {
   if (ButtonText2.value == 'Cancelar') {
     dataList.value = [];
-    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
+    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: null, factura: '', status: '', aeronave: '', };
     isInserting.value = false;
     isSearching.value = false;
     isEditing.value = false;
@@ -766,7 +632,7 @@ const resetAll = () => {
     registros.value = []
   } else {
     dataList.value = [];
-    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
+    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: null, factura: '', status: '', aeronave: '', };
     startSearch()
     ButtonText.value = 'Ok'
     ButtonText2.value = 'Cancelar'
@@ -799,11 +665,10 @@ watch(registros, (newVal) => {
   // Evitar errores si el array está vacío
   if (!newVal.length) {
     registros.value.push({
-      guia: '',
-      items: 0,
-      peso: '',
-      naturaleza: '',
-      destinatario: ''
+      cargo: '',
+      tiempo_total: '',
+      monto: '0',
+      status: ''
     });
     return;
   }
@@ -812,11 +677,10 @@ watch(registros, (newVal) => {
   const ultimaFila = newVal[newVal.length - 1];
   if (filaLlena(ultimaFila)) {
     registros.value.push({
-      guia: '',
-      items: 0,
-      peso: '',
-      naturaleza: '',
-      destinatario: ''
+      cargo: '',
+      tiempo_total: '',
+      monto: '',
+      status: ''
     });
   }
 }, { deep: true });

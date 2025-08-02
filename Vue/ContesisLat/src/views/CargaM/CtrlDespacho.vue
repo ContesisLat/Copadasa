@@ -5,7 +5,7 @@
           <div class="container">
               <div class="row" style="gap: 5px;">
                 <div class="col d-flex flex-column justify-content-center align-item-center" >
-                  <h3><strong>Manifiestos</strong></h3>
+                  <h3><strong>Control de Despachos</strong></h3>
                   <div class="card overflow-scroll">
                       <table class="table table-hover  table-sm">
                           <thead>
@@ -13,56 +13,46 @@
                                   <th>Fecha</th>
                                   <th>Operador</th>
                                   <th>No. Vuelo</th>
-                                  <th>Pto. Despacho</th>
-                                  <th>Pto. Destino</th>
-                                  <th>Aeronave</th>
-                                  <th>Matrícula</th>
+                                  <th>No. Embarque</th>
+                                  <th>Destinatario</th>
+                                  <th>Piezas</th>
+                                  <th>Peso</th>
                                   <th>Estado</th> 
                               </tr>
                           </thead>
                             <tbody>
                               <tr v-for="elm in filteredCarga1" :key="elm.numero_vuelo"
-                                  @click="getCardmani(elm.numero_vuelo, elm.operador, elm.fecha, elm.id, elm.nom_operador)"
-                                  :class="{ 'table-primary': elm.id === id_ref }">
-                                  <td>{{ elm.fecha }}</td>
+                                  @click="getCardeent(elm.fecha, elm.fecha_manifiesto, elm.operador, elm.numero_vuelo, elm.no_embarque, elm.id)" 
+                                  :class="{ 'table-primary': elm.no_embarque === id_ref }">
+                                  <td>{{ elm.fecha_manifiesto }}</td>
                                   <td>{{ elm.nom_operador }}</td>
                                   <td>{{ elm.numero_vuelo }}</td>
-                                  <td>{{ elm.nom_pto_despacho }}</td>
-                                  <td>{{ elm.nom_pto_destino }}</td>
-                                  <td>{{ elm.nom_aeronave }}</td>
-                                  <td>{{ elm.matricula }}</td>
+                                  <td>{{ elm.no_embarque }}</td>
+                                  <td>{{ elm.destinatario }}</td>
+                                  <td>{{ elm.piezas_entrega }}</td>
+                                  <td>{{ elm.peso }}</td>
                                   <td>{{ elm.nom_status}}</td>
                               </tr>
                             </tbody>
                       </table>  
                   </div>
-                  <h3><strong>Air Way Bill por Manifiestos</strong></h3>
+                  <h3><strong>Cargos Generados</strong></h3>
                   <div class="card overflow-scroll">
                       <table class="table table-hover  table-sm">
                           <thead>
                               <tr>
-                                <th>Secuencia</th>
-                                <th>No. Embarque</th>
-                                <th>Naturaleza</th>
-                                <th>Tot. Piezas</th>
-                                <th>Peso Kg.</th>
-                                <th>Destinatario</th>
-                                <th>Ubicación</th>
+                                <th>Cargo</th>
+                                <th>Descripción</th>
+                                <th>Monto</th>
                                 <th>Estado</th>
                               </tr>
                           </thead>
                           <tbody>
-                              <tr v-for="elm1 in filteredCarga2" :key="elm1.no_embarque"
-                                 @click="getCardmaniId(elm1.id, elm1.status, elm1.no_embarque, elm1.numero_vuelo,
-                                                       elm1.operador, elm1.fecha)" 
-                                  :class="{ 'table-primary': elm1.id === de_ref }" >
-                                <td>{{ elm1.secuencia }}</td>
-                                <td>{{ elm1.no_embarque }}</td>
-                                <td>{{ elm1.nom_naturaleza }}</td>
-                                <td>{{ elm1.cant_items }}</td>
-                                <td>{{ elm1.peso_kg }}</td>
-                                <td>{{ elm1.destinatario }}</td>
-                                <td>{{ elm1.ubicacion }}</td>
+                              <tr v-for="elm1 in cardeent" :key="elm1.tarifa"> 
+                                 <!--@click="true" :class="{ 'table-primary': elm1.id === de_ref }" -->
+                                <td>{{ elm1.tarifa }}</td>
+                                <td>{{ elm1.nom_tarifa }}</td>
+                                <td>{{ elm1.monto }}</td>
                                 <td>{{ elm1.nom_status}}</td>
                               </tr>
                           </tbody>
@@ -72,25 +62,18 @@
                 <div class="col div-buttom"
                       style=" background-color:rgba(255, 255, 255, 0.3);  backdrop-filter: blur(10px); border-radius: 10px; height: 300px;">
                       <div class="btn-group2">
-                        <button type="button" class="btn btn-light" @click.prevent="Confirmar">Confirmar</button>
-                        <button type="button" class="btn btn-light" @click="Complemento">Liquidación</button>
-                        <button type="button" class="btn btn-light" @click="Calcular">Calcular</button>
-                        <button type="button" class="btn btn-light" @click="Vercalculo" disabled>Ver Calculo</button>
-                        <button type="button" class="btn btn-light" @click="Listar" :disabled="!canUseGroup2">Listar</button>
-                        <!--button type="button" class="btn btn-light" @click="Anular" :disabled="!canUseGroup2">Anular</button-->
+                        <button type="button" class="btn btn-light" @click.prevent="Confirmar" disabled>Datos Entrega</button>
+                        <button type="button" class="btn btn-light" @click="Complemento" disabled>Despacho</button>
+                        <button type="button" class="btn btn-light" @click="Listar" :disabled="!canUseGroup2">Imprimir</button>
+                        <button type="button" class="btn btn-light" @click="Anular" :disabled="!canUseGroup2">Anular</button>
                       </div>
                 </div>
               </div>
           </div>
-          <UpConfirma v-if="btnUp" :fecha="fecha" :operador="operador" :numero_vuelo="numero_vuelo" 
-              :no_embarque="no_embarque" :nom_operador="nom_operador" :btnUp="btnUp"
+          <UpConfirma v-if="btnUp" :fecha="fecha" :operador="operador" :numero_vuelo="numero_vuelo" :btnUp="btnUp"
               @updateProps="updatePropsValue" />
-          <UpComplemento v-if="btnCoUp" :fecha="fecha" :operador="operador" :numero_vuelo="numero_vuelo"
-              :no_embarque="no_embarque" :btnCoUp="btnCoUp"
+          <UpComplemento v-if="btnCoUp" :fecha="fecha" :operador="operador" :numero_vuelo="numero_vuelo" :btnCoUp="btnCoUp"
               @updateCoProps="updateCoPropsValue" />
-          <UpVercalculo v-if="btnCaUp" :fecha="fecha" :operador="operador" :numero_vuelo="numero_vuelo" 
-              :no_embarque="no_embarque" :btnCaUp="btnCaUp"
-              @updateProps="updateCaPropsValue" />
       </section>
     </div>
   </body>
@@ -106,84 +89,64 @@ import { UrlGlobal } from '@/store/dominioGlobal';
 const dUrl = UrlGlobal()
 const search = ref('')
 const options = ref('')
-import { Carcmani, Cardmani } from '@/interface/interfaces';
+import { Carentre, Cardeent } from '@/interface/interfaces';
 import UpConfirma from './pUpdate/UpConfirma.vue';
 import UpComplemento from './pUpdate/UpComplemento.vue';
-import UpVercalculo from './UpVercalculo.vue';
 import { flattenDiagnosticMessageText } from 'typescript';
 
 const id_ref = ref<string | null>(null)
 const de_ref = ref<string | null>(null)
-const id_status = ref<string | null>(null)
 //--------------------------------------------------------------------------------------------------------------
-const carcmani = ref<Array<Carcmani>>([]);
+const carentre = ref<Array<Carentre>>([]);
 
-const getCarcmani = () => { 
-        axios.get(dUrl.urlGlobal +'/api2/carcmani/')
+const getCarentre = () => { 
+        axios.get(dUrl.urlGlobal +'/api2/carentre/')
             .then(response => {
-                carcmani.value = response.data;
+                carentre.value = response.data;
         
-            let fecha = response.data.fecha
-            let operador = response.data.operador
-            let numero_vuelo = response.data.numero_vuelo
-            
+            //let almacen = response.data.almacen
+            //let area = response.data.area
 
             })
             .catch(error => {
-                console.error('Error buscando control de Manifiestos:', error);
+                console.error('Error buscando control de despachos:', error);
             });
 };
-const getCardmaniId = (id: any, sts: any, emb: any, novue: any, opera: any, fec: any) => {
-  de_ref.value = id
-  id_status.value = sts
-  no_embarque = emb
-  numero_vuelo = novue
-  operador = opera
-  fecha = fec 
-
-  if(!de_ref.value) {
-    return
-  }
-
-}
 //----------------------------------------------------------------
-const cardmani = ref<Array<Cardmani>>([])
-const getCardmani = (id_numero_vuelo: any, id_operador: any, id_fecha: any, id: any, nom_opera: any) => {
-        id_ref.value = id
+const cardeent = ref<Array<Cardeent>>([])
+const getCardeent = (id_fecha: any, id_fecha_manifiesto: any, id_operador: any, id_numero_vuelo: any, id_no_embarque: any, id: any) => {
+        id_ref.value = id_no_embarque
         fecha = id_fecha
+        fecha_manifiesto = id_fecha_manifiesto
         operador = id_operador
         numero_vuelo = id_numero_vuelo
-        nom_operador = nom_opera
-        de_ref.value = null
+        no_embarque = id_no_embarque
 
-        axios.get(`${dUrl.urlGlobal}/api2/carcmani/cardmani?id_numero_vuelo=${id_numero_vuelo}&id_operador=${id_operador}&id_fecha=${id_fecha}`)
+        axios.get(`${dUrl.urlGlobal}/api2/carentre/cardeent?id_no_embarque=${no_embarque}&id_numero_vuelo=${numero_vuelo}&id_operador=${operador}
+                  &id_fecha_manifiesto=${fecha_manifiesto}&id_fecha=${fecha}`)
         //axios.get(final)    
             .then(response => { //console.log(response.data)
-                cardmani.value = response.data;
+                cardeent.value = response.data;
                 console.log(response.data)
 
                 
             })
             .catch(error => {
-                console.error('Error buscando detalles de manifiesto:', error);
+                console.error('Error buscando detalles de despacho:', error);
         });
     }
 //};
 //funcion de los botones y las extenciones de Insert,delete,update----------------
 let fecha: any
+let fecha_manifiesto: any
 let operador: any
 let numero_vuelo: any
 let no_embarque: any
-let nom_operador: any
 
 let btnUp = ref(false);//variable para mostrar modal de update
 let clickUp = ref(false)//variable para activar el click de Up
 let btnCoUp = ref(false)
 let clickCoUp = ref(false)
-let btnCaUp = ref(false)
-let clickCaUp = ref(false)
-
-    
 
 //funciones q activan el click y en el caso del insert muestran el modal
 const CbtnUp = () => {
@@ -192,22 +155,15 @@ const CbtnUp = () => {
 }
 function updatePropsValue(newValue: boolean) {
   btnUp.value = newValue
-  getCarcmani()
-  getCardmani(numero_vuelo, operador, fecha, null,null)
+  getCarentre()
+  getCardeent("1", "1", "1", "1", "1", "1")
 }
 
 function updateCoPropsValue(newValue: boolean) {
   btnCoUp.value = newValue
 
-  getCarcmani()
-  getCardmani(numero_vuelo, operador, fecha, null, null)
-}
-
-function updateCaPropsValue(newValue: boolean) {
-  btnCaUp.value = newValue
-
-  getCarcmani()
-  getCardmani(numero_vuelo, operador, fecha, null, null)
+  getCarentre()
+  getCardeent("1", "1", "1", "1", "1", "1")
 }
 //--- Fun//funcion principal para el funcionamiento de el update y delete cuando uno de los 2 este activado
 const FunClick = (n: any, nm: any, st: any) => {
@@ -223,16 +179,7 @@ const FunClick = (n: any, nm: any, st: any) => {
   //-- Funciones de Botones
 const Calcular = async() => {
   let calcular = true
-  if (!de_ref.value) {
-    return
-  }
-
-  if (id_status.value =='K' || id_status.value =='C') {
-    null
-  } else {
-    return
-  }
-    
+  
   const result = await question(
     'Se generarán los calculos de la Guía',
     '¿Seguro desea continuar?'
@@ -243,60 +190,28 @@ const Calcular = async() => {
     return
   }
 
-  axios.get(`${dUrl.urlGlobal}/api2/carcmani/calculo?id=${de_ref.value}`) 
+  axios.get(`${dUrl.urlGlobal}/api2/carcmani/calculo?id=${id_ref.value}`) 
     .then(response => {
       console.log("Generado")
-      getCarcmani
-      getCardmani(numero_vuelo, operador, fecha, null, null)
+      getCarentre
+      getCardeent("1", "1", "1", "1", "1", "1")
     })
     .catch(error => {
       console.log('Error calculando:', error)
     })
 }
 
-const Vercalculo = () => {
-  if (!de_ref.value) {
-    return
-  }
-
-  if (id_status.value !='C') {
-    return
-  }
-
-  clickCaUp.value = !clickCaUp.value
-
-  if (clickCaUp.value == true) {
-      btnCaUp.value = !btnCaUp.value
-      clickCaUp.value = !clickCaUp.value
-  }
-}
-
 const Confirmar = () => {
-  if (!de_ref.value) {
-    return
-  }
-
-  if (id_status.value != 'R' && id_status.value !='L') {
-    return
-  }
-
+  
   clickUp.value = !clickUp.value
 
   if (clickUp.value == true) {
     btnUp.value = !btnUp.value
     clickUp.value = !clickUp.value
-  } 
+  }
+   
 }
-
 const Complemento = () => {
-   if (!de_ref.value) {
-    return
-  }
-  //'L' es Confirmado
-  if (id_status.value == 'C' || id_status.value =='R' || id_status.value =='D') {
-    return
-  }
-
   clickCoUp.value = !clickCoUp.value
 
   if (clickCoUp.value == true) {
@@ -318,50 +233,44 @@ const Anular = () => {
 const filteredCarga1 = computed(() => {
     if (search.value === '') {
         // Si no hay nada en la búsqueda, retornar todos los registros
-        return carcmani.value;
+        return carentre.value;
     } else if (options.value == 'fecha') {
         // Convertir el término de búsqueda a minúsculas para hacer la búsqueda insensible a mayúsculas
         const searchTerm = search.value.toLowerCase();
         // Filtrar los registros que coincidan con el valor de búsqueda en cualquiera de los campos
-        return carcmani.value.filter(elm => {
+        return carentre.value.filter(elm => {
             return (
                 elm.fecha?.toLowerCase().includes(searchTerm) ||
+                elm.fecha_manifiesto?.toLocaleLowerCase().includes(searchTerm) ||
                 elm.nom_operador?.toLowerCase().includes(searchTerm) ||
                 elm.numero_vuelo?.toLowerCase().includes(searchTerm) ||
-                elm.nom_pto_despacho?.toLowerCase().includes(searchTerm) ||
-                elm.nom_pto_destino?.toLowerCase().includes(searchTerm) ||
-                //elm.tot_piezas?.toLowerCase().includes(searchTerm) ||
-                //elm.peso_kg?.toLowerCase().includes(searchTerm) ||
-                elm.nom_aeronave?.toLowerCase().includes(searchTerm) ||
-                elm.matricula?.toLowerCase().includes(searchTerm) ||
+                elm.destinatario?.toLowerCase().includes(searchTerm) ||
+                elm.piezas_entrega?.toLowerCase().includes(searchTerm) ||
+                elm.monto?.toLowerCase().includes(searchTerm) ||
                 elm.nom_status?.toLowerCase().includes(searchTerm)
             );
         });
     }else{
-        return carcmani.value
+        return carentre.value
     }
 });
 //-----------------------------------------------------------------
 const filteredCarga2 = computed(() => {
     if (search.value === '') {
-        return cardmani.value;
+        return cardeent.value;
 
-    } else if (options.value == 'Cardmani') {
+    } else if (options.value == 'Cardeent') {
         const searchTerm = search.value.toLowerCase();
 
-        console.log(de_ref.value)
-
-        return cardmani.value.filter(elm1 => {
+        return cardeent.value.filter(elm1 => {
             return (
-                elm1.fecha?.toLocaleLowerCase().includes(searchTerm) ||
-                elm1.operador?.toLocaleLowerCase().includes(searchTerm) ||
-                elm1.numero_vuelo?.toLocaleLowerCase().includes(searchTerm) ||
-                elm1.no_embarque?.toLowerCase().includes(searchTerm)
-                
+                elm1.nom_tarifa?.toLowerCase().includes(searchTerm) ||
+                elm1.monto?.toLowerCase().includes(searchTerm) ||
+                elm1.nom_status?.toLowerCase().includes(searchTerm) 
             );
         });
     }else{
-        return cardmani.value
+        return cardeent.value
     }
 });
 
@@ -404,9 +313,8 @@ const canUseGroup2 = computed(() => isSearching.value || isInserting.value || is
 
 //------------------------------------------------------------------------------------------------------------------
 onMounted(() => {
-    getCarcmani();
-    console.log(carcmani)
-    getCardmani(null, "1", "1",null, null);
+    getCarentre();
+    getCardeent("1", "1", "1", "1", "1", "1");
   
 });
 </script>
@@ -435,7 +343,7 @@ body {
   font-family: Trebuchet MS;
   color: white;
   background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
-  overflow: scroll;
+  overflow: hidden;
 
   @media screen and (max-width: 600px) {
     overflow: scroll;
@@ -462,12 +370,6 @@ body {
 
 .container {
   grid-area: container;
-}
-.card {
-    width: 100%;
-    height: 200px;
-    min-width: min-content;
-    box-sizing: border-box;
 }
 
 .btn-group {

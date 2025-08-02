@@ -11,42 +11,33 @@
                   d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
               </svg></span>
             <input type="search" id="search" placeholder="Buscar"
-              style="background-color: transparent; border: none; outline: none; color: white;" autocomplete="off"
-              v-model="search">
+              style="background-color: transparent; border: none; outline: none; color: white;" autocomplete="off" v-model="search">
           </div>
         </div>
         <div class="container">
           <div class="row">
             <div class="col d-flex flex-column justify-content-center align-items-center">
-              <h3><strong>Tarifas de Refrigeración</strong></h3>
+              <h3><strong>Transacciones de Almacen</strong></h3>
               <div class="card overflow-scroll">
                 <table class="table table-hover table-sm">
                   <thead>
                     <tr>
-                      <th>Fecha Inicio</th>
-                      <th>Fecha Final</th>
-                      <th>Entrada</th>
-                      <th>U/Medida</th>
-                      <th>Peso/Base</th>
-                      <th>Costo/Diario</th>
-                      <th>Mín. Diario</th>
-                      <th>Full Pallet</th>
+                      <th>Código</th>
+                      <th>Descripción</th>
+                      <th>Acción</th>
+                      <th>Maneja Clte</th>
+                      <th>Secuencia</th>
                       <th>Estado</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="elm in filteredCarga" :key="elm.fecha_inicio" 
-                      @click="FunClick(elm.fecha_inicio, elm.fecha_final, elm.entrada, elm.medida,
-                                elm.peso_base, elm.costo_diario, elm.minimo_diario, 
-                                elm.full_pallet, elm.status)">
-                      <td>{{ elm.fecha_inicio }}</td>
-                      <td>{{ elm.fecha_final }}</td>
-                      <td>{{ elm.entrada }}</td>
-                      <td>{{ elm.medida }}</td>
-                      <td>{{ elm.peso_base }}</td>
-                      <td>{{ elm.costo_diario }}</td>
-                      <td>{{ elm.minimo_diario }}</td>
-                      <td>{{ elm.full_pallet }}</td>
+                    <tr v-for="elm in filteredCarga" :key="elm.codigo"
+                      @click="FunClick(elm.codigo, elm.descripcion, elm.status)">
+                      <td>{{ elm.codigo }}</td>
+                      <td>{{ elm.descripcion }}</td>
+                      <td>{{ elm.nom_accion }}</td>
+                      <td>{{ elm.nom_maneja_clte }}</td>
+                      <td>{{ elm.secuencia }}</td>
                       <td>{{ elm.nom_status }}</td>
                     </tr>
                   </tbody>
@@ -82,77 +73,67 @@
             </div>
           </div>
         </div>
-        <UpCarTari v-if="btnUp" :fecha_inicio="fecha_inicio" :entrada="entrada" :medida="medida" :peso_base="peso_base" 
-            :costo_diario="costo_diario" :minimo_diario="minimo_diario" :full_pallet="full_pallet" :status="status" :btnUp="btnUp"
+        <UpLogTral v-if="btnUp" :codigo="codigo" :descripcion="descripcion" :accion="accion" :maneja_cliente="maneja_cliente" :status="status" :btnUp="btnUp"
           @updateProps="updatePropsValue" />
-        <InCarTari v-if="btnIn" :btnIn="btnIn" @insertProps="insertPropsValue" />
+        <InLogTral v-if="btnIn" :btnIn="btnIn" @insertProps="insertPropsValue" />
+        <DlCarNatur v-if="btnDl" :btnDl="btnDl" :codigo="codigo" @deleteProps="deletePropsValue" />
       </section>
     </div>
   </body>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted,computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { Cartari } from '@/interface/interfaces'
+import { LogTral, Natur } from '@/interface/interfaces'
 import { UrlGlobal } from '@/store/dominioGlobal';
-import UpCarTari from './pUpdate/UpCarTari.vue';
+import InLogTral from './pInsert/InLogTral.vue';
+import UpLogTral from './pUpdate/UpLogTral.vue';
 
 const dUrl = UrlGlobal()
 
-const tarifa = ref<Array<Cartari>>([]);
+//carga de data-------------------------------------------------------
+const carga = ref<Array<LogTral>>([]);
 const search = ref('')
 
-const getTarifa = (id_tarifa='03') => {
-  axios.get(`${dUrl.urlGlobal}/api2/cartari?id_tarifa=${id_tarifa}`)
+const getCarga = () => {
+  axios.get(dUrl.urlGlobal + '/api2/logtral/')
     .then(response => {
-      tarifa.value = response.data;
-
-      console.log(tarifa.value)
-    }
-  
-  )
+      carga.value = response.data;
+    })
     .catch(error => {
-      console.error('Error Buscando Tarifas:', error);
+      console.error('Error fetching cargos:', error);
     });
 };
 
 const filteredCarga = computed(() => {
   if (search.value === '') {
     // Si no hay nada en la búsqueda, retornar todos los registros
-    return tarifa.value;
+    return carga.value;
   } else {
     // Convertir el término de búsqueda a minúsculas para hacer la búsqueda insensible a mayúsculas
     const searchTerm = search.value.toLowerCase();
 
     // Filtrar los registros que coincidan con el valor de búsqueda en cualquiera de los campos
-    return tarifa.value.filter(elm => {
+    return carga.value.filter(elm => {
       return (
-        elm.id?.toLowerCase().includes(searchTerm) ||
-        elm.fecha_inicio?.toLowerCase().includes(searchTerm) ||
-        elm.fecha_final?.toLowerCase().includes(searchTerm) ||
-        elm.entrada?.toLowerCase().includes(searchTerm) ||
-        elm.medida?.toLowerCase().includes(searchTerm) ||
-        elm.costo_diario?.toLowerCase().includes(searchTerm)||
-        elm.minimo_diario?.toLowerCase().includes(searchTerm) ||
-        elm.full_pallet?.toLowerCase().includes(searchTerm) ||
-        elm.nom_status?.toLowerCase().includes(searchTerm) 
+        elm.codigo?.toLowerCase().includes(searchTerm) ||
+        elm.descripcion?.toLowerCase().includes(searchTerm) ||
+        elm.nom_accion?.toLowerCase().includes(searchTerm) ||
+        elm.maneja_cliente?.toLowerCase().includes(searchTerm) ||
+        elm.nom_status?.toLowerCase().includes(searchTerm)
       );
     });
   }
 });
+//----------------------------------------------------------------------
 
 //funcion de los botones y las extenciones de Insert,delete,update----------------
-let fecha_inicio: any
-let fecha_final: any
-let entrada: any
-let medida: any
-let peso_base: any
-let costo_diario: any
-let minimo_diario: any
-let full_pallet: any 
+let codigo: any
+let descripcion: any
+let accion: any
+let maneja_cliente: any
 let status: any
-let id_ref: any
 let btnUp = ref(false);//variable para mostrar modal de update
 let clickUp = ref(false)//variable para activar el click de Up
 let btnIn = ref(false);//variable modal insert
@@ -175,15 +156,9 @@ const CbtnDl = () => {
   clickUp.value = false
 }
 //funcion principal para el funcionamiento de el update y delete cuando uno de los 2 este activado
-const FunClick = (fi: any, ff: any, en: any, med: any, pb: any, cd: any, md: any, fp: any, st: any ) => {
-  fecha_inicio = fi;
-  fecha_final = ff;
-  entrada = en;
-  medida = med;
-  peso_base = pb;
-  costo_diario = cd;
-  minimo_diario = md;
-  full_pallet = fp;
+const FunClick = (n: any, nm: any, st: any) => {
+  codigo = n;
+  descripcion = nm;
   status = st;
 
   if (clickUp.value == true) {
@@ -199,15 +174,21 @@ const FunClick = (fi: any, ff: any, en: any, med: any, pb: any, cd: any, md: any
 //funciones de emits para actualizar las variables y cierre los modales activos sea de update o insert
 function updatePropsValue(newValue: boolean) {
   btnUp.value = newValue
-  getTarifa("03")
+  getCarga()
 }
 function insertPropsValue(newValue: boolean) {
   btnIn.value = newValue
-  getTarifa("03");
+  getCarga();
 }
 
+function deletePropsValue(newValue: boolean) {
+  btnDl.value = newValue
+  getCarga()
+}
+//-------------------------------------------------------------------------------
+
 onMounted(() => {
-  getTarifa("03");
+  getCarga();
 });
 </script>
 
@@ -236,7 +217,7 @@ body {
   color: white;
   background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
   overflow: hidden;
-  @media screen and (max-width:600px){
+  @media screen and (max-width: 600px) {
     overflow: scroll;
   }
 }
@@ -285,5 +266,35 @@ body {
 
 .btn-search:focus {
   outline: none;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.btn-group button {
+  border: none;
+  border-radius: 20px;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+  background: #d94b6a;
+  color: white;
+}
+
+.btn-update:hover,
+.btn-update:focus {
+  background: #bcd34a;
+  color: white;
+}
+
+.btn-insert:hover,
+.btn-insert:focus {
+  background: #5d74b7;
+  color: white;
 }
 </style>

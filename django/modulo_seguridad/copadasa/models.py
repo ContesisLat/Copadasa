@@ -17,7 +17,8 @@ class Caratenvue(models.Model):
         db_table = 'caratenvue'
 
 class Caratvue(models.Model):
-    fecha = models.DateField(primary_key=True)
+    id = models.AutoField( primary_key=True, default=0, null=False)
+    fecha = models.DateField(null=False)
     compania = models.CharField(max_length=3)
     matricula = models.CharField(max_length=15)
     aeronave = models.CharField(max_length=2)
@@ -43,7 +44,8 @@ class Caratvue(models.Model):
         unique_together = ('fecha', 'compania', 'matricula')
 
 class Carcmani(models.Model):
-    fecha = models.DateField(null=False,primary_key=True)
+    id = models.AutoField( primary_key=True, default=0, null=False )
+    fecha = models.DateField(null=False)
     operador = models.CharField(max_length=3, null=False)
     numero_vuelo = models.CharField(max_length=20, null=False)
     puerto_despacho = models.CharField(max_length=6, null=False)
@@ -55,6 +57,13 @@ class Carcmani(models.Model):
     modificado_por = models.CharField(max_length=10,null=True)
     fecha_status = models.DateField(null=True)
     hora_status = models.TimeField(null=True)
+    aeronave = models.CharField(max_length=2, null=False)
+    matricula = models.CharField(max_length=20, null=False)
+    confirmado = models.CharField(max_length=10)
+    fecha_confirma = models.DateField(null=True)
+    hora_confirma = models.TimeField(null=True)
+    liquida_aduana = models.CharField(max_length=20, null=True)
+    fecha_liquida = models.DateField(null=True)
 
     class Meta:
         managed = False
@@ -77,7 +86,7 @@ class Carcoaer(models.Model):
          db_table = 'carcoaer'
 
 class Cardeent(models.Model):
-    fecha = models.DateField(null=False,primary_key=True)
+    fecha = models.DateField(null=False)
     fecha_manifiesto = models.DateField(null=False) 
     operador = models.CharField(max_length=3, null=False)
     numero_vuelo = models.CharField(max_length=20, null=False)
@@ -87,6 +96,7 @@ class Cardeent(models.Model):
     status = models.CharField(max_length=1, null=True)
     fecha_status = models.DateField(null=True)
     hora_status = models.TimeField(null=True)
+    id = models.IntegerField(primary_key=True)
 
     class Meta:
        managed = False
@@ -94,7 +104,8 @@ class Cardeent(models.Model):
        unique_together = ('fecha', 'fecha_manifiesto', 'operador','numero_vuelo','no_embarque','tarifa')
 
 class Cardmani(models.Model):
-    fecha = models.DateField()
+    id = models.AutoField(primary_key=True)
+    fecha = models.DateField(null=False)
     operador = models.CharField(null=True,max_length=3)
     numero_vuelo = models.CharField(null=True,max_length=20)
     no_embarque = models.CharField(null=True,max_length=20)
@@ -108,52 +119,57 @@ class Cardmani(models.Model):
     peso_kg = models.DecimalField(max_digits=14, decimal_places=2,  null=True)
     peso_lb = models.DecimalField(max_digits=14, decimal_places=2,  null=True)
     no_udl = models.CharField(null=True,max_length=20)
-    almacen = models.CharField(null=True,max_length=2)
-    area = models.CharField(null=True,max_length=2)
-    anaquel = models.CharField(null=True,max_length=3)
-    cara = models.CharField(null=True,max_length=1)
-    nivel = models.CharField(null=True,max_length=2)
-    posicion = models.CharField(null=True,max_length=1)
+    ubicacion = models.IntegerField(null=True)
     status = models.CharField(null=True,max_length=1)
     modificado_por = models.CharField(null=True,max_length=10)
-    fecha_status = models.DateField(null=True)
-    hora_status = models.TimeField(null=True)
+    fecha_status = models.DateField(null=True, blank=True)
+    hora_status = models.TimeField(null=True, blank=True)
+    confirmado = models.CharField(max_length=10)
+    fecha_confirma = models.DateField(null=True, blank=True)
+    hora_confirma = models.TimeField(null=True, blank=True)
+    liquida_aduana = models.CharField(max_length=20)
+    fecha_liquida = models.DateField(null=True)
 
     class Meta:
         managed = False
         db_table = 'cardmani'
-        unique_together = (('fecha', 'operador', 'numero_vuelo', 'no_embarque', 'secuencia'),)
+        unique_together = (('fecha', 'operador', 'numero_vuelo', 'no_embarque'),)
 
 
 class Carentre(models.Model):
-    fecha = models.DateField()
-    fecha_manifiesto = models.DateField()
+    id = models.IntegerField(primary_key=True, null=False)
+    fecha = models.DateField(null=False)
+    fecha_manifiesto = models.DateField(null=False)
     operador = models.CharField( null=True,max_length=3)
-    numero_vuelo = models.CharField(null=True,max_length=20)
-    no_embarque = models.CharField(null=True,max_length=20)
-    secuencia = models.SmallIntegerField()
+    numero_vuelo = models.CharField(null=False,max_length=20)
+    no_embarque = models.CharField(null=False,max_length=20)
+    creado_por = models.CharField(max_length=10, null=False)
+    fecha_creado = models.DateField(null=False)
+    hora_creado = models.TimeField(null=False)
     entregado_a = models.CharField(null=True,max_length=50)
     cedula = models.CharField(null=True,max_length=15)
     no_placa = models.CharField(null=True,max_length=15)
-    docto_aduana = models.CharField(null=True,max_length=20)
-    recibo_pag = models.CharField(null=True,max_length=20)
+    liquida_aduana = models.CharField(null=True,max_length=20)
+    fecha_liquida = models.DateField(null=True)
     piezas_entrega = models.IntegerField()
     piezas_faltantes = models.IntegerField()
     piezas_buenas = models.IntegerField()
     observacion = models.CharField(null=True,max_length=250)
-    cia_afec = models.CharField(null=True,max_length=3)
-    agen_afec = models.CharField(null=True,max_length=3)
-    codigo = models.CharField(null=True,max_length=3)
     factura = models.CharField(null=True,max_length=7)
     monto = models.DecimalField(max_digits=14, decimal_places=2,  null=True)
     no_afectacion = models.IntegerField( null=True)
     status = models.CharField(null=True,max_length=1)
-    no_liqudacion = models.CharField(null=True,max_length=20)
+    modificado_por = models.CharField(null=True, max_length=10)
+    fecha_status = models.DateField(null=True)
+    hora_status = models.TimeField(null=True)
+    destinatario = models.CharField(max_length=250)
+    peso = models.DecimalField(max_digits=14, decimal_places=2, null=True)
+
 
     class Meta:
         managed = False
         db_table = 'carentre'
-        unique_together = (('fecha', 'fecha_manifiesto', 'operador', 'numero_vuelo', 'no_embarque', 'secuencia'),)
+        unique_together = (('fecha', 'fecha_manifiesto', 'operador', 'numero_vuelo', 'no_embarque'),)
 
 
 class Cargcaman(models.Model):
@@ -263,6 +279,7 @@ class Cartari(models.Model):
     modificado_por = models.CharField( null=True,max_length=10)
     fecha_status = models.DateField( null=True)
     hora_status = models.TimeField( null=True)
+    peso_base = models.DecimalField(max_digits=14, decimal_places=2, default=0)
 
     class Meta:
         managed = False
@@ -585,5 +602,185 @@ class Ubicacion(models.Model):
     ncorregimiento = models.CharField( null=True,max_length=100)
 
     class Meta:
+
         managed = False
         db_table = 'ubicacion'
+
+class Logtral(models.Model):
+    codigo = models.CharField(primary_key=True, max_length=2)
+    descripcion = models.CharField(null=False, max_length=50)
+    creado_por = models.CharField(max_length=10, null=False)
+    fecha_creado = models.DateField(null= False)
+    hora_creado = models.TimeField(null= False)
+    dominio = models.CharField(max_length=1, null=False)
+    accion = models.CharField(max_length=1, null=False)
+    maneja_cliente = models.CharField(max_length=1, null=False)
+    uso = models.CharField(max_length=1, null=False)
+    indicadores = models.CharField(max_length=2)
+    restringida = models.CharField(max_length=1)
+    autorizacion = models.CharField(max_length=1)
+    despacho = models.CharField(max_length=1)
+    tipo_documento = models.CharField(max_length=3)
+    sec_reserva = models.IntegerField()
+    digita_docto = models.CharField(max_length=1)
+    consolida = models.CharField(max_length=1)
+    presupuesto = models.CharField(max_length=1)
+    tipo_presup = models.CharField(max_length=1)
+    secuencia = models.CharField(max_length=2)
+    label = models.CharField(max_length=20)
+    status = models.CharField(null=False, max_length=1)
+    modificado_por = models.CharField(max_length=10)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
+    manejo_depto = models.CharField(max_length=1)
+
+    class Meta:
+        managed = False
+        db_table = 'logtral'
+
+class Logctmo(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    compania = models.CharField(max_length=3, null=False)
+    agencia = models.CharField(max_length=3, null=False)
+    fecha = models.DateField(null=False)
+    almacen = models.CharField(max_length=2, null=False)
+    codigo = models.CharField(max_length=2, null=False)
+    documento = models.CharField(max_length=10, null=False)
+    creado_por = models.CharField(max_length=10, null=False)
+    fecha_creado = models.DateField(null=False)
+    hora_creado = models.TimeField(null=False)
+    fecha_entrega = models.DateField()
+    hora_entrega = models.TimeField()
+    fecha_venta = models.DateField()
+    liquidacion = models.SmallIntegerField()
+    no_placa = models.CharField(max_length=10)
+    guia_despacho = models.CharField(max_length=10)
+    compania_destino = models.CharField(max_length=3)
+    agencia_destino = models.CharField(max_length=3)
+    almacen_destino = models.CharField(max_length=2)
+    no_factura = models.CharField(max_length=10)
+    cliente = models.CharField(max_length=7)
+    compania_dest = models.CharField(max_length=3)
+    agencia_dest = models.CharField(max_length=3)
+    departamento_dest = models.CharField(max_length=3)
+    fecha_req = models.DateField()
+    valor = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    fecha_llegada = models.DateField()
+    hora_llegada = models.TimeField()
+    comentario = models.CharField(max_length=250)
+    status = models.CharField(max_length=1)
+    modificado_por = models.CharField(max_length=10)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'logctmo'
+        unique_together = (('compania', 'agencia', 'fecha', 'almacen', 'codigo', 'documento'),)
+        
+class Logdemo(models.Model):
+    id = models.IntegerField(primary_key=True, null=False)
+    compania = models.CharField(max_length=3, null=False)
+    agencia = models.CharField(max_length=3, null=False)
+    fecha = models.DateField(null=False)
+    almacen = models.CharField(max_length=2, null=False)
+    codigo = models.CharField(max_length=2, null=False)
+    documento = models.CharField(max_length=10, null=False)
+    secuencia = models.SmallIntegerField(null=False)
+    articulo = models.CharField(max_length=20),
+    almacen_reserva = models.CharField(max_length=2)
+    orden_produccion = models.CharField(max_length=12)
+    creado_por = models.CharField(max_length=10, null=False)
+    fecha_creado = models.DateField(null=False)
+    hora_creado = models.TimeField(null=False)
+    pallets = models.IntegerField(default=0)
+    peso = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    cajas = models.IntegerField(default=0)
+    unidad = models.IntegerField(default=0)
+    costo = models.DecimalField(max_digits=12, decimal_places=7, default=0)
+    peso_aut = models.IntegerField(default=0)
+    cajas_aut = models.IntegerField(default=0)
+    unidad_aut = models.IntegerField(default=0)
+    pallet_desp = models.IntegerField(default=0)
+    peso_desp = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    cajas_desp = models.IntegerField(default=0)
+    unidad_desp = models.IntegerField(default=0)
+    monto = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    impuesto = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    componentes = models.IntegerField(default=0)
+    comentario = models.CharField(max_length=250)
+    status = models.CharField(max_length=1, default='A')
+    modificado_por = models.CharField(max_length=10)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'logdemo'
+        unique_together = (('compania', 'agencia', 'fecha', 'almacen', 'codigo', 'documento', 'secuencia'),)
+
+class Segpaag(models.Model):
+    id = models.AutoField(primary_key=True, null=False)
+    compania = models.CharField(max_length=3, null=False)
+    agencia = models.CharField(max_length=3, null=False)
+    aplicacion = models.CharField(max_length=3, null=False)
+    parametro = models.CharField(max_length=25, null=False)
+    valor = models.CharField(max_length=25, null=False)
+    creado_por = models.CharField(max_length=10)
+    fecha_creado = models.DateField()
+    hora_creado = models.TimeField()
+    status = models.CharField(max_length=1, null=False)
+    modificado_por = models.CharField(max_length=10)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
+    fecha = models.DateField()
+    hora = models.TimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'segpaag'
+        unique_together = (('compania', 'agencia', 'aplicacion', 'parametro'),)
+
+class Crmclte(models.Model):
+    cliente = models.CharField(primary_key=True, null=False)
+    creado_por = models.CharField(max_length=10)
+    fecha_creado = models.DateField()
+    hora_creado = models.TimeField()
+    compania = models.CharField(max_length=3)
+    agencia = models.CharField(max_length=3)
+    ruta = models.CharField(max_length=3)
+    clase = models.CharField(max_length=3)
+    subclase = models.CharField(max_length=3)
+    tipo_elemento = models.CharField(max_length=2)
+    ubicacion = models.CharField(max_length=12)
+    razon_social = models.CharField(max_length=50)
+    code_id = models.CharField(max_length=1)
+    id_legal = models.CharField(max_length=25)
+    digito_vf = models.CharField(max_length=3)
+    barrio = models.CharField(max_length=35)
+    sector = models.CharField(max_length=35)
+    entre1 = models.CharField(max_length=35)
+    entre2 = models.CharField(max_length=35)
+    casa_edificio = models.CharField(max_length=10)
+    telefono1 = models.CharField(max_length=15)
+    telefono2 = models.CharField(max_length=15)
+    no_fax = models.CharField(max_length=15)
+    zona_postal = models.CharField(max_length=5)
+    apartado = models.CharField(max_length=7)
+    email = models.EmailField()
+    inicio_operacion = models.DateField()
+    ultimo_censo = models.DateField()
+    codigo_ant = models.CharField(max_length=7)
+    status = models.CharField(max_length=1, null=False)
+    modificado_por = models.CharField(max_length=10)
+    fecha_status = models.DateField()
+    hora_status = models.TimeField()
+    imprime_unidad = models.CharField(max_length=1)
+    nombre_comercial = models.CharField(max_length=60, null=False)
+
+    class Meta:
+        managed = False
+        db_table = 'crmclte'
+
+
+
