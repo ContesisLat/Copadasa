@@ -126,10 +126,12 @@ export interface Carinent
 
 export interface Cartari
 {
+    id?:string
     tarifa?:string
     fecha_inicio?:string
     fecha_final?:string
     entrada?:string
+    peso_base?:string
     costo_diario?:string
     medida?:string
     minimo_diario?:string
@@ -175,12 +177,22 @@ export interface Logalma
 {
     almacen?:string
     descripcion?:string
+    tipo_almacen?:string
+    nom_tipo_almacen?:string
     status?:string
     nom_status?:string
 }
 
+export interface Carcoaer
+{
+    compania?:string
+    nombre?:string
+    status?:string
+    nom_status?:string
+}
 export interface Carcmani
 {
+    id?:any
     fecha?:string
     operador?:string
     nom_operador?:string
@@ -196,10 +208,19 @@ export interface Carcmani
     matricula?:string
     status?:string
     nom_status?:string
+    confirmado?:string
+    fecha_confirma?:string
+    hora_confirma?:string
+    liquida_aduana?:string
+    fecha_liquida?:string
+    
 }
 
 export interface Cardmani
 {
+    fecha?:string
+    operador?:string
+    numero_vuelo?:string
     secuencia?:string
     no_embarque?:string
     naturaleza?:string
@@ -210,6 +231,127 @@ export interface Cardmani
     destinatario?:string
     comentarios?:string
     ubicacion?:string
+    status?:string
+    nom_status?:string
+    id?:string
+}
+
+export interface LogTral
+{
+    codigo?:string
+    descripcion?:string
+    accion?:string
+    nom_accion?:string
+    maneja_cliente?:string
+    nom_maneja_clte?:string
+    secuencia?:number
+    status?:string
+    nom_status?:string
+}
+
+export interface Carentre
+{
+    id?:string
+    fecha?:string
+    fecha_manifiesto?:string
+    operador?:string
+    nom_operador?:string
+    numero_vuelo?:string
+    no_embarque?:string
+    destinatario?:string
+    entregado_a?:string
+    cedula?:string
+    no_placa?:string
+    piezas_entrega?:string
+    no_afectacion?:string
+    observacion?:string
+    peso?:string
+    monto?:string
+    status?:string
+    nom_status?:string
+}
+
+export interface Cardeent
+{
+  tarifa?:string
+  nom_tarifa?:string
+  monto?:string
+  status?:string
+  nom_status?:string
+  id?:string
+}
+
+export interface Caropera
+{
+    operador?:string
+    nombre?:string
+}
+
+export interface Logctmo
+{
+    id?:string
+    compania?:string
+    agencia?:string
+    fecha?:string
+    almacen?:string
+    nom_almacen?:string
+    codigo?:string
+    nom_codigo?:string
+    documento?:string
+    liquidacion?:string
+    no_placa?:string
+    guia_despacho?:string
+    no_factura?:string
+    cliente?:string
+    nom_cliente?:string
+    valor?:string
+    fecha_llegada?:string
+    hora_llegada?:string
+    comentario?:string
+    status?:string
+    nom_status?:string  
+}
+export interface Logdemo
+{
+    compania?:string
+    agencia?:string
+    fecha?:string
+    almacen?:string
+    codigo?:string
+    secuencia?:string
+    orden_produccion?:string
+    articulo?:string
+    pallets?:string
+    peso?:string
+    cajas?:string
+    pallet_desp?:string
+    peso_desp?:string
+    cajas_desp?:string
+    monto?:string
+    impuesto?:string
+    comentario?:string
+    status?:string
+    nom_status?:string
+    id?:string
+}
+
+export interface Crmclte
+{
+    cliente?:string
+    nombre_comercial?:string
+    razon_social?:string
+    code_id?:string
+    nom_code_id?:string
+    id_legal?:string
+    digito_vf?:string
+    ubicacion?:string
+    barrio?:string
+    casa_efificio?:string
+    telefono1?:string
+    telefono2?:string
+    zona_postal?:string
+    apartado?:string
+    email?:string
     status?:string
     nom_status?:string
 }

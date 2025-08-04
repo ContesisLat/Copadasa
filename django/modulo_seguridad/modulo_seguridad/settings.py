@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d#g^gcs6j#lbi3hz_94lm@kq+sgjr0$*qc!fyr7w0n@z=7i772'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '103.23.61.168',
@@ -31,15 +31,15 @@ ALLOWED_HOSTS = [
     '5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]
 
-SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
-SECURE_HSTS_SECONDS=259200
-SECURE_SSL_REDIRECT=True
-SESSION_COOKIE_SECURE=True
-CSRF_COOKIE_SECURE=True
+#SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
+#SECURE_HSTS_SECONDS=259200
+#SECURE_SSL_REDIRECT=True
+#SESSION_COOKIE_SECURE=True
+#CSRF_COOKIE_SECURE=True
 
-HTTPS_PORT = 443
-HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
-HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
+#HTTPS_PORT = 443
+#HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
+#HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
 # Application definition
 
 INSTALLED_APPS = [
@@ -120,26 +120,28 @@ DATABASES = {
         'NAME':'teampy',
         'USER':'postgres',
         'PASSWORD':'postgres',
-        'HOST':'10.20.10.13',
+        #'HOST':'10.20.10.13',
+        'HOST':'103.23.61.168',
         'PORT':'5432',
-         'OPTIONS': {
-            'sslmode': 'require',
-            'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
-            'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
-        },
+        #'OPTIONS': {
+        #    'sslmode': 'require',
+        #    'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
+        #    'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
+        #},
     },
      'copadasa_db': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME':'copadasapma',
         'USER':'postgres',
         'PASSWORD':'postgres',
-        'HOST':'10.20.10.13',
+        #'HOST':'10.20.10.13',
+        'HOST':'103.23.61.168',
         'PORT':'5432',
-         'OPTIONS': {
-            'sslmode': 'require',
-            'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
-            'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
-        },
+        #'OPTIONS': {
+        #    'sslmode': 'require',
+        #    'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
+        #    'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
+        #},
      }
 }      
 
@@ -199,7 +201,7 @@ EMAIL_HOST_PASSWORD = 'mwnywlugasyvqxpo'   # Tu contraseña
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-'''LOGGING = {
+"""LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
@@ -217,7 +219,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
         'handlers': ['console'],
         'level': 'DEBUG',
     }
-}'''
+}"""
 
 
 
