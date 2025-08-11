@@ -147,8 +147,8 @@ class Carentre(models.Model):
     fecha_creado = models.DateField(null=False)
     hora_creado = models.TimeField(null=False)
     entregado_a = models.CharField(null=True,max_length=50)
-    cedula = models.CharField(null=True,max_length=15)
-    no_placa = models.CharField(null=True,max_length=15)
+    cedula = models.CharField(null=True,max_length=100)
+    no_placa = models.CharField(null=True,max_length=100)
     liquida_aduana = models.CharField(null=True,max_length=20)
     fecha_liquida = models.DateField(null=True)
     piezas_entrega = models.IntegerField()
@@ -164,6 +164,7 @@ class Carentre(models.Model):
     hora_status = models.TimeField(null=True)
     destinatario = models.CharField(max_length=250)
     peso = models.DecimalField(max_digits=14, decimal_places=2, null=True)
+    firma_digital = models.CharField(null=True,max_length=100)
 
 
     class Meta:

@@ -77,7 +77,6 @@ const validation = async (): Promise<void> => {
     const user = credential.getMs();
 
     console.log(user.value)
-
     // Validación
     if (!!user.value && user.value.message === 'Autenticacion exitosa') {
       router.push('/PrinPage');

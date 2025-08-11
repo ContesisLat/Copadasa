@@ -6,7 +6,7 @@
               <div class="row" style="gap: 5px;">
                 <div class="col d-flex flex-column justify-content-center align-item-center" >
                   <h3><strong>Control de Despachos</strong></h3>
-                  <div class="card overflow-scroll">
+                  <div class="card overflow-scroll w-100">
                       <table class="table table-hover  table-sm">
                           <thead>
                               <tr>
@@ -37,7 +37,7 @@
                       </table>  
                   </div>
                   <h3><strong>Cargos Generados</strong></h3>
-                  <div class="card overflow-scroll">
+                  <div class="card overflow-scroll w-100" style="height: 150px;">
                       <table class="table table-hover  table-sm">
                           <thead>
                               <tr>
@@ -62,7 +62,7 @@
                 <div class="col div-buttom"
                       style=" background-color:rgba(255, 255, 255, 0.3);  backdrop-filter: blur(10px); border-radius: 10px; height: 300px;">
                       <div class="btn-group2">
-                        <button type="button" class="btn btn-light" @click.prevent="Confirmar" disabled>Datos Entrega</button>
+                        <button type="button" class="btn btn-light" @click.prevent="CbtnDE">Datos Entrega</button>
                         <button type="button" class="btn btn-light" @click="Complemento" disabled>Despacho</button>
                         <button type="button" class="btn btn-light" @click="Listar" :disabled="!canUseGroup2">Imprimir</button>
                         <button type="button" class="btn btn-light" @click="Anular" :disabled="!canUseGroup2">Anular</button>
@@ -74,8 +74,10 @@
               @updateProps="updatePropsValue" />
           <UpComplemento v-if="btnCoUp" :fecha="fecha" :operador="operador" :numero_vuelo="numero_vuelo" :btnCoUp="btnCoUp"
               @updateCoProps="updateCoPropsValue" />
+              
       </section>
-    </div>
+    </div> 
+    <InDatosE v-if="btnDE" :BdatosE="btnDE" :numembarque="no_embarque" @DEpropsValue="DEPropsValue"/>
   </body>
 </template>
 
@@ -92,6 +94,7 @@ const options = ref('')
 import { Carentre, Cardeent } from '@/interface/interfaces';
 import UpConfirma from './pUpdate/UpConfirma.vue';
 import UpComplemento from './pUpdate/UpComplemento.vue';
+import InDatosE from './pInsert/InDatosE.vue';
 import { flattenDiagnosticMessageText } from 'typescript';
 
 const id_ref = ref<string | null>(null)
@@ -131,7 +134,7 @@ const getCardeent = (id_fecha: any, id_fecha_manifiesto: any, id_operador: any, 
 
                 
             })
-            .catch(error => {
+            .catch((error: any) => {
                 console.error('Error buscando detalles de despacho:', error);
         });
     }
@@ -164,6 +167,15 @@ function updateCoPropsValue(newValue: boolean) {
 
   getCarentre()
   getCardeent("1", "1", "1", "1", "1", "1")
+}
+
+const btnDE = ref(false)
+const CbtnDE= () => {
+  btnDE.value = !btnDE.value
+   
+}
+function DEPropsValue(newValue: boolean) {
+  btnDE.value = newValue
 }
 //--- Fun//funcion principal para el funcionamiento de el update y delete cuando uno de los 2 este activado
 const FunClick = (n: any, nm: any, st: any) => {
@@ -201,16 +213,7 @@ const Calcular = async() => {
     })
 }
 
-const Confirmar = () => {
-  
-  clickUp.value = !clickUp.value
 
-  if (clickUp.value == true) {
-    btnUp.value = !btnUp.value
-    clickUp.value = !clickUp.value
-  }
-   
-}
 const Complemento = () => {
   clickCoUp.value = !clickCoUp.value
 
@@ -343,7 +346,7 @@ body {
   font-family: Trebuchet MS;
   color: white;
   background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
-  overflow: hidden;
+  overflow: scroll;
 
   @media screen and (max-width: 600px) {
     overflow: scroll;
@@ -371,7 +374,12 @@ body {
 .container {
   grid-area: container;
 }
-
+.card {
+  width: 85%;
+  height: 250px;
+  min-width: min-content;
+  box-sizing: border-box;
+}
 .btn-group {
   display: flex;
   justify-content: flex-end;

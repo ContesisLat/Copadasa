@@ -75,6 +75,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     'https://127.0.0.1:8080', # Agrega el dominio de tu aplicación Vue.js
     'http://localhost:8080',
+    'http://192.168.10.122:8080',
     'http://103.23.61.168:8080', # Agrega el dominio de tu aplicación Vue.js
     'https://5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]

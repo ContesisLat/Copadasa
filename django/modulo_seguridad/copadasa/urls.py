@@ -75,6 +75,7 @@ urlpatterns = [
     path('logtral/filter', LogtralFilterView.as_view(), name='logtral-filter'),
     path('crmclte/filter', CrmclteFilterView.as_view(), name='crmclte-filter'),
     path('query',query_global, name='query_global'),
+    path('guardar-imagenes',guardar_archivos, name='guardar-imagenes'),
     path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
     path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro
     path('delete/', DeleteView.as_view(), name='delete'),  # Ruta para eliminar un registro
