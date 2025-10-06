@@ -38,6 +38,7 @@ export interface Puertos{
     tipo?:string
     nombre_pais?:string
     nombre_ciudad?:string
+    status?:string
 }
 
 export interface Cartarvue{
@@ -82,13 +83,18 @@ export interface Cartitar
 {
     tarifa?:string
     nombre?:string
+    tipo?:string
+    nom_tipo?:string
     status?:string
+    nom_status?:string
 }
 
 export interface Cargcaman
 {
     cargo?:string
     nombre?:string
+    tipo?:string
+    nom_tipo?:string
     creado_por?:string
     fecha_creado?:string
     hora_creado?:string
@@ -240,6 +246,7 @@ export interface LogTral
 {
     codigo?:string
     descripcion?:string
+    sec_reserva?:string
     accion?:string
     nom_accion?:string
     maneja_cliente?:string
