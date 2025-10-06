@@ -55,7 +55,7 @@
                   </div>
                   <!--FormData-->
                   <h3><strong>Control de Movimientos</strong></h3>
-                  <div class="card overflow-scroll w-100">
+                  <div class="card overflow-scroll">
                       <table class="table table-hover  table-sm">
                           <thead>
                               <tr>
@@ -88,7 +88,7 @@
                       </table>  
                   </div>
                   <h3><strong>Detalles de Movimientos</strong></h3>
-                  <div class="card overflow-scroll w-100">
+                  <div class="card overflow-scroll">
                       <table class="table table-hover  table-sm">
                           <thead>
                               <tr>
@@ -459,7 +459,7 @@ body {
   font-family: Trebuchet MS;
   color: white;
   background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
-  overflow: scroll;
+  overflow: hidden;
 
   @media screen and (max-width: 600px) {
     overflow: scroll;
@@ -487,13 +487,7 @@ body {
 .container {
   grid-area: container;
 }
-.card {
-  width: 85%;
-  height: 200px;
-  min-width: min-content;
-  box-sizing: border-box;
-}
- 
+
 .btn-group {
   display: flex;
   justify-content: flex-end;

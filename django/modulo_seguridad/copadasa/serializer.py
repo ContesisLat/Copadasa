@@ -174,8 +174,3 @@ class CrmclteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crmclte
         fields = '__all__'
-
-class CarussecSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Carussec
-        fields = '__all__'

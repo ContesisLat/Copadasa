@@ -25,24 +25,21 @@ SECRET_KEY = 'django-insecure-d#g^gcs6j#lbi3hz_94lm@kq+sgjr0$*qc!fyr7w0n@z=7i772
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8080',
-                        'http://127.0.0.1:8080']
-
 ALLOWED_HOSTS = [
     '103.23.61.168',
     '127.0.0.1',
     '5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]
- 
-#SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
-#SECURE_HSTS_SECONDS=259200
-#SECURE_SSL_REDIRECT=True
-#SESSION_COOKIE_SECURE=True
-#CSRF_COOKIE_SECURE=True
 
-#HTTPS_PORT = 443
-#HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
-#HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
+SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
+SECURE_HSTS_SECONDS=259200
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+
+HTTPS_PORT = 443
+HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
+HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,7 +79,6 @@ CORS_ALLOWED_ORIGINS = [
     'https://5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]
 
-
 CORS_ALLOW_METHODS = (
     'DELETE',
     'GET',
@@ -93,8 +89,6 @@ CORS_ALLOW_METHODS = (
 )
 
 CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SECURE = False
 
 ROOT_URLCONF = 'modulo_seguridad.urls'
 
@@ -126,8 +120,8 @@ DATABASES = {
         'NAME':'teampy',
         'USER':'postgres',
         'PASSWORD':'postgres',
-        #'HOST':'10.20.10.13',
-        'HOST':'103.23.61.168',
+        'HOST':'10.20.10.13',
+        #'HOST':'103.23.61.168',
         'PORT':'5432',
         'OPTIONS': {
             'sslmode': 'require',
@@ -140,10 +134,9 @@ DATABASES = {
         'NAME':'copadasapma',
         'USER':'postgres',
         'PASSWORD':'postgres',
-        #'HOST':'10.20.10.13',
-        'HOST':'103.23.61.168',
+        'HOST':'10.20.10.13',
+        #'HOST':'103.23.61.168',
         'PORT':'5432',
-        #'ATOMIC_REQUEST': True,
         'OPTIONS': {
             'sslmode': 'require',
             'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
@@ -208,7 +201,7 @@ EMAIL_HOST_PASSWORD = 'mwnywlugasyvqxpo'   # Tu contraseña
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-LOGGING = {
+"""LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
@@ -226,7 +219,7 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'DEBUG',
     }
-}
+}"""
 
 
 

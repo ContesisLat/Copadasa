@@ -37,7 +37,7 @@
                       <td>{{ elm.descripcion }}</td>
                       <td>{{ elm.nom_accion }}</td>
                       <td>{{ elm.nom_maneja_clte }}</td>
-                      <td>{{ elm.sec_reserva }}</td>
+                      <td>{{ elm.secuencia }}</td>
                       <td>{{ elm.nom_status }}</td>
                     </tr>
                   </tbody>

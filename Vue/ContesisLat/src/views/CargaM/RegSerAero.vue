@@ -92,7 +92,7 @@
                     <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Estado</label>
                     <div class="col-sm-3">
                       <select class="form-select form-select-sm" v-model="formData.status" :disabled="onlyRead">
-                        <option selected>{{ formData.nom_status }}</option>
+                        <option selected>{{ formData.status }}</option>
                         <option value="R" selected>Registrado</option>
                         <option value="F">Facturado</option>
                         <option value="C">Cerrado</option>
@@ -150,26 +150,39 @@
                 <div class="div-dotted">
                   <form>
                     <div class="row g-3 mb-2" v-for="(registro, index) in registros" :key="index">
-                      <!--  Inicio de Agregar Tabla-->
-
-                      <!--  Final de Agregar Tabla-->
                       <div class="col-md-3">
-                        <select class="form-select form-select-sm" v-model="registro.cargo" :disabled="tonlyRead">
+                        <select class="form-select form-select-sm" v-model="registro.cargo" :disabled="onlyRead">
                           <option selected>{{ descripcionCargos(idncargo)}}</option>
                           <option v-for="i in cargos" :key="i.cargo"  :value="i.cargo" @click="idN(i.cargo)">{{ i.nombre }}</option>
                         </select>
                       </div>
+                      <!--div class="col-md-2">
+                        <input v-model="registro.fecha_inicio" type="date" class="form-control form-control-sm"
+                          id="validationDefault02" placeholder="Fecha Inicio" :readonly="tonlyRead">
+                      </div>
+                      <div class="col-sm-2">
+                        <input v-model="registro.hora_inicio" type="time" class="form-control form-control-sm"
+                          id="validationDefault02" placeholder= "Hora Inicio" :readonly="tonlyRead">
+                      </div>
+                      <div class="col-sm-2"> 
+                        <input v-model="registro.fecha_final" type="date" class="form-control form-control-sm"
+                          id="validationDefault03" placeholder="Fecha Final" :readonly="tonlyRead">  
+                      </div> 
+                      <div class="col-md-2">
+                         <input v-model="registro.hora_final" type="time" class="form-control form-control-sm"
+                          id="validationDefault02" placeholder= "Hora Final" :readonly="tonlyRead">
+                      </div-->
                       <div class="col-md-3">
-                        <input v-model="registro.tiempo_total" type="text" v-on:blur="Calcular(index)"   class="form-control form-control-sm"
+                        <input v-model="registro.tiempo_total" type="text" class="form-control form-control-sm"
                           id="validationDefault03" placeholder="Tiempo" :readonly="tonlyRead" >
                       </div>
                       <div class="col-md-3">
                         <input v-model="registro.monto" type="text" class="form-control form-control-sm"
-                          id="validationDefault03" placeholder="Monto" disabled >
+                          id="validationDefault03" placeholder="Monto" :readonly="tonlyRead" disabled >
                       </div>                     
                       <div class="col-sm-3">
-                        <select class="form-select form-select-sm" v-model="formData.status" :disabled="tonlyRead">
-                          <option selected>{{ registro.nom_status }}</option>
+                        <select class="form-select form-select-sm" v-model="formData.status" :disabled="onlyRead">
+                          <option selected>{{ formData.status }}</option>
                           <option value="R" selected>Registrado</option>
                           <option value="A">Anulado</option>
                         </select>
@@ -204,69 +217,24 @@ import { UrlGlobal } from '@/store/dominioGlobal';
 import { userGlobalStore } from '@/store/userGlobal';
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import CarCoaer from './CarCoaer.vue';
-import { Cartarvue } from '@/interface/interfaces';
 
 const dUrl = UrlGlobal()
 const userStore = userGlobalStore()
 const dateTimeStore = useDateTimeStore();
 
-function Calcular(indx: any) : void {
-   
-  let id_aeronave = formData.value.aeronave
-  let id_fecha = formData.value.fecha
-  let id_cargo = registros.value[indx].cargo
-  let tiempow = registros.value[indx].tiempo_total
-
-   
-  const patronHora = /^([0-9]{1,2}):([0-5][0-9])$/
-  if (!patronHora.test(tiempow)) {
-    error ('Dato no cumple con el formato hora')
-    return
-  }
-  
-  if (tiempow !== '00:00') { 
-    axios.get( dUrl.urlGlobal + `/api2/cartarvue/tarifas?id_aeronave=${id_aeronave}&id_fecha=${id_fecha}&id_cargo=${id_cargo}
-        &id_tiempo=${tiempow}`)
-        .then(response => {
-      dataList.value = response.data
-      let cartarvue = dataList.value
-
-      registros.value[indx].monto = cartarvue[0].costo_hora
-
-      let montoServicio = 0
-      console.log(registros.value.length)
-      for (let i = 0; i < registros.value.length; i++) {
-        console.log(i)
-        console.log(registros.value[i].monto)
-
-        let montoLinea = parseFloat(registros.value[i].monto)
-        console.log(montoLinea)
-
-        if (registros.value[i].cargo) {
-          montoServicio += montoLinea
-          console.log(montoServicio)
-        }         
-      }
-      formData.value.monto_servicio = montoServicio
-      })
-    }
-  }
 //--------------------------------------------------------------------------------------------------------------
 type Registro = {
   cargo: string
   tiempo_total: string // | null
   monto: string
   status: string
-  nom_status: string
 }
+
 // Inicializa con una sola fila vacía
 const registros = ref<Registro[]>([
-  { cargo: '', tiempo_total: '', monto: '0', status: 'R', nom_status:'Registrado'}
+  { cargo: '', tiempo_total: '', monto: '0', status: 'A' }
 ])
 
-const cartarvue = ref<Cartarvue[]>([
-  { costo_hora: '' }
-])
 // Estado del formulario y la data
 const formData = ref({
   fecha: '',
@@ -275,10 +243,9 @@ const formData = ref({
   aeronave: '',
   fecha_llegada: '',
   hora_llegada: '',
-  monto_servicio: 0,
+  monto_servicio: null,
   factura: '',
-  status: 'R', 
-  nom_status: 'Registrado'  
+  status: 'R',
 });
 
 // Variables de control
@@ -309,7 +276,6 @@ const startInsert = () => {
   onlyRead.value = false;
   tonlyRead.value = false
   ButtonText.value = 'Insertar';
-  formData.value.status = 'R'
 };
 
 // Función para iniciar búsqueda
@@ -330,7 +296,6 @@ const startUpdate = () => {
   isDeleting.value = false;
   canNavigate.value = false;
   onlyRead.value = false;
-  tonlyRead.value = false;
   ButtonText.value = 'Editar';
   ButtonText2.value = 'Volver';
   pk = formData.value.fecha, formData.value.compania, formData.value.matricula
@@ -370,90 +335,10 @@ const handleSearch = async () => {
   }
 };
 
-// Valida Array
-function valida(arr: string[]): boolean {
-  let valido = true
-  const uniqueElement = new Set(arr)
-  if (arr.length != uniqueElement.size) {
-    valido = false
-  }
-
-  return valido
-}
 //Funcion para la insercion
 const handleInsert = async () => {
   let vali = 0
   // Mostrar confirmación
-  if (!formData.value.fecha) {
-    error('Digite la fecha del Servicio...')
-    return
-  }
-  if(!formData.value.compania){
-    error('Digite la compañía aerea...')
-    return
-  }
-  if (!formData.value.aeronave) {
-    error('Escoja el tipo de aeronave...')
-    return
-  }
-  if (!formData.value.matricula) {
-    error('Digite el número de la matrícula...')
-    return
-  }
-  if(!formData.value.fecha_llegada || !formData.value.hora_llegada) {
-    error('Digite la fecha y hora de llegada de la aeronave...')
-    return
-  }
-  if (formData.value.fecha_llegada > formData.value.fecha) {
-    error('Fecha del servicio no puede ser menor a la fecha de llegada de la aeronave...')
-    return
-  }
-
-  // VALIDAR ARREGLO
-  let lineas = registros.value.length
-  
-  if (!registros.value) {
-    console.log('esta vacio el array')
-    return
-  }
-   
-  const guiaArray: string[] = registros.value.map(item => item.cargo)
-
-  let resultado: boolean = valida(guiaArray);
-
-  if (!resultado) {
-    error('Existen Cargos repetidos, verifique... ')
-    return
-  }
-
-  let montoServicio = 0
-  const patronHora = /^([0-9]{1,2}):([0-5][0-9])$/
-  
-  for (let i = 0; i < registros.value.length -1; i++) {
-    const arreglo = registros.value[i]
-    console.log(i)
-    console.log(lineas)
-
-    if (i != lineas) {
-      if (!arreglo.cargo) {
-        error('Hay codigos de cargos que no se han registrado...')
-        return
-      }
-      const valor = parseFloat(arreglo.monto)
-      if ( valor < 1 || typeof valor != 'number' ) {
-        error( `Monto en la posicion ${i + 1}, es incorrecto...`)
-        return
-      }
-
-      //let tiempo = registros.value[i].tiempo_total
-      //if (!patronHora.test(tiempo)) {
-      //  error( `Formato de tiempo en la línea ${i + 1}, es incorrecto`)
-      //  return
-      //} else{
-      //montoServicio =+ registros.value[i].monto
-      //}
-    }
-  }
   const result = await question(
     'Se va a insertar el campo con los nuevos datos.',
     '¿Deseas insertar este registro?'
@@ -495,9 +380,6 @@ const handleInsert = async () => {
     else {
       vali++
       for (const fila of registros.value) {
-        if (fila.cargo == "" || fila.cargo == undefined) {
-          break
-        }
         const data = {
         model: "caratvued",
         data: {
@@ -560,86 +442,21 @@ const handleUpdate = async () => {
       table: 'caratvue',
       filters: { fecha: formData.value.fecha, compania: formData.value.compania, matricula: formData.value.matricula }, // Filtro para identificar el registro a actualizar
       data: {
+        fecha: formData.value.fecha,
+        compania: formData.value.compania, 
+        matricula: formData.value.matricula, 
         fecha_llegada: formData.value.fecha_llegada,
         hora_llegada: formData.value.hora_llegada,
         monto_servicio: formData.value.monto_servicio,
         aeronave: formData.value.aeronave,
         status: formData.value.status,
-        modificado_por: userStore.globalUser,
-        fecha_status: dateTimeStore.formattedDate,
-        hora_status: dateTimeStore.formattedTime
+        creado_por: userStore.globalUser,
+        fecha_creado: dateTimeStore.formattedDate,
+        hora_creado: dateTimeStore.formattedTime
       } // Datos a actualizar
     })
     if (response.status == 200) {
-// Update del detalle
-      for (const fila of registros.value) {
-        if (fila.cargo == "" || fila.cargo == undefined) {
-          break
-        }
-        
-        const response = await axios.post(dUrl.urlGlobal + '/api2/query', { 
-          tabla: 'caratvued', 
-          filtro: { fecha: formData.value.fecha, compania: formData.value.compania, 
-                    matricula: formData.value.matricula, cargo: fila.cargo }});
-                    
-        dataList.value = response.data;
-        if (dataList.value.length == 0) {
-          const data = {
-            tabla: 'caratvued',
-            data: {
-              fecha: formData.value.fecha,
-              compania: formData.value.compania,
-              matricula: formData.value.matricula,
-              cargo: fila.cargo,
-              creado_por: userStore.globalUser,
-              fecha_creado: dateTimeStore.formattedDate,
-              hora_creado: dateTimeStore.formattedTime,
-              tiempo_total: fila.tiempo_total,
-              monto: fila.monto,
-              status: fila.status
-            }
-          }
-          try {
-            const response = await fetch( dUrl.urlGlobal + '/api2/insert/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            })
-
-            if (!response.ok) {
-              error(`Error insertando el cargo ${fila.cargo}`)
-            }else {
-              try {
-                const response = await axios.post( dUrl.urlGlobal + '/api2/update/', {
-                  table: 'caratvued',
-                  filters: { fecha: formData.value.fecha, compania: formData.value.compania,
-                            matricula: formData.value.matricula, cargo: fila.cargo },
-                  data: {
-                    cargo: fila.cargo,
-                    tiempo_total: fila.tiempo_total,
-                    monto: fila.monto,
-                    modificado_por: userStore.globalUser,
-                    fecha_status: dateTimeStore.formattedDate,
-                    hora_status: dateTimeStore.formattedTime
-                  }
-                })
-                if (response.status != 200) {
-                  error(`Error actualizando el cargo ${fila.cargo}`)
-                }
-              } 
-              catch (err: any) {
-                error(err.response?.data?.detail || `Error actualizando el cargo ${fila.cargo}`)
-              }
-            }
-          } catch (err: any) {
-            error(err.response?.data?.detail || `Error Insertando el cargo ${fila.cargo}`)
-          }
-        } 
-      } 
-// Fin del Update del detalle
-      success('Los datos fueron actualizados correctamente.', 'Actualización exitosa')
+        success('Los datos fueron actualizados correctamente.', 'Actualización exitosa')
 
     } else {
       error('Ocurrió un error al actualizar los datos.')
@@ -700,7 +517,6 @@ const getCaratvue = () => {
         tiempo_total: i.tiempo_total || '',
         monto: i.monto || null,
         status: i.status || '',
-        nom_status: i.nom_status
       }))
     })
     .catch(error => {
@@ -781,7 +597,7 @@ const toggleSearch = () => {
   if (dataList.value.length && isSearching.value == true) {
     // Si ya hay datos, "Consulta" limpia y reinicia la búsqueda
     dataList.value = [];
-    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: 0, status: '', nom_status: '', factura: '', aeronave: '' };
+    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: null, status: '', factura: '', aeronave: '' };
     onlyRead.value = false;
     ButtonText.value = 'Ok'
     canNavigate.value = false;
@@ -804,7 +620,7 @@ const toggleSearch = () => {
 const resetAll = () => {
   if (ButtonText2.value == 'Cancelar') {
     dataList.value = [];
-    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: 0, factura: '', status: '', nom_status: '', aeronave: '', };
+    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: null, factura: '', status: '', aeronave: '', };
     isInserting.value = false;
     isSearching.value = false;
     isEditing.value = false;
@@ -816,7 +632,7 @@ const resetAll = () => {
     registros.value = []
   } else {
     dataList.value = [];
-    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: 0, factura: '', status: '', nom_status: '', aeronave: '', };
+    formData.value = { fecha: '', compania: '', matricula: '', fecha_llegada: '', hora_llegada: '', monto_servicio: null, factura: '', status: '', aeronave: '', };
     startSearch()
     ButtonText.value = 'Ok'
     ButtonText2.value = 'Cancelar'
@@ -852,8 +668,7 @@ watch(registros, (newVal) => {
       cargo: '',
       tiempo_total: '',
       monto: '0',
-      status: '',
-      nom_status: ''
+      status: ''
     });
     return;
   }
@@ -864,9 +679,8 @@ watch(registros, (newVal) => {
     registros.value.push({
       cargo: '',
       tiempo_total: '',
-      monto: '0',
-      status: 'R',
-      nom_status: 'Registrado'
+      monto: '',
+      status: ''
     });
   }
 }, { deep: true });

@@ -40,7 +40,7 @@
             </div>
             <div class="col-md-1">
                 <label for="validationCustom02" class="form-label">Secuencia</label>
-                <input type="text" v-model="sec_reserva" class="form-control" id="validationCustom02"  required disabled>
+                <input type="text" v-model="secuencia" class="form-control" id="validationCustom02"  required disabled>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -79,7 +79,7 @@ const codigo = ref<string>('')
 const descripcion = ref<string>('')
 const accion = ref<string>('')
 const maneja_cliente = ref<string>('')
-const sec_reserva = ref<string>('')
+const secuencia = ref<string>('')
 const status = ref<string>('')
 
 //props y emits----------------------------------------------------------------

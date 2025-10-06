@@ -380,7 +380,6 @@ body {
   min-width: min-content;
   box-sizing: border-box;
 }
-
 .btn-group {
   display: flex;
   justify-content: flex-end;

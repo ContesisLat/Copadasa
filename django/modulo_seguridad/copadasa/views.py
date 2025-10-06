@@ -244,27 +244,6 @@ def cargos_aereos(request):
             return JsonResponse(cargos_list, safe=False)
         except Caratenvue.DoesNotExist:
             return JsonResponse({'error': 'No Existen Cargos'}, status=404)
-
-def tipos_de_tarifas(request):
-    cartitar = Cartitar.objects.all().values()
-    try:
-        for titar in cartitar:
-            if titar['status'] == "A":
-                titar['nom_status'] = 'Activo'
-            else:
-                titar['nom_status'] = 'Inactivo'
-
-            if titar['tipo'] == "A":
-                titar['nom_tipo'] = 'Almacenaje'
-            if titar['tipo'] == "M":
-                titar['nom_tipo'] = 'Manejo'
-            if titar['tipo'] == 'R':
-                titar['nom_tipo'] = 'Refrigeración'
-        
-        cartitar_list = list(cartitar)
-        return JsonResponse(cartitar_list, safe=False)
-    except Cartitar.DoesNotExist:
-        return JsonResponse({'Error': 'No hay Tipos de Tarifas definidas'}, status=404)
         
 def control_manifiesto(request):
     if request.method == "GET":
@@ -397,13 +376,6 @@ def cargos_manejo(request):
                 else:
                     cargo['nom_status'] = "Inactivo"
 
-                if cargo['tipo'] == "A":
-                    cargo['nom_tipo'] = "Almacenaje"
-                if cargo['tipo'] == "M":
-                    cargo['nom_tipo'] = "Manejo"
-                if cargo['tipo'] == "R":
-                    cargo['nom_tipo'] = "Refrigeración"
-
             cargos_list = list(cargos)
             return JsonResponse(cargos_list, safe=False)
         
@@ -453,17 +425,6 @@ def tarifas_almacenaje(request):
             return JsonResponse(tarifa_list, safe=False)
     except Cartaralm.DoesNotExist:
         return JsonResponse({'error': 'No puede accesar Tarifas'}, status=404 )
-    
-#def almacenaje_vigencia(request):
-#    print(request)
-#    fecha_inicio = request.GET.get('fecha_inicio')
-#    fecha_final = request.GET.get('fecha_final')
-#    valor_base = request.GET.get('valor_base')
-#    peso_adicional = request.GET.get('peso_adicional')
-#    valor_peso_adicional = request.GET.get('valor_peso_adicional')
-#    fechaMayor = Cartaralm.objects.latest('fecha_inicio')
-#    Cartaralm.objects.filter(tarifa='01', fecha_inicio=fechaMayor).update(fecha_final=fecha_final-1)
-
 
 def tarifas_frio(request):
     if request.method == "GET":
@@ -884,49 +845,8 @@ def despacho_cuartofrio(request):
     except Logctmo.DoesNotExist:
         return JsonResponse({'Error': ' No se encontró la entrada...'}, status=404)
 
-def tarifa_vuelos(request):
-    id_fecha = request.GET.get('id_fecha')
-    id_aeronave = request.GET.get('id_aeronave')
-    id_cargo = request.GET.get('id_cargo')
-    id_tiempo = request.GET.get('id_tiempo')
-    print(id_tiempo)
-    
-    string_hora = id_tiempo
-    formato_entrada = "%H:%M"
-    objeto_datetime = datetime.strptime(string_hora, formato_entrada)
-    horas = objeto_datetime.hour
-    minutos = objeto_datetime.minute
 
-    print(horas)
-    print(minutos)
-    try:
-        cartarvue = Cartarvue.objects.filter(aeronave=id_aeronave, fecha_inicio__lt=id_fecha, fecha_final__gt=id_fecha,
-                                          cargo=id_cargo, status='A').values()
-        for tarvue in cartarvue:
-            costo_hora = tarvue['costo_hora']
-            costo_minuto = costo_hora / 60
-            valor = horas * costo_hora + minutos * costo_minuto
-            
-            valor = "%0.2f" % valor 
-            print(valor)
-            tarvue['costo_hora'] = valor
-             
-
-        print(cartarvue)
-        
-        cartarvue_list = list(cartarvue)
-        return JsonResponse(cartarvue_list, safe=False)
-    except Cartarvue.DoesNotExist:
-        return JsonResponse({'Error': ' No hay tarifa disponible...'}, status=404)
-    
-
-#nuevo filtrado en tabla
-class CarcmaniFilterView(generics.ListAPIView):
-    queryset = Carcmani.objects.all()
-    serializer_class = CarcmaniSerializer
-    filter_backends = [DjangoFilterBackend]  
-    filterset_fields = ['numero_vuelo']   
-    
+#nuevo filtrado en tabla        
 class CardmaniFilterView(generics.ListAPIView):
     queryset = Cardmani.objects.all()
     serializer_class = CardmaniSerializer

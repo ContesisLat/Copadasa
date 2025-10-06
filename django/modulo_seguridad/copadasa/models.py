@@ -176,7 +176,6 @@ class Carentre(models.Model):
 class Cargcaman(models.Model):
     cargo = models.CharField(primary_key=True,max_length=2)
     nombre = models.CharField(null=True,max_length=50)
-    tipo = models.CharField(max_length=1, null=False)
     creado_por = models.CharField(null=True,max_length=10)
     fecha_creado = models.DateField()
     hora_creado = models.TimeField()
@@ -609,7 +608,7 @@ class Ubicacion(models.Model):
         db_table = 'ubicacion'
 
 class Logtral(models.Model):
-    codigo = models.CharField(primary_key=True, max_length=3)
+    codigo = models.CharField(primary_key=True, max_length=2)
     descripcion = models.CharField(null=False, max_length=50)
     creado_por = models.CharField(max_length=10, null=False)
     fecha_creado = models.DateField(null= False)
@@ -784,14 +783,5 @@ class Crmclte(models.Model):
         managed = False
         db_table = 'crmclte'
 
-class Carussec(models.Model):
-    id = models.AutoField(primary_key=True, null=False)
-    usuario = models.CharField(max_length=10, null=False)
-    tabla = models.CharField(max_length=20, null=False)
-    secuencia = models.IntegerField(null=False)
 
-    class Meta:
-        managed = False
-        db_table = 'carussec'
-        unique_together = (('usuario', 'tabla'),)
 
