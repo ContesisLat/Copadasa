@@ -186,6 +186,8 @@
                   ButtonText }}</button>
                 <button type="button" class="btn btn-light btn-sm" @click="resetAll" :disabled="!canUseGroup2">{{
                   ButtonText2 }}</button>
+                  <ExRegmani v-if="print" :operador="descripcionOperador" :matricula="formData.matricula" :num_vuelo="formData.numero_vuelo"
+                  :puertoE="descripcionPuertosDP" :puertoD="descripcionPuertosDT" :aeronave="descripcionAeronaves" :tabla="registros"/>
               </div>
             </div>
           </div>
@@ -204,6 +206,7 @@ import { UrlGlobal } from '@/store/dominioGlobal';
 import { userGlobalStore } from '@/store/userGlobal';
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import { RefSymbol } from '@vue/reactivity';
+import ExRegmani from './pImpresion/ExRegmani.vue';
 
 const dUrl = UrlGlobal()
 const userStore = userGlobalStore()
@@ -243,6 +246,7 @@ const isSearching = ref(false);
 const isInserting = ref(false);
 const isDeleting = ref(false)
 const canNavigate = ref(false);
+const print = ref(false)
 const onlyRead = ref(true);
 const tonlyRead = ref(true);
 const ButtonText = ref('OK')
@@ -314,6 +318,7 @@ const handleSearch = async () => {
       ButtonText.value = 'Ok';
     } else {
       ButtonText.value = 'Consulta';
+      print.value = true
       canNavigate.value = true;
       onlyRead.value = true;
       getCarga()
@@ -734,6 +739,7 @@ const toggleSearch = () => {
     formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
     onlyRead.value = false;
     ButtonText.value = 'Ok'
+    print.value = false
     canNavigate.value = false;
     registros.value = []
   } else if (isInserting.value == true) {
@@ -760,6 +766,7 @@ const resetAll = () => {
     isEditing.value = false;
     isDeleting.value = false;
     canNavigate.value = false;
+    print.value = false;
     onlyRead.value = true;
     tonlyRead.value = true;
     ButtonText.value = 'Ok'
@@ -770,6 +777,7 @@ const resetAll = () => {
     startSearch()
     ButtonText.value = 'Ok'
     ButtonText2.value = 'Cancelar'
+    print.value = false
     registros.value = []
   }
 
