@@ -269,6 +269,7 @@ export interface Carentre
     monto?:string
     status?:string
     nom_status?:string
+    liquida_aduana?:string
 }
 
 export interface Cardeent

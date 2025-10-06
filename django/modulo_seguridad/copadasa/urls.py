@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+from .pdfviews import *
+from .excelviews import *
 from rest_framework import routers
 from .viewsets import *
 from .views import *
@@ -76,6 +78,8 @@ urlpatterns = [
     path('crmclte/filter', CrmclteFilterView.as_view(), name='crmclte-filter'),
     path('query',query_global, name='query_global'),
     path('guardar-imagenes',guardar_archivos, name='guardar-imagenes'),
+    path('informe-entrega',informe_entrega, name='informe-entrega'),
+    path('Regmani_excel',excel_regmani,name='Regmani_excel'),
     path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
     path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro
     path('delete/', DeleteView.as_view(), name='delete'),  # Ruta para eliminar un registro
