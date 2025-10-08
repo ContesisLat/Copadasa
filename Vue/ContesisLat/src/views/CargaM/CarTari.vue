@@ -97,6 +97,7 @@ import axios from 'axios';
 import { Cartari } from '@/interface/interfaces'
 import { UrlGlobal } from '@/store/dominioGlobal';
 import UpCarTari from './pUpdate/UpCarTari.vue';
+import InCarTari from './pInsert/InCarTari.vue';
 
 const dUrl = UrlGlobal()
 

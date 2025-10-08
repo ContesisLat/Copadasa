@@ -1,54 +1,35 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Registro Códigos Tr. Inventarios</h4>
+        <h4>Registro Tipos de Tarifas</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-2">
-                <label for="validationCustom01" class="form-label">Código</label>
-                <input type="text" v-model="codigo" class="form-control" id="validationCustom01" required>
+                <label for="validationCustom01" class="form-label">Tarifa</label>
+                <input type="text" v-model="tarifa" class="form-control" id="validationCustom01" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom03" class="form-label">Descripción</label>
+                <input type="text" v-model="nombre" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-3">
-                <label for="validationCustom02" class="form-label">Descripción</label>
-                <input type="text" v-model="descripcion" class="form-control" id="validationCustom02"  required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label for="validationCustom04" class="form-label">Acción</label>
-                <select class="form-select" v-model="accion" id="validationCustom04" required >
-                    <option value="S" selected>Suma</option>
-                    <option value="R">Resta</option>
+                <label for="validationCustom04" class="form-label">Tipo</label>
+                <select class="form-select" v-model="nom_tipo" id="validationCustom04" required >
+                    <option value="A">Almacenaje</option>
+                    <option value="M">Manejo</option>
+                    <option value="R">Refrigeración</option>
                 </select>
-                <div class="invalid-feedback">
-                    Please select a valid state.
-                </div>
             </div>
-             <div class="col-md-2">
-                <label for="validationCustom04" class="form-label">Cltes</label>
-                <select class="form-select" v-model="maneja_cliente" id="validationCustom04" required >
-                    <option value="S" selected>Sí</option>
-                    <option value="N">No</option>
-                </select>
-                <div class="invalid-feedback">
-                    Please select a valid state.
-                </div>
-            </div>
-            <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">Secuencia</label>
-                <input type="text" v-model="sec_reserva" class="form-control" id="validationCustom02"  required disabled>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label for="validationCustom04" class="form-label">Estado</label>
-                <select class="form-select" v-model="status" id="validationCustom04" required >
-                    <option value="A" selected>Activo</option>
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Status</label>
+                <select class="form-select" v-model="nom_status" id="validationCustom04" required >
+                    <option value="A">Activo</option>
                     <option value="I">Inactivo</option>
                 </select>
                 <div class="invalid-feedback">
@@ -75,12 +56,12 @@ const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const codigo = ref<string>('')
-const descripcion = ref<string>('')
-const accion = ref<string>('')
-const maneja_cliente = ref<string>('')
-const sec_reserva = ref<string>('')
+const tarifa = ref<string>('')
+const nombre = ref<string>('')
+const tipo = ref<string>('')
+const nom_tipo = ref<string>('')
 const status = ref<string>('')
+const nom_status = ref<string>('')
 
 //props y emits----------------------------------------------------------------
 const props = defineProps({
@@ -97,16 +78,14 @@ const handleSubmit = async () =>{
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"logtral",
+        model:"cartitar",
         data:{
-            codigo:codigo.value,
-            descripcion:descripcion.value,
-            accion:accion.value,
-            maneja_cliente:maneja_cliente.value,
-            status:status.value,
+            tarifa:tarifa.value,
+            nombre:nombre.value,
             creado_por:userStore.globalUser,
             fecha_creado:dateTimeStore.formattedDate,
-            hora_creado:dateTimeStore.formattedTime
+            hora_creado:dateTimeStore.formattedTime,
+            status:status.value,
         }
     }
     try {

@@ -1,54 +1,35 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Registro Códigos Tr. Inventarios</h4>
+        <h4>Cargos por Manejo</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-2">
-                <label for="validationCustom01" class="form-label">Código</label>
-                <input type="text" v-model="codigo" class="form-control" id="validationCustom01" required>
+                <label for="validationCustom01" class="form-label">Cargo</label>
+                <input type="text" v-model="cargo" class="form-control" id="validationCustom01" required >
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Descripción</label>
+                <input type="text" v-model="nombre" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-3">
-                <label for="validationCustom02" class="form-label">Descripción</label>
-                <input type="text" v-model="descripcion" class="form-control" id="validationCustom02"  required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label for="validationCustom04" class="form-label">Acción</label>
-                <select class="form-select" v-model="accion" id="validationCustom04" required >
-                    <option value="S" selected>Suma</option>
-                    <option value="R">Resta</option>
+                <label for="validationCustom04" class="form-label">Tipo</label>
+                <select class="form-select" v-model="tipo" id="validationCustom04" required >
+                    <option value="A">Almacenaje</option>
+                    <option value="M">Manejo</option>
+                    <option value="R">Refrigeración</option>
                 </select>
-                <div class="invalid-feedback">
-                    Please select a valid state.
-                </div>
             </div>
-             <div class="col-md-2">
-                <label for="validationCustom04" class="form-label">Cltes</label>
-                <select class="form-select" v-model="maneja_cliente" id="validationCustom04" required >
-                    <option value="S" selected>Sí</option>
-                    <option value="N">No</option>
-                </select>
-                <div class="invalid-feedback">
-                    Please select a valid state.
-                </div>
-            </div>
-            <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">Secuencia</label>
-                <input type="text" v-model="sec_reserva" class="form-control" id="validationCustom02"  required disabled>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label for="validationCustom04" class="form-label">Estado</label>
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Status</label>
                 <select class="form-select" v-model="status" id="validationCustom04" required >
-                    <option value="A" selected>Activo</option>
+                    <option value="A">Activo</option>
                     <option value="I">Inactivo</option>
                 </select>
                 <div class="invalid-feedback">
@@ -69,17 +50,17 @@ import { defineProps,defineEmits,Ref,ref } from 'vue'
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import { userGlobalStore } from '@/store/userGlobal';
 import { UrlGlobal } from '@/store/dominioGlobal';
+import { useAlert } from '@/store/useAlert';
+const { success } = useAlert()
 
 const dUrl = UrlGlobal()
 const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const codigo = ref<string>('')
-const descripcion = ref<string>('')
-const accion = ref<string>('')
-const maneja_cliente = ref<string>('')
-const sec_reserva = ref<string>('')
+const cargo = ref<string>('')
+const nombre = ref<string>('')
+const tipo = ref<string>('')
 const status = ref<string>('')
 
 //props y emits----------------------------------------------------------------
@@ -97,16 +78,15 @@ const handleSubmit = async () =>{
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"logtral",
+        model:"cargcaman",
         data:{
-            codigo:codigo.value,
-            descripcion:descripcion.value,
-            accion:accion.value,
-            maneja_cliente:maneja_cliente.value,
-            status:status.value,
-            creado_por:userStore.globalUser,
-            fecha_creado:dateTimeStore.formattedDate,
-            hora_creado:dateTimeStore.formattedTime
+            cargo: cargo.value,
+            nombre: nombre.value,
+            tipo: tipo.value,
+            creado_por: userStore.globalUser,
+            fecha_creado: dateTimeStore.formattedDate,
+            hora_creado: dateTimeStore.formattedTime,
+            status: status.value,
         }
     }
     try {
@@ -119,7 +99,7 @@ const handleSubmit = async () =>{
         })
         if(response.ok){
             const responseData = await response.json()
-            console.log("Insercion exitosa:",responseData)
+            success('Los datos fueron insertados correctamente...', '')
             handleClick()
         }else{
             console.error("Error al insertar en la base de datos:",response.statusText)

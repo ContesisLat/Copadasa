@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.urls import path
-from .pdfviews import *
-from .excelviews import *
 from rest_framework import routers
 from .viewsets import *
 from .views import *
@@ -50,6 +48,7 @@ urlpatterns = [
     path('caratenvue/', cargos_aereos, name="cargos_aereos"),
     path('cartiaero/cartarvue', tarifas_aeronaves, name='tarifas_aeronaves'),
     path('carnatur/', naturaleza_cargos, name='naturaleza_cargos'),
+    path('cartitar/', tipos_de_tarifas, name='tipos_de_tarifas'),
     path('cargcaman/', cargos_manejo, name='cargos_manejo'),
     path('cargcaman/cartarman', tarifas_manejo, name='tarifas_manejo'),
     path('cartaralm/', tarifas_almacenaje, name='tarifas_almacenaje'),
@@ -68,6 +67,7 @@ urlpatterns = [
     path('logctmo/salida', despacho_cuartofrio, name="despacho_ctofrio"),
     path('crmclte/', clientes_default, name='clientes_default'),
     path('logalma/', define_almacenes, name='define_almacenes'),
+    path('cartarvue/tarifas', tarifa_vuelos, name='tarifa_vuelos'),
     path('cardmani/filter', CardmaniFilterView.as_view(), name='cardmani-filter'),
     path('caratvued/filter', CaratvuedFilterView.as_view(), name='servuelos-filter'),
     path('puertos/filter', PuertosFilterView.as_view(), name='puertos-filter'),
@@ -78,8 +78,6 @@ urlpatterns = [
     path('crmclte/filter', CrmclteFilterView.as_view(), name='crmclte-filter'),
     path('query',query_global, name='query_global'),
     path('guardar-imagenes',guardar_archivos, name='guardar-imagenes'),
-    path('informe-entrega',informe_entrega, name='informe-entrega'),
-    path('Regmani_excel',excel_regmani,name='Regmani_excel'),
     path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
     path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro
     path('delete/', DeleteView.as_view(), name='delete'),  # Ruta para eliminar un registro

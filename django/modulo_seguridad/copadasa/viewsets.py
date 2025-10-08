@@ -140,3 +140,7 @@ class SegpaagViewSet(viewsets.ModelViewSet):
 class CrmclteViewSet(viewsets.ModelViewSet):
     queryset = Crmclte.objects.all()
     serializer_class = CrmclteSerializer
+
+class CarussecViewSet(viewsets.ModelViewSet):
+    queryset = Carussec.objects.all()
+    serializer_class = CarussecSerializer
