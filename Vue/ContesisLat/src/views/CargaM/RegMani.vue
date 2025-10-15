@@ -312,7 +312,7 @@ const handleSearch = async () => {
     dataList.value = response.data;
     currentIndex.value = 0;
     updateFormData();
-
+   
     if (dataList.value.length === 0) {
       warning('No se ha encontrado registros con los datos ingresados', 'Vuelva hacer la consulta')
       ButtonText.value = 'Ok';
@@ -322,6 +322,7 @@ const handleSearch = async () => {
       canNavigate.value = true;
       onlyRead.value = true;
       getCarga()
+      
     }
   } catch (err: any) {
     error(err.response?.data?.detail || 'Ocurrió un error en la consulta.')
