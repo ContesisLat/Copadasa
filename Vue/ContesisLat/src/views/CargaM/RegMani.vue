@@ -108,21 +108,21 @@
                       <select class="form-select form-select-sm" v-model="formData.puerto_despacho"
                         :disabled="onlyRead">
                         <option selected>{{ descripcionPuertosDP }}</option>
-                        <option v-for="i in puertosDp" :key="i.puerto" :value="i.puerto">{{ i.nombre }}</option>
+                        <option v-for="i in puertos" :key="i.puerto" :value="i.puerto">{{ i.nombre }}</option>
                       </select>
                     </div>
                     <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Puerto destino</label>
                     <div class="col-sm-3">
                       <select class="form-select form-select-sm" v-model="formData.puerto_destino" :disabled="onlyRead">
                         <option selected>{{ descripcionPuertosDT }}</option>
-                        <option v-for="i in puertosDt" :key="i.puerto" :value="i.puerto">{{ i.nombre }}</option>
+                        <option v-for="i in puertos" :key="i.puerto" :value="i.puerto">{{ i.nombre }}</option>
                       </select>
                     </div>
                     <label for="inputPassword3" class="col-sm-1 col-form-label col-form-label-sm">Estado</label>
                     <div class="col-sm-2">
                       <select class="form-select form-select-sm" v-model="formData.status" :disabled="onlyRead">
-                        <option>{{ formData.nom_status }}</option>
-                        <option value="R">Registrado</option>
+                        <option>{{ formData.status }}</option>
+                        <option value="R" selected>Registrado</option>
                         <option value="A">Actualizado</option>
                         <option value="E">Anulado</option>
                       </select>
@@ -161,7 +161,7 @@
                           id="validationDefault02" placeholder="Peso" :readonly="tonlyRead">
                       </div>
                       <div class="col-sm-3">
-                        <select class="form-select form-select-sm" v-model="registro.naturaleza" :readonly="tonlyRead">
+                        <select class="form-select form-select-sm" v-model="registro.naturaleza" :disabled="onlyRead">
                           <option selected>{{ descripcionNaturaleza(idnaturaleza)}}</option>
                           <option v-for="i in naturaleza" :key="i.naturaleza"  :value="i.naturaleza" @click="idN(i.naturaleza)">{{ i.nombre }}</option>
                         </select>
@@ -186,13 +186,15 @@
                   ButtonText }}</button>
                 <button type="button" class="btn btn-light btn-sm" @click="resetAll" :disabled="!canUseGroup2">{{
                   ButtonText2 }}</button>
+                  <ExRegmani v-if="print" :operador="descripcionOperador" :matricula="formData.matricula" :num_vuelo="formData.numero_vuelo"
+                  :puertoE="descripcionPuertosDP" :puertoD="descripcionPuertosDT" :aeronave="descripcionAeronaves" :tabla="registros"/>
               </div>
             </div>
           </div>
         </div>
       </section>
     </div>
-  </body>/
+  </body>
 </template>
 
 <script lang="ts" setup>
@@ -204,6 +206,7 @@ import { UrlGlobal } from '@/store/dominioGlobal';
 import { userGlobalStore } from '@/store/userGlobal';
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import { RefSymbol } from '@vue/reactivity';
+import ExRegmani from './pImpresion/ExRegmani.vue';
 
 const dUrl = UrlGlobal()
 const userStore = userGlobalStore()
@@ -231,7 +234,6 @@ const formData = ref({
   puerto_despacho: '',
   puerto_destino: '',
   status: '',
-  nom_status: '',
   aeronave: '',
   matricula: ''
 });
@@ -244,6 +246,7 @@ const isSearching = ref(false);
 const isInserting = ref(false);
 const isDeleting = ref(false)
 const canNavigate = ref(false);
+const print = ref(false)
 const onlyRead = ref(true);
 const tonlyRead = ref(true);
 const ButtonText = ref('OK')
@@ -284,7 +287,6 @@ const startUpdate = () => {
   isDeleting.value = false;
   canNavigate.value = false;
   onlyRead.value = false;
-  tonlyRead.value = false;
   ButtonText.value = 'Editar';
   ButtonText2.value = 'Volver';
   pk = formData.value.numero_vuelo
@@ -316,6 +318,7 @@ const handleSearch = async () => {
       ButtonText.value = 'Ok';
     } else {
       ButtonText.value = 'Consulta';
+      print.value = true
       canNavigate.value = true;
       onlyRead.value = true;
       getCarga()
@@ -398,19 +401,23 @@ const handleInsert = async () => {
 
   let resultado: boolean = valida(guiaArray);
   if (!resultado) {
+    console.log(registros)
     error('Existen Guías Aéreas repetidas... ')
     return
   }
 
   // VALIDA REGISTRO DUPLICADO
   try {
-    //console.log(formData.value.numero_vuelo) 
+    console.log(formData.value.numero_vuelo) 
 
     const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'carcmani', 
         filtro: { fecha: formData.value.fecha, operador: formData.value.operador, numero_vuelo: formData.value.numero_vuelo}});
 
     dataList.value = response.data;
-   
+
+    console.log(response.data)
+    console.log(dataList.value.length)
+
     if (dataList.value.length > 0) {
       warning('Este Manifiesto ya fué Registrado', 'Valide la Información a Registrar')
       return
@@ -419,42 +426,42 @@ const handleInsert = async () => {
     } catch (err: any) {
         error(err.response?.data?.detail || 'Ocurrió un error en la consulta.')
   }
-// VALIDA CONTENIDO DEL ARRAY
-  let indice = registros.value.length
 
-  for ( let i = 0; i < indice-1; i++ ) {
+// VALIDA CONTENIDO DEL ARRAY
+  let indice = registros.value.length -1
+  for ( let i = 0; i < indice; i++ ) {
     const arreglo = registros.value[i];
 
-    console.log(i)
-    if (i != indice) {
-      if (typeof arreglo.guia !== 'string' || arreglo.guia.trim() === '') {
-        console.log(arreglo)
-        error (`Error: Falta la Guía en la posición ${i++}`)
-        return false
-      }
+    if (typeof arreglo.guia !== 'string' || arreglo.guia.trim() === '') {
+      console.log(i)
+      console.log(arreglo)
+      error (`Error: Falta la Guía en la posición ${i++}`)
+      return false
+    }
 
-      if (typeof arreglo.items !== 'number') {
-        error (`Error: Cantidad de Items en la posición ${i++}  es inválida... `)
-        return false
-      }
+    if (typeof arreglo.items !== 'number') {
+      console.log(i)
+      console.log(arreglo)
+      error (`Error: Cantidad de Items en la posición ${i++}  es inválida... `)
+      return false
+    }
 
-      if (typeof arreglo.peso !== 'number' || arreglo.peso <= 0) {
-        error (`Error: Valor digitado en Peso en la posición ${i++} es incorrecto... `)
-        return false
-      }
+    if (typeof arreglo.peso !== 'number' || arreglo.peso <= 0) {
+      error (`Error: Valor digitado en Peso en la posición ${i++} es incorrecto... `)
+      return false
+    }
 
-      if (typeof arreglo.naturaleza !== 'string' || arreglo.naturaleza.trim() === '') {
-        error (`Error: Campo Naturaleza no tiene registro en la posición ${i++}`)
-        return false
-      }
+    if (typeof arreglo.naturaleza !== 'string' || arreglo.naturaleza.trim() === '') {
+      error (`Error: Campo Naturaleza no tiene registro en la posición ${i++}`)
+      return false
+    }
 
-      if (typeof arreglo.destinatario !== 'string' || arreglo.destinatario.trim() === '') {
-        error (`Error: Debe registrar el Destinatario en la posición ${i++}`)
-        return false
-      }
+    if (typeof arreglo.destinatario !== 'string' || arreglo.destinatario.trim() === '') {
+      error (`Error: Debe registrar el Destinatario en la posición ${i++}`)
+      return false
     }
   }
-  
+
   const result = await question(
     'Se va a insertar el campo con los nuevos datos.',
     '¿Deseas insertar este registro?'
@@ -464,6 +471,8 @@ const handleInsert = async () => {
     // Usuario canceló, salimos de la función
     return
   }
+
+  registros.value.pop()
 
   const data = {
     model: "carcmani",
@@ -496,9 +505,6 @@ const handleInsert = async () => {
     else {
       vali++
       for (const fila of registros.value) {
-        if (fila.guia === "" || fila.guia == undefined) {
-          break
-        }
         const data = {
         model: "cardmani",
         data: {
@@ -528,7 +534,7 @@ const handleInsert = async () => {
           // Puedes registrar el error y seguir con el siguiente
           error(`Error al insertar registro con guía: ${fila.guia}`)
         }else{
-          vali = indice + 1
+          vali++
         }
       } catch (err: any) {
         error(`Error inesperado en la guía ${fila.guia}:`, err)
@@ -560,7 +566,7 @@ const handleUpdate = async () => {
   try {
     const response = await axios.post(dUrl.urlGlobal + '/api2/update/', {
       table: 'carcmani',
-      filters: { fecha: formData.value.fecha, operador: formData.value.operador, numero_vuelo: formData.value.numero_vuelo }, // Filtro para identificar el registro a actualizar
+      filters: { numero_vuelo: pk }, // Filtro para identificar el registro a actualizar
       data: {
         numero_vuelo: formData.value.numero_vuelo,
         operador: formData.value.operador,
@@ -576,83 +582,7 @@ const handleUpdate = async () => {
       } // Datos a actualizar
     })
     if (response.status == 200) {
-// Inicio de Actualización de cardmani
-      for (const fila of registros.value) {
-        if (fila.guia === "" || fila.guia == undefined) {
-          break
-        }
-        const data = {
-          model: "cardmani",
-          filtros: { fecha: formData.value.fecha, operador: formData.value.operador, numero_vuelo: formData.value.numero_vuelo, no_embarque: fila.guia},
-          
-        }
-        const response = await axios.post(dUrl.urlGlobal + '/api2/query', 
-          { tabla: 'cardmani', 
-          filtro:{ fecha: formData.value.fecha, operador: formData.value.operador, 
-                  numero_vuelo: formData.value.numero_vuelo, no_embarque: fila.guia }});
-
-        dataList.value = response.data;
-     
-        if (dataList.value.length === 0) {
-          const data = {
-            model: "cardmani",
-            data: {
-              fecha: formData.value.fecha,
-              operador: formData.value.operador,
-              numero_vuelo: formData.value.numero_vuelo,
-              no_embarque: fila.guia,
-              cant_items: fila.items,
-              peso_kg: fila.peso,
-              naturaleza: fila.naturaleza,
-              destinatario: fila.destinatario,
-              remitente: '.',
-              secuencia: 1,
-              status: formData.value.status
-            }
-          }
-          try {
-            const response = await fetch(dUrl.urlGlobal + '/api2/insert/', {
-              method: 'POST',
-              headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-            })
-
-            if (!response.ok) {
-              error (`Error inesperado en la guía ${fila.guia}:`)  
-            }
-          }catch (err: any) {
-            error(err.response?.data?.detail || 'Ocurrió un error al insertar los datos.')
-          }
-        }else{    
-          try {
-            const response = await axios.post(dUrl.urlGlobal + '/api2/update/', {
-              table: 'cardmani',
-              filters: { fecha: formData.value.fecha, operador: formData.value.operador, numero_vuelo: formData.value.numero_vuelo,
-                        no_embarque: fila.guia},  
-              data: {
-                no_embarque: fila.guia,
-                cant_items: fila.items,
-                peso_kg: fila.peso,
-                naturaleza: fila.naturaleza,
-                destinatario: fila.destinatario
-              }
-            })
-
-            if (response.status === 200) {
-              success('Los datos fueron actualizados correctamente.', 'Actualización exitosa')
-           
-            }else{
-              error(`Error inesperado en la guía ${fila.guia}:`)
-            }
-          } catch (err: any) {
-            error(`Error inesperado en la guía ${fila.guia}:`, err)
-          }
-        }
-    }
-// Fin actualiza cardmani
-
+      success('Los datos fueron actualizados correctamente.', 'Actualización exitosa')
     } else {
       error('Ocurrió un error al actualizar los datos.')
     }
@@ -695,8 +625,7 @@ const handleDelete = async () => {
 // Actualiza el formulario con el registro actual
 const updateFormData = () => {
   if (dataList.value.length > 0) {
-    formData.value = { ...dataList.value[currentIndex.value]};
-    console.log(formData.value)
+    formData.value = { ...dataList.value[currentIndex.value] };
   }
 };
      
@@ -705,7 +634,6 @@ const getdmani = ref<any[]>([]);
 const getCarga = () => {
   getdmani.value = []
   registros.value = []
-  console.log(formData.value)
   axios.get(dUrl.urlGlobal + `/api2/cardmani/filter?fecha=${formData.value.fecha}&operador=${formData.value.operador}&numero_vuelo=${formData.value.numero_vuelo}`)
     .then(response => {
       getdmani.value = response.data;
@@ -726,18 +654,15 @@ const getCarga = () => {
 //carga de las ayudas
 const operadores = ref<any[]>([]);
 const aeronaves = ref<any[]>([]);
-const puertosDp = ref<any[]>([]);
-const puertosDt = ref<any[]>([]);
+const puertos = ref<any[]>([]);
 const naturaleza = ref<any[]>([]);
 onMounted(async () => {
   const responseO = await axios.get(dUrl.urlGlobal + '/api2/caropera/')
   operadores.value = responseO.data
   const responseA = await axios.get(dUrl.urlGlobal + '/api2/cartiaero/')
   aeronaves.value = responseA.data
-  const responsePDP = await axios.get(dUrl.urlGlobal + `/api2/puertos/filter?status=A`)
-  puertosDp.value = responsePDP.data
-  const responsePDT = await axios.get(dUrl.urlGlobal + `/api2/puertos/filter?status=A`)
-  puertosDt.value = responsePDT.data
+  const responseP = await axios.get(dUrl.urlGlobal + `/api2/puertos/filter?status=A`)
+  puertos.value = responseP.data
   const responseN = await axios.get(dUrl.urlGlobal + '/api2/naturaleza/filter?status=A')
   naturaleza.value = responseN.data
 })
@@ -754,12 +679,12 @@ const descripcionAeronaves = computed(() => {
 })
 
 const descripcionPuertosDP = computed(() => {
-  const encontrado = puertosDp.value.find(i => i.puerto === formData.value.puerto_despacho)
+  const encontrado = puertos.value.find(i => i.puerto === formData.value.puerto_despacho)
   return encontrado ? encontrado.nombre : ''
 })
 
 const descripcionPuertosDT = computed(() => {
-  const encontrado = puertosDt.value.find(i => i.puerto === formData.value.puerto_destino)
+  const encontrado = puertos.value.find(i => i.puerto === formData.value.puerto_destino)
   return encontrado ? encontrado.nombre : ''
 })
 
@@ -812,9 +737,10 @@ const toggleSearch = () => {
   if (dataList.value.length && isSearching.value == true) {
     // Si ya hay datos, "Consulta" limpia y reinicia la búsqueda
     dataList.value = [];
-    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', nom_status: '', aeronave: '', matricula: '', };
+    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
     onlyRead.value = false;
     ButtonText.value = 'Ok'
+    print.value = false
     canNavigate.value = false;
     registros.value = []
   } else if (isInserting.value == true) {
@@ -835,22 +761,24 @@ const toggleSearch = () => {
 const resetAll = () => {
   if (ButtonText2.value == 'Cancelar') {
     dataList.value = [];
-    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', nom_status: '', aeronave: '', matricula: '', };
+    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
     isInserting.value = false;
     isSearching.value = false;
     isEditing.value = false;
     isDeleting.value = false;
     canNavigate.value = false;
+    print.value = false;
     onlyRead.value = true;
     tonlyRead.value = true;
     ButtonText.value = 'Ok'
     registros.value = []
   } else {
     dataList.value = [];
-    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', nom_status: '', aeronave: '', matricula: '', };
+    formData.value = { numero_vuelo: '', operador: '', fecha: '', puerto_despacho: '', puerto_destino: '', status: '', aeronave: '', matricula: '', };
     startSearch()
     ButtonText.value = 'Ok'
     ButtonText2.value = 'Cancelar'
+    print.value = false
     registros.value = []
   }
 
