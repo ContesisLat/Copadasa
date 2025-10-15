@@ -1,61 +1,54 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Tarifas de Refrigeración</h4>
+        <h4>Agregar Tarifas de Almacenaje</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-2">
-                <label for="validationCustom01" class="form-label">Inicio</label>
-                <input type="date" v-model="fecha_inicio" class="form-control" id="validationCustom01" required>
+                <label for="validationCustom01" class="form-label">F. Inicio</label>
+                <input type="date" v-model="fechaInicio" class="form-control" id="validationCustom01" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-2">
-                <label for="validationCustom02" class="form-label">Final</label>
-                <input type="date" v-model="fecha_final" class="form-control" id="validationCustom02"  required>
+                <label for="validationCustom02" class="form-label">F. Final</label>
+                <input type="date" v-model="fechaFinal" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">Entrada</label>
-                <input type="text" v-model="entrada" class="form-control" id="validationCustom02"  required>
+                <label for="validationCustom02" class="form-label">P Base</label>
+                <input type="text" v-model="pesoBase" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
-            <div class="col-md-1">
-                <label for="validationCustom04" class="form-label">U/medida</label>
+            <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Medida</label>
                 <select class="form-select" v-model="medida" id="validationCustom04" required >
                     <option value="Kilos">Kilos</option>
-                    <option value="Libras">Libras</option>
+                    <option value="Libras">Llibras</option>
                 </select>
             </div>
             <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">Peso/Base</label>
-                <input type="text" v-model="peso_base" class="form-control" id="validationCustom02"  required>
+                <label for="validationCustom02" class="form-label">V. Base</label>
+                <input type="text" v-model="valorBase" class="form-control" id="validationCustom02"  required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+             <div class="col-md-1">
+                <label for="validationCustom02" class="form-label">P Adic</label>
+                <input type="text" v-model="pesoAdic" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">Costo/Diario</label>
-                <input type="text" v-model="costo_diario" class="form-control" id="validationCustom02"  required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">Min/Dia</label>
-                <input type="text" v-model="minimo_diario" class="form-control" id="validationCustom02"  required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <div class="col-md-1">
-                <label for="validationCustom02" class="form-label">F/Pallet</label>
-                <input type="text" v-model="full_pallet" class="form-control" id="validationCustom02"  required>
+                <label for="validationCustom02" class="form-label">VP Ad.</label>
+                <input type="text" v-model="valPesoAdic" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -87,20 +80,18 @@ import { UrlGlobal } from '@/store/dominioGlobal';
 import { useAlert } from '@/store/useAlert';
 const { success, error, question, warning } = useAlert()
 
-
 const dUrl = UrlGlobal()
 const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const fecha_inicio = ref<string>('')
-const fecha_final = ref<string>('')
-const entrada = ref<string>('')
+const fechaInicio = ref<string>('')
+const fechaFinal = ref<string>('')
+const pesoBase = ref<string>('')
 const medida = ref<string>('')
-const peso_base = ref<string>('')
-const costo_diario = ref<string>('')
-const minimo_diario = ref<string>('')
-const full_pallet = ref<string>('')
+const valorBase = ref<string>('')
+const pesoAdic = ref<string>('')
+const valPesoAdic = ref<string>('')
 const status = ref<string>('')
 
 //props y emits----------------------------------------------------------------
@@ -115,53 +106,47 @@ const emits = defineEmits(['insertProps'])
 
 // envio del insert a la tabla en la base de datos a traves de la api en django
 const handleSubmit = async () =>{
-    if (fecha_inicio.value > fecha_final.value) {
-        error('Fecha Inicial no puede ser mayor que Fecha Final...')
+
+    if (fechaInicio.value > fechaFinal.value) {
+        error('Fecha de inicio es mayor que la Fecha Final...')
         return
     }
-    const ent = Number(entrada.value)
-    if (typeof ent !== 'number') {
-        error('Información incorrecta en Costo Entrada...')
-        return
-    }
-    if (ent == 0 || ent < 0) {
-        error('Información inválida en Costo de Etrada')
-        return
-    }
-    const peso = parseFloat(peso_base.value)
-    if (typeof peso !== 'number') {
-        error('Información incorrecta en Peso Base...')
+    const peso = Number(pesoBase.value)
+    if(typeof peso !== 'number') {
+        error('Información inválida en Peso Base...')
         return
     }
     if (peso == 0 || peso < 0) {
-        error('Valor de Peso Base es incorrecto...')
+        error('Digite un monto válido en el Peso Base')
+    }
+    const valorB = Number(valorBase.value)
+    if (typeof valorB !== 'number') {
+        error('Información inválida en Valor Base...')
         return
     }
-    const costo = parseFloat(costo_diario.value)  
-    if (typeof costo !== 'number') {
-        error('Información de Costo Diario incorrecta...')
+    if (valorB == 0  || valorB < 0) {
+        error('Información incorrecta en Valor Base...')
+    }
+    const pesoA =Number(pesoAdic)
+    if (typeof pesoA !== 'number') {
+        error('Información incorrecta en Peso Adicional...')
         return
     }
-    if (costo == 0 || costo < 0) {
-        error('Error en el Costo Diario...')
+    if (pesoA == 0 || pesoA < 0) {
+        error ('Información incorrecta en Peso Adicional...')
         return
     }
-    const minimo = parseFloat(costo_diario.value)
-    if (typeof minimo !== 'number') {
-        error('Información Mínimo Diario es incorrecta...')
-        return
-    } 
-    if (minimo == 0 || minimo < 0) {
-        error('Valor de Mínimo Diario es incorrecto...')
+    const ValPA = Number(valPesoAdic)
+    if (typeof ValPA !== 'number') {
+        error('Valor del Peso Adicional incorrecto...')
         return
     }
-    const fpallet = parseFloat(full_pallet.value)
-    if (typeof fpallet !== 'number') {
-        error('Información del Full Pallet incorrecta...')
+    if (ValPA == 0 || ValPA < 0) {
+        error('Información del Valor por Peso Adicional incorrecta...')
         return
     }
-    if (fpallet == 0 || fpallet < 0) {
-        error('Información Full Pallet incorrecta...')
+    if (!status.value) {
+        error('Estado del Registro no puede ser nulo...')
         return
     }
 
@@ -173,23 +158,23 @@ const handleSubmit = async () =>{
     if (!result.isConfirmed) {
         return
     }
+
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"cartari",
+        model:"cartaralm",
         data:{
-            tarifa: '03',
-            fecha_inicio:fecha_inicio.value,
-            fecha_final: fecha_final.value,
+            tarifa: '01',
+            fecha_inicio: fechaInicio.value,
+            fecha_final: fechaFinal.value,
+            medida: medida.value,
+            peso_base: pesoBase.value,
+            valor_base: valorBase.value,
+            peso_adicional: pesoAdic.value,
+            valor_peso_adic: valPesoAdic.value,
             creado_por:userStore.globalUser,
             fecha_creado:dateTimeStore.formattedDate,
             hora_creado:dateTimeStore.formattedTime,
-            entrada: entrada.value,
-            peso_base: peso_base.value,
-            costo_diario: costo_diario.value,
-            medida: medida.value,
-            minimo_diario: minimo_diario.value,
-            full_pallet: full_pallet.value,
             status:status.value,
         }
     }

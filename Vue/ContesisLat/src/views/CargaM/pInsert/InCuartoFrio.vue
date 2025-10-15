@@ -155,6 +155,7 @@ function valida(arr: string[]): boolean {
 }
 
 let fecha = ref(props.fecha)
+let docto: string
 
 // envio del insert a la tabla en la base de datos a traves de la api en django
 const handleSubmit = async () =>{
@@ -285,7 +286,7 @@ const handleSubmit = async () =>{
                   
         }
     }
-    let docto: string
+    
     try { 
         const response = await fetch(dUrl.urlGlobal +'/api2/insert/',{
             method: 'POST',
@@ -297,14 +298,21 @@ const handleSubmit = async () =>{
         if(response.ok){
             const responseData = await response.json()
 
-            console.log(responseData)
-            console.log(responseData.Object)
-            docto = responseData.Object.documento
-           
-            console.log(docto)
             console.log("Insercion exitosa:",responseData)
+        
+            try {
+                const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'carussec', 
+                    filtro: { usuario: userStore.globalUser, tabla: 'logctmo' }});
 
+                dataList.value = response.data;
+                docto = dataList.value[0].secuencia
+
+            } catch(err: any) {
+                error('NO se pudo accesar el secuencial de almacen')
+            }
+            
 // INSERT DEL ARRAY
+            
             for (const fila of registros.value) {
             const data = {
             model: "logdemo",
@@ -335,7 +343,6 @@ const handleSubmit = async () =>{
                 },
                 body: JSON.stringify(data),
             })
-
             if (!response.ok) {
             // Puedes registrar el error y seguir con el siguiente
                 error(`Error al insertar registro con pallet: ${fila.orden_produccion}`)
@@ -355,7 +362,8 @@ const handleSubmit = async () =>{
         console.error("error de red:",error)
     }
 }
-
+ 
+// final handle submit
 type Registro = {
   secuencia: number | null
   orden_produccion: string | null
