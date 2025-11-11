@@ -10,6 +10,11 @@ from django.conf import settings
 from PIL import Image
 from django.db import connection
 from pyzbar.pyzbar import decode
+from rest_framework import generics
+from .serializer import *
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
+from django.db import connections
 
 # Create your views here.
 
@@ -33,6 +38,46 @@ def login_view(request):
             return JsonResponse({'message':'Credenciales invalidas'},status=401)
         
     return JsonResponse({'message':request.method},status=405)
+
+@api_view(['POST'])
+def obtener_programas_y_subprogramas(request):
+    perfil = request.data.get('perfil')  # viene desde Vue
+
+    if not perfil:
+        return Response({"error": "Falta el perfil"}, status=400)
+
+    with connections['default'].cursor() as cursor:
+        # Obtener solo los programas que tengan subprogramas para el perfil dado
+        cursor.execute("""
+            SELECT DISTINCT p.proceso, p.descripcion
+            FROM segproc p
+            JOIN segpape s ON p.proceso = s.proceso
+            WHERE s.perfil = %s
+            ORDER BY p.descripcion
+        """, [perfil])
+        programas = cursor.fetchall()  # [(proceso, descripcion), ...]
+
+        resultado = []
+
+        for proceso, descripcion in programas:
+            # Obtener los subprogramas correspondientes a ese proceso y perfil
+            cursor.execute("""
+                SELECT s.programa
+                FROM segpape s
+                WHERE s.proceso = %s AND s.perfil = %s
+                ORDER BY s.programa
+            """, [proceso, perfil])
+
+            subprogramas = cursor.fetchall()  # [(nombre_subprograma,), ...]
+
+            # Solo añadimos si hay subprogramas (seguridad extra)
+            if subprogramas:
+                resultado.append({
+                    "proceso": descripcion,
+                    "subprogramas": [{"programa": s[0]} for s in subprogramas]
+                })
+
+    return Response(resultado)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class EnviarCorreoView(View):
@@ -138,3 +183,10 @@ def query_global(request):
         return JsonResponse({'error': 'Error al decodificar los datos JSON'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+    
+
+class SegUserFilterView(generics.ListAPIView):
+    queryset = SegUser.objects.all()
+    serializer_class = SegUserSerializer
+    filter_backends = [DjangoFilterBackend]  
+    filterset_fields = ['nombre_usuario']  

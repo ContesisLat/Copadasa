@@ -60,8 +60,10 @@ route.register('seghpas',SegHpasViewSet)
 
 urlpatterns = [
     path('seguser/login',api_view(['POST'])(login_view)),
+    path('seguser/filter', SegUserFilterView.as_view(), name='seguser-filter'),
     path('envio_correo',EnviarCorreoView.as_view(),name='envio_correo'),
     path('barcode',barcode_reader,name='barcode'),
+    path('procesos_subprogramas',obtener_programas_y_subprogramas,name='procesos_subprogramas'),
     path('query',query_global, name='query_global'),
     path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
     path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro

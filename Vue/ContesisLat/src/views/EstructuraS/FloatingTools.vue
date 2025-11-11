@@ -60,14 +60,16 @@ function updatePropsD(newValue:boolean){
 
 <style scoped>
 .fab-container{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    user-select: none;
+       display: flex;
+     flex-direction: column;
+     justify-content: flex-end;
+     align-items: center;
+     user-select: none;
     position: absolute;
-    bottom: 30px;
-    right: 30px;
+    position: fixed;
+     bottom: 30px;
+     right: 30px;
+     z-index: 2000; /* añade esto para que siempre quede encima */
 }
 .fab-container svg{
     fill: white;

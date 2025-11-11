@@ -14,13 +14,17 @@ import PopupWindow from '@/views/EstructuraS/PopupWindow.vue';
 
 <style scoped>
 .full-background {
-    height: 100vh;
-    background-color: white;
-    background-image: url('@/assets/ContesisLA.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: 50% 90px;
-    position: relative;
-    z-index: 1000;
+  min-height: 100vh;
+  background-color: white;
+  background-image: url('@/assets/ContesisLA.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50% 90px;
+  position: relative;
+  z-index: 1000;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 </style>
