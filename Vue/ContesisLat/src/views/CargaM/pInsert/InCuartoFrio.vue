@@ -109,6 +109,7 @@ import axios from 'axios';
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import { userGlobalStore } from '@/store/userGlobal';
 import { UrlGlobal } from '@/store/dominioGlobal';
+ 
 import { useAlert } from '@/store/useAlert';
 import LogTral from '../LogTral.vue';
  
@@ -117,8 +118,6 @@ const { success, error, question, warning } = useAlert()
 const dUrl = UrlGlobal()
 const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
-
-
 
 //variables reactivas para los campos del formulario
 //const fecha = ref<string>('')
@@ -129,6 +128,7 @@ const userStore = userGlobalStore();
 //const guia = ref<string>('')
 //const documento = ref<string>('')
 //const cliente = ref<string>('')
+
 
 let fila = 1
 //props y emits----------------------------------------------------------------
@@ -314,25 +314,29 @@ const handleSubmit = async () =>{
 // INSERT DEL ARRAY
             
             for (const fila of registros.value) {
-            const data = {
-            model: "logdemo",
-            data: {
-                compania: '300',
-                agencia: '001',
-                fecha: formDataI.value.fecha,
-                almacen: '02',
-                codigo: formDataI.value.codigo,
-                documento: docto,
-                secuencia: fila.secuencia,
-                orden_produccion: fila.orden_produccion,
-                pallets: fila.pallets,
-                peso: fila.peso,
-                cajas: fila.cajas,
-                unidad: 0,
-                creado_por: userStore.globalUser,
-                fecha_creado: dateTimeStore.formattedDate,
-                hora_creado: dateTimeStore.formattedTime,
-                status: formDataI.value.status
+                let wpeso = Number(fila.peso)
+                if (fila.pallets == "" || fila.cajas == undefined || wpeso == 0) {
+                    break
+                }
+                const data = {
+                model: "logdemo",
+                data: {
+                    compania: '300',
+                    agencia: '001',
+                    fecha: formDataI.value.fecha,
+                    almacen: '02',
+                    codigo: formDataI.value.codigo,
+                    documento: docto,
+                    secuencia: fila.secuencia,
+                    orden_produccion: fila.orden_produccion,
+                    pallets: fila.pallets,
+                    peso: fila.peso,
+                    cajas: fila.cajas,
+                    unidad: 0,
+                    creado_por: userStore.globalUser,
+                    fecha_creado: dateTimeStore.formattedDate,
+                    hora_creado: dateTimeStore.formattedTime,
+                    status: formDataI.value.status
                 }
             }
             try {
@@ -347,8 +351,36 @@ const handleSubmit = async () =>{
             // Puedes registrar el error y seguir con el siguiente
                 error(`Error al insertar registro con pallet: ${fila.orden_produccion}`)
                 }else{
-                //vali++
-            }
+                    //Generar Excel
+                    const envio_data = computed(() => ({
+                        fecha: formDataI.value.fecha,
+                        almacen: '02',
+                        codigo: formDataI.value.codigo,
+                        documento: formDataI.value.documento,  
+                    }));
+
+                    // Método para generar el Excel
+ 
+                    try {
+                        const response = await axios.post(
+                        dUrl.urlGlobal + '/api2/AuxLogctmo_excel',
+                        envio_data.value,
+                        { responseType: 'blob' }
+                        );
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'auxiliar_logctmo.xlsx');
+                        document.body.appendChild(link);
+                        link.click();
+                        window.URL.revokeObjectURL(url);
+                        success('Se generó el Auxiliar del Movimiento', 'Ubíquelo en descargas')
+                        } catch (error) {
+                        console.error('Error al generar el auxiliar:', error);
+                    }
+                }
+            // Final de Excel
+             
             } catch (err: any) {
                 error(`Error inesperado en el número ${fila.orden_produccion}:`, err)
       }

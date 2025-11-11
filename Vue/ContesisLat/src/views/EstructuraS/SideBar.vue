@@ -83,7 +83,7 @@
 
         </a>
         <ul class="dropdown-menu" style="cursor: pointer;">
-          <li @click="store.openPopup('RegSerAero')"><a class="dropdown-item">Servicios Prestados</a></li>
+          <li @click="store.openPopup('ExResSerAero')"><a class="dropdown-item">Servicios Aéreos</a></li>
 
           <li><a class="dropdown-item disabled" aria-disabled="true">Something else here</a></li>
 

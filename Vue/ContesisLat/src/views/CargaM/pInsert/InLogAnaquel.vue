@@ -62,11 +62,12 @@ const status = ref<string>('')
 const props = defineProps({
     btnLaIn: Boolean,
     almacen: String,
-    area: String
+    area: String,
+    status: String
 
     
 })
-const emits = defineEmits(['insLaProps'])
+const emits = defineEmits(['insLaProps']) 
         const handleClick = () =>{
             emits("insLaProps",!props.btnLaIn)
         }

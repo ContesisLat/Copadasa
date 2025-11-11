@@ -186,6 +186,7 @@
                   ButtonText }}</button>
                 <button type="button" class="btn btn-light btn-sm" @click="resetAll" :disabled="!canUseGroup2">{{
                   ButtonText2 }}</button>
+                 <ExRegSegAero v-if="print" :fecha="formData.fecha" :compania="formData.compania" :matricula="formData.matricula" :tabla="registros"/>
               </div>
             </div>
           </div>
@@ -245,6 +246,7 @@ const isSearching = ref(false);
 const isInserting = ref(false);
 const isDeleting = ref(false)
 const canNavigate = ref(false);
+const print = ref(false);
 const onlyRead = ref(true);
 const tonlyRead = ref(true);
 const ButtonText = ref('OK')
@@ -273,6 +275,7 @@ const startSearch = () => {
   isSearching.value = true;
   isInserting.value = false;
   isEditing.value = false;
+  print.value = false;
   isDeleting.value = false;
   onlyRead.value = false;
 };
@@ -318,6 +321,7 @@ const handleSearch = async () => {
     } else {
       ButtonText.value = 'Consulta';
       canNavigate.value = true;
+      print.value = true;
       onlyRead.value = true;
       getCaratvue()
     }

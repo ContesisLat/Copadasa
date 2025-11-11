@@ -22,6 +22,7 @@ import CtrlDespacho from '@/views/CargaM/CtrlDespacho.vue';
 import CtrlCuartofrio from '@/views/CargaM/CtrlCuartofrio.vue';
 import CrmClte from '@/views/CargaM/CrmClte.vue';
 import LogAlma from '@/views/CargaM/LogAlma.vue';
+import ExResSerAero from '@/views/CargaM/pImpresion/ExResSerAero.vue';
 // Importar todos los componentes globales
 
 // objeto que contiene todos los componentes globales
@@ -48,6 +49,7 @@ const globalComponents: Record<string, Component> = {
   CtrlCuartofrio,
   CrmClte,
   LogAlma,
+  ExResSerAero
   // Agrega todos los demás componentes aquí
 };
 

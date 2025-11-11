@@ -1,19 +1,19 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Insertar Tipos de Aeronave</h4>
+        <h4>Cargos Por Atención de Vuelos</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-2">
-                <label for="validationCustom01" class="form-label">Aeronave</label>
-                <input type="text" v-model="aeronave" class="form-control" id="validationCustom01" required>
+                <label for="validationCustom01" class="form-label">Cargo</label>
+                <input type="text" v-model="cargo" class="form-control" id="validationCustom01" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
-            <div class="col-md-6">
-                <label for="validationCustom02" class="form-label">Descripcion</label>
-                <input type="text" v-model="descripcion" class="form-control" id="validationCustom02"  required>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Descripción</label>
+                <input type="text" v-model="nombre" class="form-control" id="validationCustom02"  required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -21,7 +21,7 @@
             <div class="col-md-3">
                 <label for="validationCustom04" class="form-label">Status</label>
                 <select class="form-select" v-model="status" id="validationCustom04" required >
-                    <option selected value="A">Activo</option>
+                    <option value="A">Activo</option>
                     <option value="I">Inactivo</option>
                 </select>
                 <div class="invalid-feedback">
@@ -48,8 +48,8 @@ const dateTimeStore = useDateTimeStore();
 const userStore = userGlobalStore();
 
 //variables reactivas para los campos del formulario
-const aeronave = ref<string>('')
-const descripcion = ref<string>('')
+const cargo = ref<string>('')
+const nombre = ref<string>('')
 const status = ref<string>('')
 
 //props y emits----------------------------------------------------------------
@@ -67,10 +67,10 @@ const handleSubmit = async () =>{
     dateTimeStore.refreshDateTime();
     console.log(dateTimeStore.formattedDate)
     const data = {
-        model:"cartiaero",
+        model:"caratenvue",
         data:{
-            aeronave:aeronave.value,
-            descripcion:descripcion.value,
+            cargo:cargo.value,
+            nombre:nombre.value,
             status:status.value,
             creado_por:userStore.globalUser,
             fecha_creado:dateTimeStore.formattedDate,

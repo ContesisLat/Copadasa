@@ -37,11 +37,12 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="elm in filteredCarga1" :key="elm.aeronave"
-                                            @click="getTarifas(elm.aeronave, elm.descripcion, elm.status)">
+                                            @click="getTarifas(elm.aeronave, elm.descripcion, elm.status)"
+                                            :class="{ 'table-primary': elm.aeronave === id_ref }">
                                             <td>{{ elm.aeronave }}</td>
                                             <td>{{ elm.descripcion }}</td>
                                             <td>{{ elm.status }}</td>
-                                        </tr>
+                                        </tr>  
                                     </tbody>
                                 </table>
                             </div>
@@ -131,14 +132,9 @@
                         </div>
                     </div>
                 </div>
-                <UpCarTiaero v-if="btnUp" :aeronave="aeronave" :descripcion="descripcion" :status="status" :btnUp="btnUp"
-                    @updateProps="updatePropsValue" />
-                <InCarTiaero v-if="btnIn" :btnIn="btnIn" @insertProps="insertPropsValue" />
-                <DlCarTiaero v-if="btnDl" :btnDl="btnDl" :aeronave="aeronave" @deleteProps="deletePropsValue" />
-                <UpCarTarvue v-if="btnTvUp" :aeronave="aeronave" :descripcion="descripcion" :status="status" :btnTvUp="btnTvUp"
-                    @updateTvProps="updateTvPropsValue" />
-                <InCarTarvue v-if="btnTvIn" :btnTvIn="btnTvIn" @insertTvProps="insertTvPropsValue" />
-                <DlCarTarvue v-if="btnTvDl" :btnTvDl="btnTvDl" :aeronave="aeronave" @deleteTvProps="deleteTvPropsValue" />
+                <UpCarTiaero v-if="btnUp" :aeronave="aeronave" :descripcion="descripcion" :status="status" :btnUp="btnUp" @updateProps="updatePropsValue" />
+                <InCarTiaero v-if="btnIn" :btnIn="btnIn" @insertProps="insertPropsValue"/> 
+                <InCarTarVue v-if="btnTvIn" :aeronave="aeronave" :btnTvIn="btnTvIn" @insTvProps="insTvPropsValue" />
             </section>
         </div>
     </body>
@@ -151,10 +147,14 @@ import { Cartiaero, Cartarvue } from '@/interface/interfaces';
 import { UrlGlobal } from '@/store/dominioGlobal';
 import InCarTiaero from './pInsert/InCarTiaero.vue';
 import UpCarTiaero from './pUpdate/UpCarTiaero.vue';
+import InCarTarVue from './pInsert/InCarTarVue.vue';
+import { useAlert } from '@/store/useAlert';
+const { error, success, question, warning } = useAlert()
 
 const dUrl = UrlGlobal()
 const search = ref('')
 const options = ref('') 
+const id_ref = ref<string | null>(null)
 //-----------------------------------------------------------------
 const cartiaero = ref<Array<Cartiaero>>([]);
 const getAeronaves = () => {
@@ -174,6 +174,7 @@ const getAeronaves = () => {
 //----------------------------------------------------------------
 const cartarvue = ref<Array<Cartarvue>>([])
 const getTarifas = (id_aeronave: any, id_descripcion: any, id_status: any) => {
+    id_ref.value = id_aeronave
     axios.get(`${dUrl.urlGlobal}/api2/cartiaero/cartarvue?id_aeronave=${id_aeronave}`)
         .then(response => {
             cartarvue.value = response.data;
@@ -307,10 +308,6 @@ const FunClick = (n: any, nm: any, st: any) => {
     btnTvUp.value = !btnTvUp.value
     clickTvUp.value = !clickTvUp.value
   }
-  if (clickTvDl.value == true) {
-    btnTvDl.value = !btnTvDl.value
-    clickTvDl.value = !clickTvDl.value
-  }
 }
 
 //funciones de emits para actualizar las variables y cierre los modales activos sea de update o insert
@@ -333,8 +330,8 @@ function updateTvPropsValue(newValue: boolean, aeronave: any) {
   aeronave.value = String 
   getTarifas(aeronave, null, null)
 }
-function insertTvPropsValue(newValue: boolean, aeronave: any) {
-  btnIn.value = newValue
+function insTvPropsValue(newValue: boolean, aeronave: any) {
+  btnTvIn.value = newValue
   aeronave.value = String
   getTarifas(aeronave, null, null);
 }

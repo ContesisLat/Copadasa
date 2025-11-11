@@ -545,6 +545,7 @@ const handleInsert = async () => {
       error(err.response?.data?.detail || 'Ocurrió un error al insertar los datos.')
       }
 
+  console.log(vali)
   if (vali > registros.value.length) {
     success('Los datos fueron insertados correctamente.', 'Insercion multiple exitosa')
   }

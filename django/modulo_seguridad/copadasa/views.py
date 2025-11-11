@@ -346,6 +346,34 @@ def compania_aerea(request):
     except Carcoaer.DoesNotExist:
         return JsonResponse({'error': 'No hay compañías'}, status=404)
 
+def tarifas_servaereo(request):
+    id_aeronave = request.GET.get('id_aeronave')
+    id_fecha = request.GET.get('id_fecha')
+    id_cargo = request.GET.get('id_cargo')
+    id_tiempo = request.GET.get('id_tiempo')
+    horas, minutos = id_tiempo.split(':')
+    horas = int(horas)
+    minutos = int(minutos)
+    try:
+        cartarvue = Cartarvue.objects.filter(aeronave=id_aeronave, fecha_inicio__lte=id_fecha, 
+                                         fecha_final__gte=id_fecha, cargo=id_cargo).values()
+        for tarvue in cartarvue:
+            id_costo_hora = tarvue['costo_hora']
+            costo_minuto = id_costo_hora / 60
+            valor = 0
+            if horas > 0:
+                valor = horas * id_costo_hora
+            if minutos > 0:
+                valor = valor + costo_minuto * minutos
+            
+            tarvue['costo_hora'] = round(valor,2)
+
+        list_cartarvue = list(cartarvue)    
+        return JsonResponse(list_cartarvue, safe=False)
+    
+    except Cartarvue.DoesNotExist:
+        return JsonResponse({'error':'No hay tarifa para este cargo'}, status=404)
+    
 def tarifas_aeronaves(request):
     id_aeronave = request.GET.get('id_aeronave')  # Obtener el valor del parámetro id_aeronave de la URL
     try:
@@ -711,7 +739,7 @@ def define_almacenes(request):
         return JsonResponse({'Error' :' No hay información'}, status=404)
 
 def control_movimientos(request):
-        logctmo = Logctmo.objects.all().values()
+        logctmo = Logctmo.objects.all().values().order_by('fecha', 'documento')
         try:
             for ctmo in logctmo:
                 id_cliente = ctmo['cliente']
@@ -785,6 +813,8 @@ def calculo_cuartofrio(request):
                 logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=idw_fecha,
                             almacen=id_almacen, codigo=id_codigo, documento=id_documento).values()
             
+                print(logdemo)
+                
                 for demo in logdemo:
                     id_demo = demo['id']
                     id_secuencia = demo['secuencia']
@@ -814,12 +844,13 @@ def calculo_cuartofrio(request):
                         almacen=id_almacen, codigo=id_codigo, documento=id_documento).aggregate(
                         total=Sum('monto'))
             
+                print(resultado)
                 total_ctmo = decimal.Decimal(resultado['total'])
             
                 Logctmo.objects.filter(id=id_reg).update(valor=total_ctmo, status='C', modificado_por='contesis',
                         fecha_status=id_fecha, hora_status=id_hora)
-                Logctmo.save()
-                Logdemo.save()
+                #Logctmo.save()
+                #Logdemo.save()
             return JsonResponse('Se generó el calculo...', safe=False)    
         except Logctmo.DoesNotExist:
             return JsonResponse({'Error ':'No hay información por mostrar'}, status=404)
@@ -853,8 +884,15 @@ def despacho_cuartofrio(request):
             id_cliente = ctmo['cliente']
             id_valor = ctmo['valor']
 
+        logtral = Logtral.objects.filter(accion='R', maneja_cliente='S').values()
+        for tral in logtral:
+            nvo_codigo = tral['codigo']
+            nvo_docto = tral['sec_reserva']
+
+        nvo_docto = int(nvo_docto)
+        nvo_docto = nvo_docto + 1
         Logctmo.objects.create(compania=id_compania, agencia=id_agencia, fecha=id_fecha, almacen=id_almacen,
-                    codigo=id_codigo, documento=id_documento, fecha_creado=id_fecha, hora_creado=id_hora,
+                    codigo=nvo_codigo, documento=nvo_docto, fecha_creado=id_fecha, hora_creado=id_hora,
                     guia_despacho=id_guia, cliente=id_cliente, valor=id_valor, status='D')
     
         logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=ant_fecha, 
@@ -868,7 +906,7 @@ def despacho_cuartofrio(request):
             id_peso = demo['peso']
             id_monto = demo['monto']
             Logdemo.objects.create(compania=id_compania, agencia=id_agencia, fecha=id_fecha, almacen=id_almacen,
-                        codigo=id_codigo, documento=id_documento, secuencia=id_sec, orden_produccion=id_orden,
+                        codigo=nvo_codigo, documento=nvo_docto, secuencia=id_sec, orden_produccion=id_orden,
                         pallet_desp=id_pallets, peso_desp=id_peso, cajas_desp=id_cajas, monto=id_monto, status='D')
 
         Logctmo.objects.filter(id=id_registro).update(status='D', modificado_por='contesis', 
@@ -878,7 +916,7 @@ def despacho_cuartofrio(request):
                            codigo=ant_codigo, documento=ant_documento).update(status='D', modificado_por='contesis',
                             fecha_status=id_fecha, hora_status=id_hora)
     
-        Logtral.objects.filter(codigo=id_codigo).update(secuencia=id_documento)
+        Logtral.objects.filter(codigo=id_codigo).update(secuencia=nvo_docto)
 
         return JsonResponse('Se generó el despacho satisfactoriamente...', safe=False)
     except Logctmo.DoesNotExist:

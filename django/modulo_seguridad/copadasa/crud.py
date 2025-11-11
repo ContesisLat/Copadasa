@@ -90,6 +90,8 @@ class InsertView(APIView):
                 placeholders = ', '.join(['%s'] * len(fields))
                 sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
 
+                if table_name == "logdemo":
+                    print(sql)
                 try:
                     with connections['copadasa_db'].cursor() as cursor:
                         cursor.execute(sql, list(fields.values()))

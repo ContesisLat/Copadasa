@@ -186,6 +186,8 @@
                   ButtonText }}</button>
                 <button type="button" class="btn btn-light btn-sm" @click="resetAll" :disabled="!canUseGroup2">{{
                   ButtonText2 }}</button>
+                <ExRegSerAero v-if="print" :fecha="formData.fecha" :compania="formData.compania" :matricula="formData.matricula" 
+                  :aeronave="formData.aeronave" :fecha_llegada="formData.fecha_llegada" :hora_llegada="formData.hora_llegada" :status="formData.status" :tabla="registros"/>
               </div>
             </div>
           </div>
@@ -205,13 +207,14 @@ import { userGlobalStore } from '@/store/userGlobal';
 import { useDateTimeStore } from '@/store/dateTimeStore';
 import CarCoaer from './CarCoaer.vue';
 import { Cartarvue } from '@/interface/interfaces';
+import ExRegSerAero from './pImpresion/ExRegSerAero.vue';
 
 const dUrl = UrlGlobal()
 const userStore = userGlobalStore()
 const dateTimeStore = useDateTimeStore();
 
 function Calcular(indx: any) : void {
-   
+  console.log('calculando')
   let id_aeronave = formData.value.aeronave
   let id_fecha = formData.value.fecha
   let id_cargo = registros.value[indx].cargo
@@ -277,8 +280,8 @@ const formData = ref({
   hora_llegada: '',
   monto_servicio: 0,
   factura: '',
-  status: 'R', 
-  nom_status: 'Registrado'  
+  status: '', 
+  nom_status: ''  
 });
 
 // Variables de control
@@ -288,6 +291,7 @@ const isEditing = ref(false);
 const isSearching = ref(false);
 const isInserting = ref(false);
 const isDeleting = ref(false)
+const print = ref(false)
 const canNavigate = ref(false);
 const onlyRead = ref(true);
 const tonlyRead = ref(true);
@@ -310,6 +314,7 @@ const startInsert = () => {
   tonlyRead.value = false
   ButtonText.value = 'Insertar';
   formData.value.status = 'R'
+  formData.value.nom_status = 'Registrado'
 };
 
 // Función para iniciar búsqueda
@@ -319,6 +324,7 @@ const startSearch = () => {
   isEditing.value = false;
   isDeleting.value = false;
   onlyRead.value = false;
+  print.value = false;
 };
 
 // Funcion para iniciar edición
@@ -362,6 +368,7 @@ const handleSearch = async () => {
     } else {
       ButtonText.value = 'Consulta';
       canNavigate.value = true;
+      print.value = true;
       onlyRead.value = true;
       getCaratvue()
     }
@@ -413,7 +420,7 @@ const handleInsert = async () => {
   let lineas = registros.value.length
   
   if (!registros.value) {
-    console.log('esta vacio el array')
+    error('Digite los detalles del servicio')
     return
   }
    
@@ -431,9 +438,6 @@ const handleInsert = async () => {
   
   for (let i = 0; i < registros.value.length -1; i++) {
     const arreglo = registros.value[i]
-    console.log(i)
-    console.log(lineas)
-
     if (i != lineas) {
       if (!arreglo.cargo) {
         error('Hay codigos de cargos que no se han registrado...')
@@ -444,14 +448,6 @@ const handleInsert = async () => {
         error( `Monto en la posicion ${i + 1}, es incorrecto...`)
         return
       }
-
-      //let tiempo = registros.value[i].tiempo_total
-      //if (!patronHora.test(tiempo)) {
-      //  error( `Formato de tiempo en la línea ${i + 1}, es incorrecto`)
-      //  return
-      //} else{
-      //montoServicio =+ registros.value[i].monto
-      //}
     }
   }
   const result = await question(
@@ -496,6 +492,7 @@ const handleInsert = async () => {
       vali++
       for (const fila of registros.value) {
         if (fila.cargo == "" || fila.cargo == undefined) {
+          vali++
           break
         }
         const data = {

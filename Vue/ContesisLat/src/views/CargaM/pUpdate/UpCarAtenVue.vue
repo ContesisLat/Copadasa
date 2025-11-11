@@ -1,25 +1,25 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Actualizar Aeronaves</h4>
+        <h4>Actualizar Cargos Atención de Vuelos</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-2">
-                <label for="validationCustom01" class="form-label">Aeronave</label>
-                <input type="text" class="form-control" id="validationCustom01" v-model="aeronave" required disabled>
+                <label for="validationCustom01" class="form-label">Cargo</label>
+                <input type="text" class="form-control" id="validationCustom01" v-model="cargo" required disabled>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-6">
-                <label for="validationCustom02" class="form-label">Descripcion</label>
-                <input type="text" class="form-control" id="validationCustom02" v-model="descripcion" required>
+                <label for="validationCustom02" class="form-label">Descripción</label>
+                <input type="text" class="form-control" id="validationCustom02" v-model="nombre" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
             <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">Estado</label>
+                <label for="validationCustom04" class="form-label">Status</label>
                 <select class="form-select" id="validationCustom04" required v-model="status">
                     <option value="A">Activo</option>
                     <option value="I">Inactivo</option>
@@ -42,19 +42,15 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, Ref, ref } from 'vue'
 import axios from 'axios'
-import { userGlobalStore } from '@/store/userGlobal';
 import { UrlGlobal } from '@/store/dominioGlobal';
-import { useDateTimeStore } from '@/store/dateTimeStore';
 
 const dUrl = UrlGlobal()
-const userStore = userGlobalStore()
-const dateTimeStore = useDateTimeStore()
 
 //props y emits ----------------------------------------------------------------
 const props = defineProps({
     btnUp: Boolean,
-    aeronave: String,
-    descripcion: String,
+    cargo: String,
+    nombre: String,
     status: String
 
 })
@@ -65,8 +61,8 @@ const handleClick = () => {
 //------------------------------------------------------------------------------
 
 //variables reactivas para el formulario----------------------------------------
-let aeronave = ref(props.aeronave)
-let descripcion = ref(props.descripcion)
+let cargo = ref(props.cargo)
+let nombre = ref(props.nombre)
 let status = ref(props.status)
 //------------------------------------------------------------------------------
 
@@ -74,12 +70,9 @@ let status = ref(props.status)
 const handleSubmit = async () => {
     try {
         const response = await axios.post(dUrl.urlGlobal +'/api2/update/', {
-            table: 'cartiaero', 
-            filters: { aeronave: aeronave.value }, // Filtro para identificar el registro a actualizar
-            data: { descripcion: descripcion.value, status: status.value,
-                    modificado_por: userStore.globalUser, fecha_status: dateTimeStore.formattedDate,
-                    hora_status: dateTimeStore.formattedTime
-             } // Datos a actualizar
+            table: 'caratenvue', 
+            filters: { cargo: cargo.value }, // Filtro para identificar el registro a actualizar
+            data: { nombre: nombre.value, status: status.value } // Datos a actualizar
         })
         console.log(response.data)
         emits("updateProps", !props.btnUp)

@@ -1,7 +1,7 @@
 <template>
     <div class="modal-backdrop"></div>
     <div class="ReportPage">
-        <h4>Insertar Compañías Aéreas</h4>
+        <h4>Naturaleza de Carga</h4>
         <hr>
         <form class="row g-3 needs-validation" novalidate>
             <div class="col-md-4">
