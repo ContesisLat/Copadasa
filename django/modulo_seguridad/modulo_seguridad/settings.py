@@ -34,15 +34,15 @@ ALLOWED_HOSTS = [
     '5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host'
 ]
  
-#SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
-#SECURE_HSTS_SECONDS=259200
-#SECURE_SSL_REDIRECT=True
-#SESSION_COOKIE_SECURE=True
-#CSRF_COOKIE_SECURE=True
+SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
+SECURE_HSTS_SECONDS=259200
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
 
-#HTTPS_PORT = 443
-#HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
-#HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
+HTTPS_PORT = 443
+HTTPS_SSL_CERTFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/fullchain.pem'
+HTTPS_SSL_KEYFILE = '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem'
 # Application definition
 
 INSTALLED_APPS = [
@@ -129,11 +129,11 @@ DATABASES = {
         #'HOST':'10.20.10.13',
         'HOST':'103.23.61.168',
         'PORT':'5432',
-        #'OPTIONS': {
-        #    'sslmode': 'require',
-        #    'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
-        #    'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
-        #},
+        'OPTIONS': {
+            'sslmode': 'require',
+            'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
+            'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
+        },
     },
      'copadasa_db': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -144,11 +144,11 @@ DATABASES = {
         'HOST':'103.23.61.168',
         'PORT':'5432',
         #'ATOMIC_REQUEST': True,
-        #'OPTIONS': {
-        #    'sslmode': 'require',
-        #    'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
-        #    'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
-        #},
+        'OPTIONS': {
+            'sslmode': 'require',
+            'sslcert': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/cert.pem',
+            'sslkey': '/etc/letsencrypt/live/5e9147f5-145d-4231-97c5-0bdcffd88b89.clouding.host/privkey.pem',
+        },
      }
 }      
 
