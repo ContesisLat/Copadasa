@@ -85,7 +85,6 @@ class InsertView(APIView):
                         return Response({"error": f"Error cerrando la vigencia anterior: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
             
                 # Construye la consulta SQL de inserción
-                print('continua')
                 columns = ', '.join(fields.keys())
                 placeholders = ', '.join(['%s'] * len(fields))
                 sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
