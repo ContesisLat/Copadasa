@@ -123,13 +123,15 @@
                         <button type="button" class="btn btn-light" @click="Entrada">Movimientos</button>
                         <button type="button" class="btn btn-light" @click="Calcular">Calcular</button>
                         <button type="button" class="btn btn-light" @click="Despachar">Entrega</button>
-                        <button type="button" class="btn btn-light" @click="Listar" :disabled="!canUseGroup2">Listar</button>
-                        <button type="button" class="btn btn-light" @click="Anular" :disabled="!canUseGroup2">Anular</button>
+                        <button type="button" class="btn btn-light" @click="Listar">Reporte</button>
+                        <button type="button" class="btn btn-light" @click="Auxiliar">Auxiliar</button>
+                        <!--button type="button" class="btn btn-light" @click="Anular" :disabled="!canUseGroup2">Anular</button-->
                       </div>
                 </div>
               </div>
           </div>
           <InCuartoFrio v-if="btnIn" :fecha="fecha" :btnIn="btnIn" @insertProps="insertPropsValue" />
+          <ExCuartoFrio v-if="btnEx" :btnEx="btnEx" @insertProps="ExcelPropsValue" />
       </section>
     </div>
   </body>
@@ -149,6 +151,7 @@ import { Logctmo, Logdemo, LogTral } from '@/interface/interfaces';
  
 import { flattenDiagnosticMessageText } from 'typescript';
 import InCuartoFrio from './pInsert/InCuartoFrio.vue';
+import ExCuartoFrio from './pImpresion/ExCuartoFrio.vue';
 import { useDateTimeStore } from '@/store/dateTimeStore';
 
 
@@ -210,14 +213,14 @@ let codigo: any
 let documento: any
 
 let btnIn = ref(false);//variable modal insert
-let btnUp = ref(false);//variable para mostrar modal de update
-let clickUp = ref(false)//variable para activar el click de Up
+let btnEx = ref(false);//variable para mostrar modal de update
+let clickEx = ref(false)//variable para activar el click de Up
 let btnCoUp = ref(false)
 let clickCoUp = ref(false)
 
 //funciones q activan el click y en el caso del insert muestran el modal
-const CbtnUp = () => {
-  clickUp.value = !clickUp.value
+const CbtnEx = () => {
+  clickEx.value = !clickEx.value
    
 }
 function insertPropsValue(newValue: boolean) {
@@ -226,14 +229,54 @@ function insertPropsValue(newValue: boolean) {
   getLogdemo("1", "1", null, "1", "1", "1", "1")
 }
 
-function updateCoPropsValue(newValue: boolean) {
-  btnCoUp.value = newValue
+function ExcelPropsValue(newValue: boolean) {
+  btnEx.value = newValue
 
   getLogctmo()
   getLogdemo("1", "1", "1", null, "1", "1", "1")
 }
 //--- Fun//funcion principal para el funcionamiento de el update y delete cuando uno de los 2 este activado
- 
+const Auxiliar = async() => {
+    if (!id_ref.value) {
+      error('Seleccione la línea que generará el auxiliar...')
+      return
+    }
+    try {
+        const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'logctmo', 
+            filtro: { id:id_ref.value }});
+
+        dataList.value = response.data;
+
+    } catch (err: any) {
+        error(err.response?.data?.detail || 'Ocurrió un error en la consulta.')
+    }
+    const envio_data = computed(() => ({
+        fecha: dataList.value[0].fecha,
+        almacen: '02',
+        codigo: dataList.value[0].codigo,
+        documento: dataList.value[0].documento, 
+        status: dataList.value[0].status 
+    }));
+
+    try {
+        const response = await axios.post(
+        dUrl.urlGlobal + '/api2/AuxLogctmo_excel',
+        envio_data.value,
+        { responseType: 'blob' }
+        );
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'auxiliar_logctmo.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        success('Se generó el Auxiliar del Movimiento', 'Auxiliar en descargas')
+    } catch (error) {
+        console.error('Error al generar el auxiliar:', error);
+      }
+}
+
 const Despachar = async() => {
   console.log(id_ref.value)
   if (!id_ref.value) {
@@ -320,6 +363,7 @@ const Entrada = () => {
 }
 
 const Listar = () => {
+  btnEx.value = !btnEx.value
   let calcular = false
 }
 

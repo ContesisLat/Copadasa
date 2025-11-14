@@ -346,6 +346,34 @@ def compania_aerea(request):
     except Carcoaer.DoesNotExist:
         return JsonResponse({'error': 'No hay compañías'}, status=404)
 
+def tarifas_servaereo(request):
+    id_aeronave = request.GET.get('id_aeronave')
+    id_fecha = request.GET.get('id_fecha')
+    id_cargo = request.GET.get('id_cargo')
+    id_tiempo = request.GET.get('id_tiempo')
+    horas, minutos = id_tiempo.split(':')
+    horas = int(horas)
+    minutos = int(minutos)
+    try:
+        cartarvue = Cartarvue.objects.filter(aeronave=id_aeronave, fecha_inicio__lte=id_fecha, 
+                                         fecha_final__gte=id_fecha, cargo=id_cargo).values()
+        for tarvue in cartarvue:
+            id_costo_hora = tarvue['costo_hora']
+            costo_minuto = id_costo_hora / 60
+            valor = 0
+            if horas > 0:
+                valor = horas * id_costo_hora
+            if minutos > 0:
+                valor = valor + costo_minuto * minutos
+            
+            tarvue['costo_hora'] = round(valor,2)
+
+        list_cartarvue = list(cartarvue)    
+        return JsonResponse(list_cartarvue, safe=False)
+    
+    except Cartarvue.DoesNotExist:
+        return JsonResponse({'error':'No hay tarifa para este cargo'}, status=404)
+
 def tarifas_aeronaves(request):
     id_aeronave = request.GET.get('id_aeronave')  # Obtener el valor del parámetro id_aeronave de la URL
     try:
