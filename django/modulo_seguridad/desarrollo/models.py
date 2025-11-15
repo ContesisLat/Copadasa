@@ -298,6 +298,7 @@ class SegProg(models.Model):
     modificado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_status = models.DateField(blank=True, null=True)
     hora_status = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=1, null=True)
 
     class Meta:
         db_table='segprog'
