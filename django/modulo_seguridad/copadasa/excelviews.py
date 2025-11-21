@@ -950,18 +950,20 @@ def excel_auxlogctmo(request):
     ws['A10'] = "Documento:"
     ws['A10'].font = Font(name="Arial", size=13, bold=False)
     ws['A10'].alignment = right_alignment
-    ws['B10'] = docto_salida
-    ws['B10'].font = Font(name="Arial", size=13, bold=False)
-    ws['B10'].alignment = right_alignment
 
     if estado == "D":
-        code_tr = Logtral.objects.get(accion='S', maneja_cliente='S').codigo
-        logctmo_desp = Logctmo.objects.filter(compania=id_compania, agencia=id_agencia, 
-                            almacen=id_almacen, codigo=code_tr, guia_despacho=guia, cliente=id_cliente).values()
+        ws['B10'] = docto_salida
+        ws['B10'].font = Font(name="Arial", size=13, bold=False)
+        ws['B10'].alignment = right_alignment
+
+    code_tr = Logtral.objects.get(accion='S', maneja_cliente='S').codigo
+    logctmo_desp = Logctmo.objects.filter(compania=id_compania, agencia=id_agencia, 
+                        almacen=id_almacen, codigo=code_tr, guia_despacho=guia, cliente=id_cliente).values()
         
-        for desp in logctmo_desp:
-            fechaLlegada = desp['fecha_llegada']
-            horaLlegada = desp['hora_llegada']
+    for desp in logctmo_desp:
+        fechaIngreso = desp['fecha']
+        fechaLlegada = desp['fecha_llegada']
+        horaLlegada = desp['hora_llegada']
 
     ws['A11'] = "Llegada:"
     ws['A11'].font = Font(name="Arial", size=12, bold=False)
@@ -1067,6 +1069,7 @@ def excel_auxlogctmo(request):
             totCajas = 0
             totPeso = 0
             totCajasdesp = 0
+            totCajas = 0
             totPesodesp = 0
             for demo in logdemo:
                 wsecuencia = demo['secuencia']
@@ -1179,11 +1182,14 @@ def excel_auxlogctmo(request):
             ws.cell(row=i, column=10, value=nwstatus).alignment = center_alignment
             i+= 1       
     else:
-        logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=id_fecha,
+        logdemo = Logdemo.objects.filter(compania=id_compania, agencia=id_agencia, fecha=fechaIngreso,
                         almacen=ctmo_almacen, codigo=ctmo_codigo, documento=ctmo_documento).values().order_by('secuencia')
 
         totCajasdesp = 0
         totPesodesp = 0
+        totCajas = 0
+        totPeso = 0
+        totMonto = 0
         for demo in logdemo:
             wsecuencia = demo['secuencia']
             wcanpallets = demo['pallets']
@@ -1204,6 +1210,7 @@ def excel_auxlogctmo(request):
             peso = float(wpeso)
             totCajas = totCajas + cajas
             totPeso = totPeso + peso
+            totMonto = totMonto + monto
 
             ws.cell(row=i, column=1, value=wsecuencia).alignment = right_alignment
             ws.cell(row=i, column=2, value=wnopallet).alignment = right_alignment

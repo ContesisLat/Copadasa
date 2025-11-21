@@ -17,7 +17,7 @@ class SegError(models.Model):
 
 
 class SegComp(models.Model):
-    compania = models.CharField(max_length=3)
+    compania = models.CharField(primary_key=True, max_length=3)
     descripcion = models.CharField(max_length=50, blank=True, null=True)
     direccion_1 = models.CharField(max_length=50, blank=True, null=True)
     direccion_2 = models.CharField(max_length=50, blank=True, null=True)
@@ -31,26 +31,27 @@ class SegComp(models.Model):
     fax_2 = models.CharField(max_length=15, blank=True, null=True)
     creado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_creacion = models.DateField(blank=True, null=True)
-    hora_creacion = models.DateTimeField(blank=True, null=True)
+    hora_creacion = models.TimeField(blank=True, null=True)
     modificado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_status = models.DateField(blank=True, null=True)
-    hora_status = models.DateTimeField(blank=True, null=True)
+    hora_status = models.TimeField(blank=True, null=True)
     apartado = models.CharField(max_length=20, blank=True, null=True)
+    status = models.CharField(max_length=1, null=False)
 
     class Meta:
         db_table='segcomp'
 
 
 class SegAplic(models.Model):
-    aplicacion = models.CharField(max_length=3)
+    aplicacion = models.CharField(primary_key=True, max_length=3)
     descripcion = models.CharField(max_length=50, blank=True, null=True)
     status = models.CharField(max_length=1, default='A')
     creado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_creacion = models.DateField(blank=True, null=True)
-    hora_creacion = models.DateTimeField(blank=True, null=True)
+    hora_creacion = models.TimeField(blank=True, null=True)
     modificado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_status = models.DateField(blank=True, null=True)
-    hora_status = models.DateTimeField(blank=True, null=True)
+    hora_status = models.TimeField(blank=True, null=True)
 
     class Meta:
         db_table ='segaplic'
@@ -72,7 +73,7 @@ class SegGjer(models.Model):
       
 
 class SegPerfi(models.Model):
-    perfil = models.SmallIntegerField()
+    perfil = models.SmallIntegerField(primary_key=True)
     descripcion = models.CharField(max_length=50)
     status = models.CharField(max_length=1, default='A')
     creado_por = models.CharField(max_length=10)
@@ -163,7 +164,7 @@ class SegDept(models.Model):
         db_table='segdept'
 
 class SegUser(models.Model):
-    usuario = models.CharField(max_length=10)
+    usuario = models.CharField(primary_key=True, max_length=10)
     nombre_usuario = models.CharField(max_length=40)
     contrasena = models.CharField(max_length=10)
     contrasena_apl = models.CharField(max_length=10, blank=True, null=True)
@@ -285,7 +286,7 @@ class Segtaut(models.Model):
       
 
 class SegProg(models.Model):
-    programa = models.CharField(max_length=40)
+    programa = models.CharField(primary_key=True, max_length=40)
     descripcion = models.CharField(max_length=50)
     aplicacion = models.CharField(max_length=3, blank=True, null=True)
     proceso = models.SmallIntegerField(blank=True, null=True)
@@ -298,6 +299,7 @@ class SegProg(models.Model):
     modificado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_status = models.DateField(blank=True, null=True)
     hora_status = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=1, null=True)
 
     class Meta:
         db_table='segprog'
@@ -355,13 +357,16 @@ class SegAgen(models.Model):
     fax_2 = models.CharField(max_length=15, blank=True, null=True)
     creado_por = models.CharField(max_length=10)
     fecha_creacion = models.DateField(null=True)
-    hora_creacion = models.DateTimeField(null=True)
+    hora_creacion = models.TimeField(null=True)
     modificado_por = models.CharField(max_length=10, blank=True, null=True)
     fecha_status = models.DateField(blank=True, null=True)
-    hora_status = models.DateTimeField(blank=True, null=True)
+    hora_status = models.TimeField(blank=True, null=True)
+    status = models.CharField(max_length=1, null=False)
+    id = models.IntegerField(primary_key=True)
 
     class Meta:
         db_table='segagen'
+        unique_together = (('compania', 'agencia'),)
 
 class SegCaApl(models.Model):
     compania = models.CharField(max_length=3)
