@@ -196,6 +196,13 @@ svg {
         height: 55%;
         width: 95%; 
     }
+    .div-buttom{
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center; /* centra los botones */
+    }
+    overflow: auto;
 }
 
 .ReportPage hr {
@@ -203,6 +210,7 @@ svg {
     border-top: 1px solid #ccc;
     margin: 1px 0;
     padding-left: 100%;
+    
 }
 
 button {

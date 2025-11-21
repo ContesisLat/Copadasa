@@ -842,12 +842,13 @@ def calculo_cuartofrio(request):
                         almacen=id_almacen, codigo=id_codigo, documento=id_documento).aggregate(
                         total=Sum('monto'))
             
+                print(resultado)
+                print(resultado['total'])
                 total_ctmo = decimal.Decimal(resultado['total'])
             
                 Logctmo.objects.filter(id=id_reg).update(valor=total_ctmo, status='C', modificado_por='contesis',
                         fecha_status=id_fecha, hora_status=id_hora)
-                Logctmo.save()
-                Logdemo.save()
+                
             return JsonResponse('Se generó el calculo...', safe=False)    
         except Logctmo.DoesNotExist:
             return JsonResponse({'Error ':'No hay información por mostrar'}, status=404)
