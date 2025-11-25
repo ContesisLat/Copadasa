@@ -64,6 +64,7 @@ urlpatterns = [
     path('envio_correo',EnviarCorreoView.as_view(),name='envio_correo'),
     path('barcode',barcode_reader,name='barcode'),
     path('procesos_subprogramas',obtener_programas_y_subprogramas,name='procesos_subprogramas'),
+    path('compania_agencia',obtener_compania_agencia,name='compania_agencia'),
     path('query',query_global, name='query_global'),
     path('insert/', InsertView.as_view(), name='insert'),  # Ruta para insertar un nuevo registro
     path('update/', UpdateView.as_view(), name='update'),  # Ruta para actualizar un registro

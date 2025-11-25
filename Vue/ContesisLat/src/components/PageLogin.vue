@@ -2,11 +2,11 @@
   <div id="app2">
     <div class="form">
       <h4 style="font-family:Lucida Handwriting,cursive"><b>Login</b></h4>
-      <h2><b>Contesis <br>Latinoamerica</b></h2><br>
+      <h2>Contesis <br>Latinoamerica</h2><br>
 
       <div class="inputbox">
         <input v-model="username" type="text" required id="User" autocomplete="off">
-        <label for="User"><b>Usuario</b></label>
+        <label for="User">Usuario</label>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person"
           viewBox="0 0 16 16">
           <path
@@ -16,7 +16,7 @@
 
       <div class="inputbox">
         <input v-model="password" type="password" required id="password">
-        <label for="password"><B>Contraseña</B></label>
+        <label for="password">Contraseña</label>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock"
           viewBox="0 0 16 16">
           <path
@@ -80,7 +80,7 @@ const validation = async (): Promise<void> => {
     // Validación
     if (!!user.value && user.value.message === 'Autenticacion exitosa') {
       router.push('/PrinPage');
-      gUser.setUser(username.value)
+      gUser.setUser(user.value.nombre_usuario)
       console.log('Credenciales válidas');
     } else {
       openL.value = !openL.value
@@ -102,6 +102,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 #app2 {
   position: absolute;
   top: 50%;
@@ -123,7 +125,8 @@ onMounted(() => {
   flex-direction: column;
   backdrop-filter: blur(10px);
   color: black;
-  font-family: Trebuchet MS;
+  font-family: 'Poppins', sans-serif;
+
   @media screen and (max-width: 600px) {
     width: 320px;
   }

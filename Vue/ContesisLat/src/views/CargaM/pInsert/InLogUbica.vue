@@ -126,6 +126,8 @@ const handleSubmit = async () =>{
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 svg {
     fill: black;
 }
@@ -157,7 +159,7 @@ svg {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    font-family: Trebuchet MS;
+    font-family: 'Poppins', sans-serif;
     color: black;
     padding: 15px;
     z-index: 1060; 

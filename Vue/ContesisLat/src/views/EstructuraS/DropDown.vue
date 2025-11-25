@@ -2,10 +2,10 @@
     <div class="background">
         <nav class="menu-wrapper">
             <div class="menu-bar">
-                <SideBar/>
+                <SideBar />
                 <ul class="navigation hide">
                     <li>
-                        <button>Compañia</button>
+                        <button>{{ compania }}</button>
                         <div class="dropdown">
                             <h3>for</h3>
                             <ul class="list-menu-items">
@@ -16,7 +16,7 @@
                         </div>
                     </li>
                     <li>
-                        <button>Agencia</button>
+                        <button>{{ agencia }}</button>
                         <div class="dropdown">
                             <h3>for</h3>
                             <ul class="list-menu-items">
@@ -30,14 +30,15 @@
 
             </div>
             <div class="action-buttons">
-                <router-link to="/"><a href="#" title="sign out" class="secondary hide" style="font-family:Lucida Handwriting,cursive">{{ gUser.globalUser }}</a></router-link>
-                <span class="dateTime"> 
+                <img src="@/assets/ContesisLA.png" alt="Imagen" class="img-fluid" style="height: 40px;" />
+                <router-link to="/"><a href="#" title="sign out" class="secondary hide">{{ gUser.globalUser }}</a></router-link>
+                <span class="dateTime">
                     <p>{{ currentDate }}</p>
                     <p>{{ currentTime }}</p>
                 </span>
-                
+
             </div>
-            
+
 
         </nav>
     </div>
@@ -45,47 +46,69 @@
 
 <script lang="ts" setup>
 import SideBar from '@/views/EstructuraS/SideBar.vue'
-import{ref,onMounted} from "vue"
+import { ref, watch, computed, onMounted } from 'vue'
+import axios from 'axios';
+import { UrlGlobal } from '@/store/dominioGlobal';
 import { userGlobalStore } from '@/store/userGlobal';
 
+const dUrl = UrlGlobal()
+
+
 let gUser = userGlobalStore()
-    const currentDate=ref('')
-    const currentTime=ref('')
-    
-    const updateTime=()=>{
-        const now = new Date();
-        currentDate.value=formatDate(now);
-        currentTime.value=formatTime(now);
-    }
+const currentDate = ref('')
+const currentTime = ref('')
 
-    const formatDate=(date: Date)=>{
-        const year= date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${day}/${month}/${year}`;
-    }
+const updateTime = () => {
+    const now = new Date();
+    currentDate.value = formatDate(now);
+    currentTime.value = formatTime(now);
+}
 
-    const formatTime=(date:Date)=>{
-        const hours = date.getHours().toString().padStart(2 , '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-    }
+const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${day}/${month}/${year}`;
+}
 
-    onMounted(() => {
-        updateTime();
-        setInterval(updateTime,1000)
-    })
+const formatTime = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+const usuario = ref<any[]>([]);
+const compania = ref('')
+const agencia = ref('')
+onMounted(async () => {
+    updateTime();
+    setInterval(updateTime, 1000)
+
+    const responseO = await axios.get(dUrl.urlGlobal + `/api/seguser/filter?nombre_usuario=${gUser.globalUser}`)
+    usuario.value = responseO.data
+
+    const responseCA = await axios.post(dUrl.urlGlobal +'/api/compania_agencia', {
+    compania: usuario.value[0]?.compania,
+    agencia: '001'
+  })
+    compania.value = responseCA.data.compania_desc
+    agencia.value = responseCA.data.agencia_desc
+})
 
 </script>
 
 <style scoped>
-*{
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-.menu-wrapper{
+
+.menu-wrapper {
     display: flex;
     position: fixed;
     flex-direction: row;
@@ -93,57 +116,70 @@ let gUser = userGlobalStore()
     width: 100vw;
     z-index: 2;
     gap: 24px;
-    background-color: #24292F;
+    background-color: white;
+    color:#24292F ;
     height: 60px;
     padding: 0px 16px;
     align-items: center;
 }
-.menu-bar{
+
+.menu-bar {
     display: flex;
     gap: 24px;
     align-items: center;
-    @media screen and (max-width:600px){
+
+    @media screen and (max-width:600px) {
         gap: 10px;
     }
 }
-.logo{
+
+.logo {
     width: 32px;
     height: 32px;
     cursor: pointer;
 }
-.logo svg{
+
+.logo svg {
     fill: white;
 }
-.navigation{
+
+.navigation {
     display: flex;
     flex-direction: row;
     list-style-type: none;
     align-items: center;
-    gap:8px;
-    background-color: #24292F;
-    font-family: Trebuchet MS;
+    gap: 20px;
+    background-color: white;
+    color: #24292F;
+    font-family: 'Poppins', sans-serif;
+
+
 }
-.navigation > li{
+
+.navigation>li {
     display: flex;
     position: relative;
     cursor: pointer;
     align-items: center;
     height: 42px;
 }
-.navigation > li > button > svg{
+
+.navigation>li>button>svg {
     stroke: white;
     fill: white;
     color: white;
     margin-top: -2px;
     transition: all 0.2s ease-in-out;
 }
-.navigation > li > a{
+
+.navigation>li>a {
     color: white;
     font-size: 14px;
     text-decoration: none;
 }
-.navigation > li > button{
-    color: white;
+
+.navigation>li>button {
+    color:#24292F;
     border-bottom: 2px solid transparent;
     transition: all 0.3 ease;
     text-decoration: none;
@@ -162,15 +198,18 @@ let gUser = userGlobalStore()
     position: relative;
     transition: all 0.2s ease-in-out;
 }
-.navigation > li > button:hover,
-.navigation > li > a:hover{
+
+.navigation>li>button:hover,
+.navigation>li>a:hover {
     opacity: 0.75;
 }
-.navigation > li > button:hover > svg{
+
+.navigation>li>button:hover>svg {
     opacity: 0.75;
     margin-top: 6px;
 }
-.dropdown{
+
+.dropdown {
     position: absolute;
     top: 42px;
     min-width: 240px;
@@ -180,34 +219,38 @@ let gUser = userGlobalStore()
     display: none;
     flex-direction: column;
     padding: 16px;
-    box-shadow: 0 0 5px gray, 0 0 10px
-     gray,0 0 25px gray,0 0 100px gray;
+    box-shadow: 0 0 5px gray, 0 0 10px gray, 0 0 25px gray, 0 0 100px gray;
     z-index: 2;
     animation: fadeIn 0.2s ease-in-out;
 }
-@keyframes fadeIn{
-    from{
+
+@keyframes fadeIn {
+    from {
         opacity: 0;
         transform: scale(0.99) translateY(-0.7em);
         transform-origin: top;
     }
-    to{
+
+    to {
         opacity: 1;
         transform: scale(1) translateY(0);
     }
 }
+
 .dropdown h3 {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 8px;
 }
-.list-menu-items{
+
+.list-menu-items {
     display: flex;
     list-style-type: none;
     flex-direction: column;
-    gap:4px;
+    gap: 4px;
 }
-.list-menu-items > li > a{
+
+.list-menu-items>li>a {
     display: flex;
     gap: 16px;
     font-size: 14px;
@@ -215,78 +258,95 @@ let gUser = userGlobalStore()
     color: #847f90;
     text-decoration: none;
 }
-.list-menu-items > li > a:hover{
-    color: #0969DA;
+
+.list-menu-items>li>a:hover {
+    color:#001982;
 }
-.list-items-with-description{
+
+.list-items-with-description {
     list-style-type: none;
 }
-.list-items-with-description li{
+
+.list-items-with-description li {
     display: flex;
     padding: 4px;
     gap: 16px;
     width: 100%;
 }
-.list-items-with-description li:hover{
-    color:#0969DA;
+
+.list-items-with-description li:hover {
+    color: #001982;
 }
-.list-items-with-description li svg{
+
+.list-items-with-description li svg {
     margin-top: 4px;
     width: 16px;
     height: 16px;
 }
-.list-items-with-description li:hover svg{
-    stroke:#0969DA;
+
+.list-items-with-description li:hover svg {
+    stroke: #001982;
 }
-.item-title h3{
+
+.item-title h3 {
     font-size: 14px;
     font-weight: 600;
 }
-.item-title p{
+
+.item-title p {
     font-size: 12px;
 }
-.navigation > li:hover .dropdown{
+
+.navigation>li:hover .dropdown {
     display: flex;
     opacity: 1;
 }
-.action-buttons{
+
+.action-buttons {
     display: flex;
     gap: 8px;
     align-items: center;
     flex-wrap: nowrap;
-    @media  screen and (max-width:600px) {
+
+    @media screen and (max-width:600px) {
         gap: 3px;
     }
 }
-.action-buttons a{
+
+.action-buttons a {
     text-decoration: none;
     font-size: 16px;
-    white-space:nowrap;
+    white-space: nowrap;
     padding: 4px 8px;
     transition: all 0.2s ease-in-out;
 }
-.action-buttons a:hover{
+
+.action-buttons a:hover {
     opacity: .75;
 }
-.secondary{
+
+.secondary {
     background: none;
-    color: white;
+    color:#24292F;
+      font-family: 'Poppins', sans-serif;
+
     outline: none;
     border: none;
 }
 
-.dateTime{
+.dateTime {
     flex-direction: column;
-    font-family:Trebuchet MS ;
+    font-family: 'Poppins', sans-serif;
+
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.dateTime p{
+
+.dateTime p {
     height: 15px;
     font-size: small;
-    color: white;
+    color:#24292F;
 
 }
-
 </style>

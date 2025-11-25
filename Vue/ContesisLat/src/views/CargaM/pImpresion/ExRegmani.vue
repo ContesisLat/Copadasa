@@ -73,9 +73,12 @@ const generateExcel = async () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* Estilos opcionales para el botón */
 button {
   transition: transform 0.2s ease;
+  font-family: 'Poppins', sans-serif;;
 }
 
 button:active {

@@ -116,6 +116,7 @@ watch(() => openedPopups.value.length, (newValue) => {
   position: absolute;
   background-color: transparent;
   border: 2px solid #ccc;
+  border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }

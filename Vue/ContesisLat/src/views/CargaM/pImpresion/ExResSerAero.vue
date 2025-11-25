@@ -148,6 +148,8 @@ const descripcionCompania = computed(() => {
 //---------------------------------------------------------------------------
 </script>
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 body {
   height: 100%;
   width: 100%;
@@ -168,7 +170,7 @@ body {
   align-items: center;
   flex-direction: column;
   text-align: center;
-  font-family: Trebuchet MS;
+  font-family: 'Poppins', sans-serif;
   color: white;
   background: linear-gradient(to right, #ccd0cf, #9ba8ab, #4a5c6a);
   overflow: hidden;
@@ -241,6 +243,7 @@ body {
 
 .btn-group2 button {
   transition: transform 0.2s ease;
+  overflow: hidden;
 }
 
 .btn-group2 button:active {

@@ -22,22 +22,55 @@ from django.db import connections
 def login_view(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        nombre_usuario = data.get('nombre_usuario','')
-        contrasena = data.get('contrasena','')
+        usuario = data.get('usuario', '')
+        contrasena = data.get('contrasena', '')
         
-        #buscar el usuario en la base de datos 
+        # Buscar el usuario en la base de datos 
         try:
-            user = SegUser.objects.get(nombre_usuario=nombre_usuario)
+            user = SegUser.objects.only('usuario', 'contrasena', 'nombre_usuario').get(usuario=usuario)
         except SegUser.DoesNotExist:
             user = None
 
-        #verificar contraseña
+        # Verificar contraseña
         if user is not None and user.contrasena == contrasena:
-            return JsonResponse({'message':'Autenticacion exitosa'})
+            return JsonResponse({
+                'message': 'Autenticacion exitosa',
+                'nombre_usuario': user.nombre_usuario  
+            })
         else:
-            return JsonResponse({'message':'Credenciales invalidas'},status=401)
+            return JsonResponse({'message': 'Credenciales invalidas'}, status=401)
         
-    return JsonResponse({'message':request.method},status=405)
+    return JsonResponse({'message': request.method}, status=405)
+
+@api_view(['POST'])
+def obtener_compania_agencia(request):
+    compania = request.data.get('compania')
+    agencia = request.data.get('agencia')
+
+    if not compania or not agencia:
+        return Response({"error": "Faltan parámetros"}, status=400)
+
+    with connections['default'].cursor() as cursor:
+        # Obtener descripción de compañía
+        cursor.execute("""
+            SELECT descripcion 
+            FROM segcomp 
+            WHERE compania = %s
+        """, [compania])
+        comp_row = cursor.fetchone()
+
+        # Obtener descripción de agencia
+        cursor.execute("""
+            SELECT descripcion 
+            FROM segagen 
+            WHERE compania = %s AND agencia = %s
+        """, [compania, agencia])
+        agen_row = cursor.fetchone()
+
+    return Response({
+        "compania_desc": comp_row[0] if comp_row else None,
+        "agencia_desc": agen_row[0] if agen_row else None
+    })
 
 @api_view(['POST'])
 def obtener_programas_y_subprogramas(request):
@@ -47,37 +80,47 @@ def obtener_programas_y_subprogramas(request):
         return Response({"error": "Falta el perfil"}, status=400)
 
     with connections['default'].cursor() as cursor:
-        # Obtener solo los programas que tengan subprogramas para el perfil dado
+
+        # Obtener solo los procesos que tengan subprogramas
         cursor.execute("""
             SELECT DISTINCT p.proceso, p.descripcion
             FROM segproc p
             JOIN segpape s ON p.proceso = s.proceso
             WHERE s.perfil = %s
-            ORDER BY p.descripcion
+            ORDER BY p.proceso
         """, [perfil])
-        programas = cursor.fetchall()  # [(proceso, descripcion), ...]
+
+        programas = cursor.fetchall()  # [(proceso, descripcion)]
 
         resultado = []
 
         for proceso, descripcion in programas:
-            # Obtener los subprogramas correspondientes a ese proceso y perfil
+
+            # Traer subprogramas + descripción desde segprog
             cursor.execute("""
-                SELECT s.programa
+                SELECT s.programa, sp.descripcion
                 FROM segpape s
+                JOIN segprog sp ON s.programa = sp.programa
                 WHERE s.proceso = %s AND s.perfil = %s
-                ORDER BY s.programa
+                ORDER BY sp.descripcion
             """, [proceso, perfil])
 
-            subprogramas = cursor.fetchall()  # [(nombre_subprograma,), ...]
+            subprogramas = cursor.fetchall()  # [(programa, descripcion_sub)]
 
-            # Solo añadimos si hay subprogramas (seguridad extra)
             if subprogramas:
                 resultado.append({
-                    "proceso": descripcion,
-                    "subprogramas": [{"programa": s[0]} for s in subprogramas]
+                    "proceso": descripcion,  # descripción del programa
+                    "subprogramas": [
+                        {
+                            "programa": r[0],
+                            "descripcion": r[1]
+                        } 
+                        for r in subprogramas
+                    ]
                 })
 
     return Response(resultado)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class EnviarCorreoView(View):

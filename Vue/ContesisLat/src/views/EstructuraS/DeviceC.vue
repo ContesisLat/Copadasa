@@ -94,6 +94,7 @@ const currentCameraIndex = ref(0); // Índice de la cámara actual
 
 // Listar las cámaras disponibles
 const listCameras = async () => {
+
     try {
         await navigator.mediaDevices.getUserMedia({ video: true }); // Solicita permiso
         const devices = await navigator.mediaDevices.enumerateDevices()
@@ -107,6 +108,7 @@ const listCameras = async () => {
 };
 
 onMounted(() =>{
+
     listCameras();
 })
 
@@ -229,12 +231,22 @@ const props = defineProps({
 })
 const emits = defineEmits(['DevicesProps'])
 const handleClick = () => {
+       // detener cámara si está activa
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+    isCameraActive.value = false;
+    photo.value = null;
+
     emits("DevicesProps", !props.device)
 }
 //-------------------------------------------------------------------------------
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -243,7 +255,7 @@ const handleClick = () => {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     /* Fondo oscuro semitransparente */
-    z-index: 1;
+    z-index: 3;
     /* Coloca el fondo oscuro por encima de otros elementos */
 
 }
@@ -260,7 +272,7 @@ const handleClick = () => {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    font-family: Trebuchet MS;
+    font-family: 'Poppins', sans-serif;
     text-decoration: dashed;
     color: black;
     padding: 15px;

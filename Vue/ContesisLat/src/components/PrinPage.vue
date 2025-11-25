@@ -16,9 +16,9 @@ import PopupWindow from '@/views/EstructuraS/PopupWindow.vue';
 .full-background {
   min-height: 100vh;
   background-color: white;
-  background-image: url('@/assets/ContesisLA.png');
+  background-image: url('@/assets/Copadasa.png');
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: 90%;
   background-position: 50% 90px;
   position: relative;
   z-index: 1000;

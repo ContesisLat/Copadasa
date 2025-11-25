@@ -11,10 +11,10 @@ export const usePopupStore = defineStore('popup', {
       let hgt = 50
 
       if (window.innerWidth > 600) {
-        wth = 800
+        wth = 1000
         hgt = 500
       }else if (window.innerWidth < 600){
-        wth = 350
+        wth = 450
         hgt = 420
       }
 
