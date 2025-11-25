@@ -214,6 +214,7 @@ svg {
   }
 }
 
+<<<<<<< HEAD
 .ReportPage {
   max-height: 70%;
   width: 90%;
@@ -247,6 +248,48 @@ svg {
   border-top: 1px solid #ccc;
   margin: 1px 0;
   padding-left: 100%;
+=======
+.ReportPage { 
+    min-height: 50%;
+    width: 90%;
+    background: whitesmoke;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: Trebuchet MS;
+    color: black;
+    padding: 15px;
+    z-index: 1060; 
+    overflow: hidden;
+    @media screen and (max-width: 600px){
+        overflow: scroll;
+        height: 55%;
+        width: 95%; 
+    }
+    .div-buttom{
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center; /* centra los botones */
+    }
+    overflow: auto;
+}
+
+.ReportPage hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1px 0;
+    padding-left: 100%;
+    
+>>>>>>> 25c1d2ded1cd92aad99f2bf0cb6f741a09d0a518
 }
 
 button {

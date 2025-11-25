@@ -335,6 +335,22 @@ const Calcular = async() => {
     return
   }
 
+  try {
+      const response = await axios.post(dUrl.urlGlobal + '/api2/query', { tabla: 'logdemo', 
+          filtro: { compania:'300', agencia: '001', fecha: fecha, almacen: '02', 
+              codigo: codigo, documento: documento }});
+
+      dataList.value = response.data;
+
+      if (dataList.value.length == 0) {
+        warning('Ingreso no tiene detalles', 'No se generarán cálculos')
+        return
+        }
+
+    } catch (err: any) {
+        error(err.response?.data?.detail || 'Ocurrió un error en la consulta.')
+    }
+
   const result = await question(
     'Se generarán los calculos con tarifa de Refrigeración... ',
     '¿Seguro desea continuar?'
